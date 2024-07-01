@@ -1,0 +1,13 @@
+name: aws s3 list all files for a specific date
+command:
+  aws s3api list-objects-v2 --bucket {{bucket_name}} --prefix {{prefix}} --query
+  'Contents[?LastModified>={{date}}].Key'
+arguments:
+  - name: bucket_name
+    description: the full bucket name (excluding prefix s3://)
+  - name: prefix
+    description: the common path to search under
+  - name: date
+    description: the date formatted as YYYY-mm-dd
+
+tags: ["aws", "s3"]

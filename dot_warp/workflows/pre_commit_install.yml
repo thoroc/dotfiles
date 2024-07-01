@@ -1,0 +1,7 @@
+name: Install pre-commit hooks
+command: pre-commit install --hook-type {{hook_type}}
+arguments:
+  - name: hook_type
+    description: hook type to install (see https://git-scm.com/docs/githooks)
+
+tags: ["git", "pre-commit", "hooks"]

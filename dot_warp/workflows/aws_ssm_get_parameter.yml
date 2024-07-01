@@ -1,0 +1,6 @@
+name: aws ssm get-parameter
+command: aws ssm get-parameter --name "{{path}}" --with-decrypt
+arguments:
+  - name: path
+    description: the parameter full path
+tags: ["aws", "ssm"]

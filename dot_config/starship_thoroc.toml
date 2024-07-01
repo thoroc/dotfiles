@@ -1,0 +1,77 @@
+# # Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Do not add new line
+add_newline = false
+
+format = """\
+[ ](bg:#FFFFFF fg:#002b36)\
+[󰀵 ](bg:#FFFFFF fg:#002b36)\
+[](fg:#FFFFFF bg:#002b36)\
+$time\
+[](fg:#002b36 bg:#3B76F0)\
+$directory\
+[](fg:#3B76F0 bg:#FFD700)\
+$git_branch\
+$git_status\
+$git_metrics\
+[](fg:#FFD700 bg:#002b36)\
+$python\
+$golang\
+$php\
+$java\
+$nodejs\
+$rust\
+"""
+
+[directory]
+format = "[  $path ]($style)"
+style = "fg:#E4E4E4 bg:#3B76F0"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+format = '[ $symbol$branch(:$remote_branch) ]($style)'
+symbol = "  "
+style = "fg:#002b36 bg:#FFD700"
+
+[git_status]
+format = '[$all_status]($style)'
+style = "fg:#002b36 bg:#FFD700"
+
+[git_metrics]
+format = "([+$added]($added_style))[]($added_style)"
+added_style = "fg:#002b36 bg:#FFD700"
+deleted_style = "fg:bright-red bg:235"
+disabled = false
+
+[cmd_duration]
+format = "[  $duration ]($style)"
+style = "fg:bright-white bg:18"
+
+[time]
+disabled = false
+time_format = "%R" # Hour:Minute Format
+style = "bg:#002b36"
+format = '[[ 󱑍 $time ](bg:#002b36 fg:#FFFFFF)]($style)'
+
+[python]
+symbol = " "
+#pyenv_version_name = true
+format = '[ ${symbol}(${version} )(\($virtualenv\) )]($style)'
+pyenv_prefix = "venv "
+python_binary = ["./venv/bin/python", "python", "python3", "python2"]
+detect_extensions = ["py"]
+version_format = "v${raw}"
+# style = "bold bg:#1E90FF fg:#17202A"
+# style = "bold bg:#06969A fg:#FFFFFF"
+
+[nodejs]
+format = "[ ${symbol}$version ](bold green) "
+detect_files = ["package.json", ".node-version"]
+detect_folders = ["node_modules"]
+style = "bold bg:#06969A fg:#FFFFFF"
+
+[rust]
+format = "[ ${symbol}$version ](bold green) "
+style = "bold bg:#06969A fg:#FFFFFF"

@@ -1,0 +1,6 @@
+name: aws apigateway list all rest apis
+command:
+  aws apigateway get-rest-apis --query 'items[*].[id,name]' --region eu-west-1
+  --output table
+
+tags: ["aws", "apigateway"]

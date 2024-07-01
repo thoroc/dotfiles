@@ -1,0 +1,9 @@
+name: Create new symbolic link
+command: ln -s {{path_to_link}} {{local_link}}
+arguments:
+  - name: path_to_link
+    description: Path to file/folder to be linked
+  - name: local_link
+    description: Path of the link to be created
+
+tags: ["symlink"]

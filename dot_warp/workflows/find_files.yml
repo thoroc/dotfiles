@@ -1,0 +1,7 @@
+name: Find all files named "filename"
+command: find . -name {{filename}}
+arguments:
+  - name: filename
+    description: Name of files to look for
+
+tags: ["files"]

@@ -1,0 +1,13 @@
+name: aws rds find all available postgresql upgrade for the given version
+command:
+  aws rds describe-db-engine-versions --engine aurora-postgresql
+  --engine-version {{version_number}} --query
+  'DBEngineVersions[*].ValidUpgradeTarget[*].{EngineVersion:EngineVersion}'  --output
+  text
+arguments:
+  - name: version_number
+    description:
+      the Postgresql version [see
+      documentation](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.Aurora_Fea_Regions_DB-eng.Feature.ServerlessV1.html#Concepts.Aurora_Fea_Regions_DB-eng.Feature.ServerlessV1.apg)
+
+tags: ["aws", "rds"]

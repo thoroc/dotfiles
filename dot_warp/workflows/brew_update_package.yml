@@ -1,0 +1,7 @@
+name: Update a brew installed package
+command: brew upgrade {{package_name}}
+arguments:
+  - name: package_name
+    description: the name of the package to update/upgrade
+
+tags: ["brew"]

@@ -1,0 +1,8 @@
+name: aws rds describe instance filter by name
+command:
+  aws rds describe-db-instances --query 'DBInstances[?DBName==`{{name}}`]'
+arguments:
+  - name: name
+    description: the name of the DB instance
+
+tags: ["aws", "rds"]

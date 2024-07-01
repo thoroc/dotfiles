@@ -1,0 +1,9 @@
+name: Git reset state of a file for a known good banch
+command: git checkout {{banch}} -- {{file_path}}
+arguments:
+  - name: banch
+    description: the branch name
+  - name: file_path
+    description: (str) the path to the file to reset
+
+tags: ["git"]

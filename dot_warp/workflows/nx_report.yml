@@ -1,0 +1,4 @@
+name: Nx report versions installed
+command: npx nx report
+
+tags: [nx]

@@ -1,0 +1,9 @@
+name: aws ssm get parameters by path recursively
+command:
+  aws ssm get-parameters-by-path --path {{partial_path}} --recursive
+  --with-decryption --query 'Parameters[].[Name,Value]'
+arguments:
+  - name: partial_path
+    description: partial path to the parameters
+
+tags: ["aws", "ssm"]

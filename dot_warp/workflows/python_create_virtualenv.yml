@@ -1,0 +1,4 @@
+name: Create a Python virtual environment
+command: py -m venv .venv
+
+tags: ["python", "virtual environment"]

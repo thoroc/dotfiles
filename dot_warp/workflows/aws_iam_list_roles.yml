@@ -1,0 +1,7 @@
+name: aws iam list roles
+command: aws iam list-roles --query "Roles[?RoleName=='{{role_name}}']"
+arguments:
+  - name: role_name
+    description: name of the role to filter on
+
+tags: ["aws", "iam"]

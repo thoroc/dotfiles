@@ -1,0 +1,157 @@
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# export LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib"
+# export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include"
+
+# installed python 3.9 locally
+export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$HOME/.rvm/scripts/rvm:$PATH"
+
+# declare the AWS_PROFILE var
+export AWS_PROFILE
+
+okta() {
+    # Argument is the okta profile name, defined in ~/.okta-aws (e.g. tooling)
+    if [ ! -f ~/.okta-aws ];then
+      echo "Missing ~/.okta-aws, please set it up."
+      return 1
+    elif [ -z "$1" ]; then
+      echo "Missing profile argument, please provide one of the following:"
+      cat "$HOME/.okta-aws" | sed -n 's/^\[/  * /p' | tr -d '\]' | sort
+      return 1
+    else
+        unset AWS_PROFILE
+        okta-awscli -f --okta-profile "${1}" --profile "${1}"
+        export AWS_PROFILE=$1
+        echo "AWS_PROFILE set to \"$1\"."
+    fi
+}
+
+# If your ssh keys are not being added automatically then uncomment the following:
+#/usr/bin/ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+#/usr/bin/ssh-add --apple-use-keychain ~/.ssh/id_ed25519_gitlab
+#/usr/bin/ssh-add --apple-use-keychain ~/.ssh/id_rsa
+/usr/bin/ssh-add --apple-load-keychain -q
+
+# Keychain
+# /usr/local/bin/keychain $HOME/.ssh/id_rsa
+# source $HOME/.keychain/id_rsa
+
+# ---------------------------------------------------------------------------------------------------------------------ev/null 2>&1; then
+# bat: https://github.com/sharkdp/bat
+# ---------------------------------------------------------------------------------------------------------------------ev/null 2>&1; then
+# cause FU AWS putting output in less
+export PAGER=cat
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+alias cat="bat --theme=\$(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo default || echo GitHub)"
+alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
+alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+
+# ---------------------------------------------------------------------------------------------------------------------ev/null 2>&1; then
+# fzf: https://github.com/junegunn/fzf
+# ---------------------------------------------------------------------------------------------------------------------ev/null 2>&1; then
+source <(fzf --zsh)
+[ -f ~/.fzf.zsh ] && source $HOME/.fzf.zsh
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/local/bin/bit bit
+fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"
+
+# ---------------------------------------------------------------------------------------------------------------------ev/null 2>&1; then
+# broot: https://github.com/Canop/broot
+# ---------------------------------------------------------------------------------------------------------------------ev/null 2>&1; then
+source $HOME/.config/broot/launcher/bash/br
+
+# ---------------------------------------------------------------------------------------------------------------------
+# pyenv
+# ---------------------------------------------------------------------------------------------------------------------
+if command -v pyenv 1>/dev/null 2>&1; then
+	eval "$(pyenv init -)"
+	eval "$(pyenv virtualenv-init -)"
+fi
+
+# NVM
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# ---------------------------------------------------------------------------------------------------------------------
+# gnubin: https://gist.github.com/skyzyx/3438280b18e4f7c490db8a2a2ca0b9da
+# ---------------------------------------------------------------------------------------------------------------------
+BREW_BIN="/usr/local/bin/brew"
+if [ -f "/opt/homebrew/bin/brew" ]; then
+    BREW_BIN="/opt/homebrew/bin/brew"
+fi
+
+if type "${BREW_BIN}" &> /dev/null; then
+    export BREW_PREFIX="$("${BREW_BIN}" --prefix)"
+    for bindir in "${BREW_PREFIX}/opt/"*"/libexec/gnubin"; do export PATH=$bindir:$PATH; done
+    for bindir in "${BREW_PREFIX}/opt/"*"/bin"; do export PATH=$bindir:$PATH; done
+    for mandir in "${BREW_PREFIX}/opt/"*"/libexec/gnuman"; do export MANPATH=$mandir:$MANPATH; done
+    for mandir in "${BREW_PREFIX}/opt/"*"/share/man/man1"; do export MANPATH=$mandir:$MANPATH; done
+fi
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Cargo the rust tool
+# ---------------------------------------------------------------------------------------------------------------------
+export PATH="$HOME/.cargo/bin:$PATH"
+source "$HOME/.cargo/env"
+
+# ---------------------------------------------------------------------------------------------------------------------
+# fnm: https://github.com/Schniz/fnm replacement for nvm
+# ---------------------------------------------------------------------------------------------------------------------
+eval "$(fnm env --use-on-cd)"
+
+# ---------------------------------------------------------------------------------------------------------------------
+# dasel: https://github.com/TomWright/dasel
+# ---------------------------------------------------------------------------------------------------------------------
+export fpath=($HOME/zsh/site-functions $fpath)
+mkdir -p ~/zsh/site-functions
+dasel completion zsh > ~/zsh/site-functions/_dasel
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Starship
+# ---------------------------------------------------------------------------------------------------------------------
+eval "$(starship init zsh)"
+
+# ---------------------------------------------------------------------------------------------------------------------
+# TheFuck
+# ---------------------------------------------------------------------------------------------------------------------
+eval "$(thefuck --alias)"
+
+# ---------------------------------------------------------------------------------------------------------------------
+# zoxide: https://github.com/ajeetdsouza/zoxide
+# ---------------------------------------------------------------------------------------------------------------------
+eval "$(zoxide init --cmd cd zsh)"
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Jenv: https://github.com/jenv/jenv
+# ---------------------------------------------------------------------------------------------------------------------
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+jenv enable-plugin export
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# aliases
+# ---------------------------------------------------------------------------------------------------------------------
+alias hal="ls -hal"
+alias le='exa --icons -F -H --group-directories-first --git -1'
+alias la="ls -A"
+alias ld="ls -d */"
+alias ll="ls -alF"
+alias ls="ls --color"
+alias lt="exa --tree --level=2 . --icons"
+
+alias docker-list-containers="docker ps -a"
+alias docker-remove-containers="docker rm $(docker ps -a -q)"
+alias docker-remove-iamges="docker rmi $(docker images -q)"
+
+# fucked ok, don't question me! node is SHITE
+alias npm="npq-hero"
+alias yarn="NPQ_PKG_MGR=yarn npq-hero"

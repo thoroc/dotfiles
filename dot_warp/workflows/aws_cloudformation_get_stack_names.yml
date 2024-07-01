@@ -1,0 +1,4 @@
+name: aws cloudformation list all stacks
+command: aws cloudformation describe-stacks --query 'Stacks[].StackName'
+
+tags: ["aws", "cloudformation"]

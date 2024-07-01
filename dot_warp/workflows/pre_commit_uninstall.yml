@@ -1,0 +1,4 @@
+name: Uninstall pre-commit hooks
+command: pre-commit uninstall
+
+tags: ["git", "pre-commit", "hooks"]

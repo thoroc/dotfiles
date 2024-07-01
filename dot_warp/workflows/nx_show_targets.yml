@@ -1,0 +1,7 @@
+name: Nx show target for project
+command: npx nx show project {{project}} --web
+arguments:
+  - name: project
+    description: (str) the name of the project
+
+tags: [nx]

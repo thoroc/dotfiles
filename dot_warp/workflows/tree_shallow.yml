@@ -1,0 +1,7 @@
+name: Run Tree for a shallow view
+command: tree -L {{depth}} -d
+arguments:
+  - name: depth
+    description: (int) the depth to stop at
+
+tags: ["dir"]

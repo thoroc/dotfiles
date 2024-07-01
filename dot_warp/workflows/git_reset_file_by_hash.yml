@@ -1,0 +1,9 @@
+name: Git reset state of a file for a known good hash
+command: git checkout {{hash}} -- {{file_path}}
+arguments:
+  - name: hash
+    description: the short commit hash
+  - name: file_path
+    description: (str) the path to the file to reset
+
+tags: ["git"]

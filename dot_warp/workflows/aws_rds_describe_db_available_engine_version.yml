@@ -1,0 +1,6 @@
+name: aws rds find all available postgresql upgrade to serverless
+command:
+  aws rds describe-db-engine-versions --engine aurora-postgresql --query
+  "DBEngineVersions[?contains(@.SupportedEngineModes,
+  'serverless')].EngineVersion"
+tags: ["aws", "rds"]

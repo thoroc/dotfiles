@@ -1,0 +1,7 @@
+name: aws iam list attached roles policies
+command: aws iam list-role-policies --role-name {{role_name}}
+arguments:
+  - name: role_name
+    description: name of the role to retrieve attached policies for
+
+tags: ["aws", "iam"]

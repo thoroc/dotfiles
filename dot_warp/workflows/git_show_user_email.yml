@@ -1,0 +1,4 @@
+name: Git Show user email
+command: git config --show-origin --get user.email
+
+tags: ["git"]

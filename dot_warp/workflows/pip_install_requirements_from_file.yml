@@ -1,0 +1,7 @@
+name: Install packages from requirements file
+command: pip install -r {{requirement_filepath}}
+arguments:
+  - name: requirement_filepath
+    description: path to the requirements.txt file
+
+tags: ["python", "dependencies"]

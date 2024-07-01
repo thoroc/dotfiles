@@ -1,0 +1,4 @@
+name: Activate a Python virtual environment
+command: source $PWD/.venv/bin/activate
+
+tags: ["python", "virtual environment"]

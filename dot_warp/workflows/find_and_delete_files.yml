@@ -1,0 +1,7 @@
+name: Find and delete all directories named "dirname"
+command: find . -name "{{dirname}}" -type d -prune -exec rm -fr "{}" +
+arguments:
+  - name: dirname
+    description: Name of directory to look for and delete
+
+tags: ["files"]

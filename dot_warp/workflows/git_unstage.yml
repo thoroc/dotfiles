@@ -1,0 +1,7 @@
+name: Git unstage file
+command: git reset -- {{file_path}}
+arguments:
+  - name: file_path
+    description: (str) the path to the file to unstage
+
+tags: ["git"]

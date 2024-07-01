@@ -1,0 +1,9 @@
+name: aws cloudformation get template for one stack
+command:
+  aws cloudformation get-template --stack-name {{stack_name}} --output json | jq
+  --raw-output ".TemplateBody | ."
+arguments:
+  - name: stack_name
+    description: the name for the stack
+
+tags: ["aws", "cloudformation"]

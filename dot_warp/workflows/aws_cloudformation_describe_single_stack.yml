@@ -1,0 +1,9 @@
+name: aws cloudformation describe single stack from partial name match
+command:
+  aws cloudformation describe-stacks --query
+  'Stacks[?contains(StackName,`{{partial_match}}`)==`true`]'
+arguments:
+  - name: partial_match
+    description: part of the stack name
+
+tags: ["aws", "cloudformation"]

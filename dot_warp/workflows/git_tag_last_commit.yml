@@ -1,0 +1,7 @@
+name: Git set tag for last commit
+command: git tag {{tag_name}} $(git rev-parse HEAD)
+arguments:
+  - name: tag_name
+    description: (str) the name of the tag to set
+
+tags: ["git"]

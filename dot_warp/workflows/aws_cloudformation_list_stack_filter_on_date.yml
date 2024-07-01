@@ -1,0 +1,11 @@
+name: aws cloudformation list stacks and filter by date
+command:
+  aws cloudformation list-stacks --query 'StackSummaries[?CreationTime >
+  `{{date}}`].[StackName,StackStatus,Creationtime]' --output table
+arguments:
+  - name: date
+    description:
+      the date you want to filter on, in ISO 8601 format (e.g.
+      2022-01-01T00:00:00Z)
+
+tags: ["aws", "cloudformation"]

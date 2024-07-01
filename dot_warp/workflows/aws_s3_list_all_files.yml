@@ -1,0 +1,7 @@
+name: aws s3 list all files
+command: aws s3 ls s3://{{path}}
+arguments:
+  - name: path
+    description: full path for the s3 bucket
+
+tags: ["aws", "s3"]

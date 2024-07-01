@@ -1,0 +1,7 @@
+name: aws iam list roles policies
+command: aws iam list-policies --role-name {{role_name}}
+arguments:
+  - name: role_name
+    description: name of the role to retrieve policies for
+
+tags: ["aws", "iam"]

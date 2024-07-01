@@ -1,0 +1,7 @@
+name: aws cloudformation get template for single stack
+command: aws cloudformation get-template --stack-name '{{stack_name}}'
+arguments:
+  - name: stack_name
+    description: name of the stack
+
+tags: ["aws", "cloudformation"]

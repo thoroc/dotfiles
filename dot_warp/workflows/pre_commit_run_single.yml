@@ -1,0 +1,7 @@
+name: Run single pre-commit hooks without installing them
+command: pre-commit run {{hook_id}}
+arguments:
+  - name: hook_id
+    description: hook id to run
+
+tags: ["git", "pre-commit", "hooks"]

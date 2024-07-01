@@ -1,0 +1,11 @@
+name: Create multiple directories that are related to each others
+command: mkdir -p {{base_path}}/{{common_prefix}}{1..{{max}}}
+arguments:
+  - name: (str) base_path can include slashes
+    description: the base path
+  - name: common_prefix
+    description: (str) common name for all the directories
+  - name: max
+    description: (int) maximum number for the list of directories
+
+tags: ["mkdir", "dir"]

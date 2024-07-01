@@ -1,0 +1,6 @@
+name: Activate poetry environment even when `poetry shell` doesn't work
+command:
+  source "$( poetry env list --full-path | grep Activated | cut -d' ' -f1
+  )/bin/activate"
+
+tags: ["poetry", "python", "virtual environment"]

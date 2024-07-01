@@ -1,0 +1,9 @@
+name: Nx run command against target
+command: npx nx run {{project}}:{{command}}
+arguments:
+  - name: project
+    description: (str) the name of the project
+  - name: command
+    description: (str) the command to run
+
+tags: [nx]

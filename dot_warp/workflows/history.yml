@@ -1,0 +1,11 @@
+name: Find cmd in your history
+command: history | grep {{cmd}} -A {{lineno_before}} -B {{lineno_after}}
+arguments:
+  - name: cmd
+    description: the command to filter on
+  - name: lineno_before
+    description: the number of line before to print out
+  - name: lineno_after
+    description: the number of line after to print out
+
+tags: ["history"]

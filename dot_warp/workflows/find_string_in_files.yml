@@ -1,0 +1,18 @@
+name:
+  Find all files containing the string "pattern" in the directory, recursively,
+  excludes directories "excludeDir" and includes only files with extension
+  "extension"
+command:
+  grep --include=\*.{{extension}} --exclude-dir={{excludeDir}} -rnw
+  '{{directory}}' -e '{{pattern}}'
+arguments:
+  - name: pattern
+    description: string to look for
+  - name: directory
+    description: directory to apply the search
+  - name: excludeDir
+    description: directories to exclude from the search
+  - name: extension
+    description: limit the search to file with extension
+
+tags: ["files", "grep"]

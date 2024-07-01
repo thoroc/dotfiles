@@ -1,0 +1,25 @@
+
+# Setting PATH for Python 3.9
+# The original version is saved in .bash_profile.pysave
+PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
+export PATH
+
+[[ -s "/Users/thomas.roche/.gvm/scripts/gvm" ]] && source "/Users/thomas.roche/.gvm/scripts/gvm"
+
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# this is something stupid that someone imposed. don't need/don't want
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# complete -C /usr/local/bin/bit bit
+
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+
+
+
+
+

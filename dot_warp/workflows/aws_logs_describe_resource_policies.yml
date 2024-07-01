@@ -1,0 +1,7 @@
+name: aws logs describe-resource-policies (pipe to `wc -m` to count them)
+command:
+  aws logs describe-resource-policies --query
+  'resourcePolicies[?policyName==`AWSLogDeliveryWrite20150319`].policyDocument'
+  --output json | jq '.[0] | fromjson'
+
+tags: ["aws", "logs"]
