@@ -243,8 +243,6 @@ brew "mercurial"
 brew "multitail"
 # Interactive cheatsheet tool for the command-line
 brew "navi"
-# Fast, highly customisable system info script
-brew "neofetch"
 # Libraries and data formats for array-oriented scientific data
 brew "netcdf"
 # HTTP/2 C Library
@@ -371,8 +369,8 @@ brew "minamijoyo/tfupdate/tfupdate"
 brew "tylerbrock/saw/saw"
 # Enable Windows-like alt-tab
 cask "alt-tab"
-# GUI app for Homebrew
-cask "cakebrew"
+# User-friendly GUI app for Homebrew
+cask "applite"
 # App to build and share containerised applications and microservices
 cask "docker"
 # Network scanner

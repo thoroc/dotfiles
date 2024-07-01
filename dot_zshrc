@@ -54,11 +54,11 @@ alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
 # ---------------------------------------------------------------------------------------------------------------------ev/null 2>&1; then
 # fzf: https://github.com/junegunn/fzf
 # ---------------------------------------------------------------------------------------------------------------------ev/null 2>&1; then
-source <(fzf --zsh)
+# source <(fzf --zsh)
 [ -f ~/.fzf.zsh ] && source $HOME/.fzf.zsh
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/local/bin/bit bit
-fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"
+# fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"
 
 # ---------------------------------------------------------------------------------------------------------------------ev/null 2>&1; then
 # broot: https://github.com/Canop/broot
@@ -128,14 +128,12 @@ eval "$(thefuck --alias)"
 # ---------------------------------------------------------------------------------------------------------------------
 eval "$(zoxide init --cmd cd zsh)"
 
-
 # ---------------------------------------------------------------------------------------------------------------------
 # Jenv: https://github.com/jenv/jenv
 # ---------------------------------------------------------------------------------------------------------------------
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 jenv enable-plugin export
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 # aliases
