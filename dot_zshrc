@@ -139,12 +139,12 @@ jenv enable-plugin export
 # aliases
 # ---------------------------------------------------------------------------------------------------------------------
 alias hal="ls -hal"
-alias le='exa --icons -F -H --group-directories-first --git -1'
+alias le='eza --icons -F -H --group-directories-first --git -1'
 alias la="ls -A"
 alias ld="ls -d */"
 alias ll="ls -alF"
 alias ls="ls --color"
-alias lt="exa --tree --level=2 . --icons"
+alias lt="eza --tree --level=2 . --icons"
 
 alias docker-list-containers="docker ps -a"
 alias docker-remove-containers="docker rm $(docker ps -a -q)"
