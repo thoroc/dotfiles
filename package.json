@@ -1,0 +1,26 @@
+{
+  "name": "Chezmoi-MacOs",
+  "version": "1.0.0",
+  "description": "Chezmoi for devs macos",
+  "scripts": {
+    "format": "prettier --write README.md",
+    "prepare": "npx lefthook install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thoroc/.dotfile.git"
+  },
+  "author": "thoroc <thomas.a.roche@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thoroc/.dotfile/issues"
+  },
+  "homepage": "https://github.com/thoroc/.dotfile#readme",
+  "devDependencies": {
+    "doctoc": "^2.2.1",
+    "lefthook": "^1.6.18",
+    "lockfile-lint": "^4.14.0",
+    "markdownlint-cli2": "^0.13.0",
+    "prettier": "^3.3.2"
+  }
+}

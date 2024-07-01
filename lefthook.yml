@@ -1,0 +1,16 @@
+pre-commit:
+  commands:
+    format-docs:
+      glob: '*.md'
+      interactive: true
+      run: 'npx prettier --write --prose-wrap always {staged_files} && git add {staged_files}'
+    lint-docs:
+      glob: '*.md'
+      interactive: true
+      run: 'npx markdownlint-cli2 --fix {staged_files} && git add {staged_files}'
+    markdown-toc:
+      glob: '*.md'
+      run: npx doctoc {staged_files} && git add {staged_files}
+    lint-lockfile:
+      glob: 'package-lock.json'
+      run: 'npx lockfile-lint --validate-https --path'
