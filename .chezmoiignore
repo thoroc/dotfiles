@@ -6,3 +6,4 @@ lefthook.yml
 .prettierrc
 .vscode/
 node_modules/
+Brewfile
