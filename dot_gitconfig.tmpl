@@ -28,8 +28,8 @@
 	email = {{ .gh_email}}
 	signingkey = /Users/{{ .username }}/.ssh/id_ed25519.pub
 
-[includeIf "gitdir:~/{{ .work_project_dir }}/"]
-  path = ~/.config/.gitconfig_gitlab
+[includeIf "gitdir:/Users/{{ .username }}/Projects/{{ .projects_dir }}/"]
+  path = /Users/{{ .username }}/.config/.gitconfig_gitlab
 
 [alias]
 	dev = "!f() { git stash && co develop && git pull && git co - && git rebase develop && git stash pop; }; f"

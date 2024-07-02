@@ -2,11 +2,13 @@
 {{- $username := promptStringOnce . "username" "Username" -}}
 {{- $gh_email := promptStringOnce . "gh_email" "GitHub email address" -}}
 {{- $gh_username := promptStringOnce . "gh_username" "GitHub username" -}}
-{{- $work_project_dir := promptStringOnce . "work_project_dir" "Work project directory (without home prefix or trailing slash)" -}}
+{{- $projects_dir := promptStringOnce . "projects_dir" "Work project directory (name of directory for the work projects)" -}}
+{{- $gh_projects_dir := promptStringOnce . "gh_projects_dir" "GitHub project directory (name of directory for the GitHub projects)" -}}
 
 [data]
     email = {{ $email | quote }}
     username = {{ $username | quote }}
+    projects_dir = {{ $projects_dir | quote }}
     gh_email = {{ $gh_email | quote }}
     gh_username = {{ $gh_username | quote }}
-    work_project_dir = {{ $work_project_dir | quote }}
+    gh_projects_dir = {{ $gh_projects_dir | quote }}
