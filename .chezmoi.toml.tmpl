@@ -10,6 +10,8 @@
 {{- $nix := promptBoolOnce . "enable.nix" "Enable nix as a package manager (y/n)" -}}
 {{- $broot := promptBoolOnce . "enable.broot" "Enable broot as a tree alternative (y/n)" -}}
 {{- $jenv := promptBoolOnce . "enable.jenv" "Enable jenv as a Java version manager (y/n)" -}}
+{{- $golang := promptBoolOnce . "enable.lang.golang" "Enable Go as a programming language (y/n)" -}}
+{{- $rust := promptBoolOnce . "enable.lang.rust" "Enable Rust as a programming language (y/n)" -}}
 
 [data]
   projects_dir = {{ $projects_dir | quote }}
@@ -28,3 +30,7 @@
   nix = {{ $nix }}
   broot = {{ $broot }}
   jenv = {{ $jenv }}
+
+[data.enable.lang]
+  golang = {{ $golang }}
+  rust = {{ $rust }}

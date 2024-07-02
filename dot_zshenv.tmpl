@@ -162,19 +162,23 @@ esac
 export PATH="/Users/{{ .user.work.name }}/.yarn/bin:/Users/{{ .user.work.name }}/.config/yarn/global/node_modules/.bin:$PATH"
 
 
+{{ if eq .enable.lang.golang true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # golang
 # ---------------------------------------------------------------------------------------------------------------------
 export GOPATH="/Users/{{ .user.work.name }}/go" 
 export PATH="$PATH:$GOPATH/bin"
+{{ end -}}
 
 
+{{ if eq .enable.lang.rust true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # Cargo the rust tool
 # ---------------------------------------------------------------------------------------------------------------------
 export CARGO_HOME="/Users/{{ .user.work.name }}/.cargo"
 export PATH="$CARGO_HOME/bin:$PATH"
 [[ -s "$CARGO_HOME" ]] && source "/Users/{{ .user.work.name }}/.cargo/env"
+{{ end -}}
 
 
 {{ if eq .enable.broot true -}}
