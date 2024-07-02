@@ -18,7 +18,7 @@
 	untracked = cyan
 
 [core]
-	excludesfile = /Users/{{ .user.work.name }}/.config/.gitignore_global
+	excludesfile = {{- .chezmoi.homeDir -}}/.config/.gitignore_global
 	editor = vim
 	autocrlf = input
 
@@ -26,10 +26,10 @@
 	userConfigOnly = true
 	name = {{ .user.github.name }}
 	email = {{ .user.github.email }}
-	signingkey = /Users/{{ .user.work.name }}/.ssh/id_ed25519.pub
+	signingkey = {{- .chezmoi.homeDir -}}/.ssh/id_ed25519.pub
 
-[includeIf "gitdir:/Users/{{ .user.work.name }}/Projects/{{ .projects_dir }}/"]
-  path = /Users/{{ .user.work.name }}/.config/.gitconfig_gitlab
+[includeIf "gitdir:{{- .chezmoi.homeDir -}}/Projects/{{ .projects_dir }}/"]
+  path = {{- .chezmoi.homeDir -}}/.config/.gitconfig_gitlab
 
 [alias]
 	dev = "!f() { git stash && co develop && git pull && git co - && git rebase develop && git stash pop; }; f"
@@ -155,7 +155,7 @@
 	mailmap = true
 
 [mailmap]
-	file = /Users/{{ .user.work.name }}/.mailmap
+	file = {{- .chezmoi.homeDir -}}/.mailmap
 
 [rebase]
 	autosquash = true

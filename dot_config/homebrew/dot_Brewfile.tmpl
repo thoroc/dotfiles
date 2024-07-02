@@ -1,0 +1,298 @@
+{{ $taps := list 
+  "aws/tap"
+  "buo/cask-upgrade"
+  "dagger/tap"
+  "domt4/autoupdate"
+  "fabianishere/personal"
+  "go-task/tap"
+  "hashicorp/tap"
+  "homebrew/autoupdate"
+  "homebrew/bundle"
+  "homebrew/cask-fonts"
+  "homebrew/services"
+  "jmespath/jmespath"
+  "localstack/tap"
+  "mike-engel/jwt-cli"
+  "minamijoyo/hcledit"
+  "minamijoyo/tfupdate"
+  "mtslzr/marmaduke-chromium"
+  "turbot/tap"
+  "tylerbrock/saw"
+-}}
+
+{{ $formulaes := list
+  "act"
+  "pycparser"
+  "cffi"
+  "cryptography"
+  "xz"
+  "ansible"
+  "jpeg-xl"
+  "aom"
+  "bzip2"
+  "grpc"
+  "apache-arrow"
+  "automake"
+  "aws-cdk"
+  "aws-sam-cli"
+  "awscli"
+  "azure-cli"
+  "bash-completion"
+  "libssh2"
+  "harfbuzz"
+  "bfg"
+  "binutils"
+  "bit-git"
+  "boost"
+  "broot"
+  "coreutils"
+  "p11-kit"
+  "unbound"
+  "gnutls"
+  "cask"
+  "cfn-lint"
+  "chezmoi"
+  "libtool"
+  "libavif"
+  "gd"
+  "php"
+  "composer"
+  "cookiecutter"
+  "corrosion"
+  "cups"
+  "ddcctl"
+  "deno"
+  "diffutils"
+  "dive"
+  "docker-credential-helper-ecr"
+  "docutils"
+  "ed"
+  "folly"
+  "fizz"
+  "wangle"
+  "fbthrift"
+  "fb303"
+  "edencommon"
+  "eza"
+  "lame"
+  "leptonica"
+  "libass"
+  "libbluray"
+  "pango"
+  "sdl2"
+  "srt"
+  "tesseract"
+  "x264"
+  "ffmpeg"
+  "findutils"
+  "fish"
+  "fnm"
+  "fzf"
+  "gawk"
+  "gdk-pixbuf"
+  "git"
+  "git-delta"
+  "git-quick-stats"
+  "gitlab-ci-local"
+  "glew"
+  "glm"
+  "gnu-sed"
+  "gnu-tar"
+  "libksba"
+  "go"
+  "pkg-config"
+  "gobject-introspection"
+  "sdl2_image"
+  "gource"
+  "gpgme"
+  "netpbm"
+  "gts"
+  "librsvg"
+  "graphviz"
+  "grep"
+  "gzip"
+  "hdf5"
+  "htop"
+  "infracost"
+  "jq"
+  "just"
+  "keychain"
+  "ldns"
+  "leapp-cli"
+  "libav"
+  "libdap"
+  "libfido2"
+  "libheif"
+  "libslirp"
+  "make"
+  "markdownlint-cli"
+  "mas"
+  "mdcat"
+  "mercurial"
+  "multitail"
+  "navi"
+  "netcdf"
+  "nghttp2"
+  "nmap"
+  "openblas"
+  "openssh"
+  "pcre"
+  "pdftk-java"
+  "perl"
+  "plantuml"
+  "poppler"
+  "postgresql@14"
+  "pre-commit"
+  "prettier"
+  "proj"
+  "pyenv"
+  "pyenv-virtualenv"
+  "python-markdown"
+  "python@3.10"
+  "qemu"
+  "qpdf"
+  "ripgrep"
+  "socat"
+  "sonar-scanner"
+  "starship"
+  "stow"
+  "task"
+  "tasksh"
+  "terminal-notifier"
+  "terracognita"
+  "terraform-docs"
+  "terraformer"
+  "terragrunt"
+  "terrascan"
+  "tflint"
+  "tfsec"
+  "thefuck"
+  "tldr"
+  "translate-shell"
+  "tre"
+  "tree"
+  "unzip"
+  "vim"
+  "virtualenv"
+  "watchman"
+  "wget"
+  "whalebrew"
+  "yasm"
+  "yq"
+  "zlib"
+  "zoxide"
+  "zsh"
+  "dagger/tap/dagger"
+  "fabianishere/personal/pam_reattach"
+  "hashicorp/tap/terraform"
+  "jmespath/jmespath/jp"
+  "localstack/tap/localstack-cli"
+  "mike-engel/jwt-cli/jwt-cli"
+  "minamijoyo/hcledit/hcledit"
+  "minamijoyo/tfupdate/tfupdate"
+  "tylerbrock/saw/saw"
+  "alt-tab"
+  "applite"
+  "docker"
+  "fing"
+  "font-hack-nerd-font"
+  "iterm2"
+  "keepassxc"
+  "keycastr"
+  "leapp"
+  "marmaduke-chromium"
+  "obsidian"
+  "opera"
+  "postman"
+  "processing"
+  "spotter"
+  "stats"
+  "temurin"
+  "trunk-io"
+  "vlc"
+  "whatsapp"
+  "zed"
+  "zoom"
+-}}
+
+{{ $casks := list 
+  "alt-tab"
+  "applite"
+  "docker"
+  "fing"
+  "font-hack-nerd-font"
+  "iterm2"
+  "keepassxc"
+  "keycastr"
+  "leapp"
+  "marmaduke-chromium"
+  "obsidian"
+  "opera"
+  "postman"
+  "processing"
+  "spotter"
+  "stats"
+  "temurin"
+  "trunk-io"
+  "vlc"
+  "whatsapp"
+  "zed"
+  "zoom"
+-}}
+
+
+{{ if eq .enable.tool.bat true -}}
+{{ $formulaes = concat $formulaes ( list "bat" ) -}}
+{{ end -}}
+
+{{ if eq .enable.tool.broot true -}}
+{{ $formulaes = concat $formulaes ( list "broot" ) -}}
+{{ end -}}
+
+{{ if eq .enable.tool.dasel true -}}
+{{ $formulaes = concat $formulaes ( list "dasel" ) -}}
+{{ end -}}
+
+{{ if eq .enable.lang.golang true -}}
+{{ $formulaes = concat $formulaes ( list "go" ) -}}
+{{ end -}}
+
+{{ if eq .enable.tool.jenv true -}}
+{{ $formulaes = concat $formulaes ( list "jenv" ) -}}
+{{ end -}}
+
+{{ if eq .enable.lang.java true -}}
+{{ $formulaes = concat $formulaes ( list "openjdk@11" "openjdk@8" ) -}}
+{{ end -}}
+
+#    ______                    __ _ _
+#    | ___ \                  / _(_) |
+#    | |_/ /_ __ _____      _| |_ _| | ___
+#    | ___ \ '__/ _ \ \ /\ / /  _| | |/ _ \
+#   _| |_/ / | |  __/\ V  V /| | | | |  __/
+#  (_)____/|_|  \___| \_/\_/ |_| |_|_|\___|
+#
+#
+
+{{- /* Taps */ -}}
+{{- range ( $taps | sortAlpha | uniq ) }}
+tap "{{ . }}"
+{{- end }}
+
+{{- /* Formula */ -}}
+{{- range ( $formulaes | sortAlpha | uniq ) }}
+brew "{{ . }}"
+{{- end }}
+
+{{- /* Casks */ -}}
+{{- range ( $casks | sortAlpha | uniq ) }}
+cask "{{ . }}"
+{{- end }}
+
+{{- /* Mac App Store */ -}}
+mas "Boop", id: 1518425043
+mas "FTP Rush", id: 1611675603
+mas "Keynote", id: 409183694
+mas "WeatherDock", id: 1624480719
+mas "Xcode", id: 497799835
+

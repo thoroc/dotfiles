@@ -14,6 +14,7 @@ Inspiration:
 
 - <https://github.com/politician/dotfiles/>
 - <https://github.com/federicober/dotfiles>
+- <https://github.com/m0lson84/dotfiles>
 
 ## Prerequisite
 
@@ -22,9 +23,10 @@ install the following if not already present on the machine
 - xcode: `xcode-select --install`
 - git
 - brew
-- run `brew bundle install --file=~/.local/share/chezmoi/Brewfile`
 
 ## Setup
 
 Run `chezmoi init`. That should prompt you to inform all the variables in `chezmoi.toml.tmpl` and save a new config file
 under: `~/.config/chezmoi.toml`.
+
+Run `brew bundle install --file=~/.config/homebrew/.Brewfile` to install all the required softwares

@@ -2,7 +2,7 @@
 # export LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib"
 # export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include"
 
-source "/Users/{{ .user.work.name }}/.zshenv"
+source "{{- .chezmoi.homeDir -}}/.zshenv"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -15,8 +15,8 @@ source "/Users/{{ .user.work.name }}/.zshenv"
 /usr/bin/ssh-add --apple-load-keychain -q
 
 # Keychain
-# /usr/local/bin/keychain /Users/{{ .user.work.name }}/.ssh/id_rsa
-# source /Users/{{ .user.work.name }}/.keychain/id_rsa
+# /usr/local/bin/keychain {{- .chezmoi.homeDir -}}/.ssh/id_rsa
+# source {{- .chezmoi.homeDir -}}/.keychain/id_rsa
 
 
 
