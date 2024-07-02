@@ -12,10 +12,10 @@ export MANPATH="/usr/local/man:$MANPATH"
 # ---------------------------------------------------------------------------------------------------------------------
 # local bin directories 
 # ---------------------------------------------------------------------------------------------------------------------
-export PATH="/Users/{{ .username }}/Bin:$PATH"
-export PATH="/Users/{{ .username }}/.bin:$PATH"
-export PATH="/Users/{{ .username }}/.local/bin:$PATH"
-export PATH="/Users/{{ .username }}/bin:$PATH"
+export PATH="/Users/{{ .user.work.name }}/Bin:$PATH"
+export PATH="/Users/{{ .user.work.name }}/.bin:$PATH"
+export PATH="/Users/{{ .user.work.name }}/.local/bin:$PATH"
+export PATH="/Users/{{ .user.work.name }}/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 
@@ -30,8 +30,8 @@ export PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
 # AWS 
 # ---------------------------------------------------------------------------------------------------------------------
 export AWS_SDK_LOAD_CONFIG=1
-export AWS_CONFIG_FILE=/Users/{{ .username }}/.aws/config
-export AWS_SHARED_CREDENTIALS_FILE=/Users/{{ .username }}/.aws/credentials
+export AWS_CONFIG_FILE=/Users/{{ .user.work.name }}/.aws/config
+export AWS_SHARED_CREDENTIALS_FILE=/Users/{{ .user.work.name }}/.aws/credentials
 
 
 # declare the AWS_PROFILE var
@@ -39,12 +39,12 @@ export AWS_PROFILE
 
 okta() {
     # Argument is the okta profile name, defined in ~/.okta-aws (e.g. tooling)
-    if [ ! -f /Users/{{ .username }}/.okta-aws ];then
-      echo "Missing /Users/{{ .username }}/.okta-aws, please set it up."
+    if [ ! -f /Users/{{ .user.work.name }}/.okta-aws ];then
+      echo "Missing /Users/{{ .user.work.name }}/.okta-aws, please set it up."
       return 1
     elif [ -z "$1" ]; then
       echo "Missing profile argument, please provide one of the following:"
-      cat "/Users/{{ .username }}/.okta-aws" | sed -n 's/^\[/  * /p' | tr -d '\]' | sort
+      cat "/Users/{{ .user.work.name }}/.okta-aws" | sed -n 's/^\[/  * /p' | tr -d '\]' | sort
       return 1
     else
         unset AWS_PROFILE
@@ -117,14 +117,14 @@ export PATH="$PATH:/nix/var/nix/profiles/default/bin"
 # ---------------------------------------------------------------------------------------------------------------------
 # Poetry
 # ---------------------------------------------------------------------------------------------------------------------
-export PATH="/Users/{{ .username }}/.poetry/bin:$PATH"
-export PATH="/Users/{{ .username }}/.local/bin:$PATH"
+export PATH="/Users/{{ .user.work.name }}/.poetry/bin:$PATH"
+export PATH="/Users/{{ .user.work.name }}/.local/bin:$PATH"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # pyenv
 # ---------------------------------------------------------------------------------------------------------------------
-export PYENV_ROOT="/Users/{{ .username }}/.pyenv"
+export PYENV_ROOT="/Users/{{ .user.work.name }}/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv 1>/dev/null 2>&1; then
 	eval "$(pyenv init -)"
@@ -135,7 +135,7 @@ fi
 # ---------------------------------------------------------------------------------------------------------------------
 # nvm
 # ---------------------------------------------------------------------------------------------------------------------
-# export NVM_DIR="/Users/{{ .username }}/.nvm"
+# export NVM_DIR="/Users/{{ .user.work.name }}/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
@@ -143,13 +143,13 @@ fi
 # ---------------------------------------------------------------------------------------------------------------------
 # npm
 # ---------------------------------------------------------------------------------------------------------------------
-export PATH="/Users/{{ .username }}/.npm-global/bin:$PATH"
+export PATH="/Users/{{ .user.work.name }}/.npm-global/bin:$PATH"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # pnpm
 # ---------------------------------------------------------------------------------------------------------------------
-export PNPM_HOME="/Users/{{ .username }}/Library/pnpm"
+export PNPM_HOME="/Users/{{ .user.work.name }}/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -159,29 +159,29 @@ esac
 # ---------------------------------------------------------------------------------------------------------------------
 # Yarn
 # ---------------------------------------------------------------------------------------------------------------------
-export PATH="/Users/{{ .username }}/.yarn/bin:/Users/{{ .username }}/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="/Users/{{ .user.work.name }}/.yarn/bin:/Users/{{ .user.work.name }}/.config/yarn/global/node_modules/.bin:$PATH"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # golang
 # ---------------------------------------------------------------------------------------------------------------------
-export GOPATH="/Users/{{ .username }}/go" 
+export GOPATH="/Users/{{ .user.work.name }}/go" 
 export PATH="$PATH:$GOPATH/bin"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Cargo the rust tool
 # ---------------------------------------------------------------------------------------------------------------------
-export CARGO_HOME="/Users/{{ .username }}/.cargo"
+export CARGO_HOME="/Users/{{ .user.work.name }}/.cargo"
 export PATH="$CARGO_HOME/bin:$PATH"
-[[ -s "$CARGO_HOME" ]] && source "/Users/{{ .username }}/.cargo/env"
+[[ -s "$CARGO_HOME" ]] && source "/Users/{{ .user.work.name }}/.cargo/env"
 
 
 {{ if eq .enable.broot true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # broot: https://github.com/Canop/broot
 # ---------------------------------------------------------------------------------------------------------------------
-source /Users/{{ .username }}/.config/broot/launcher/bash/br
+source /Users/{{ .user.work.name }}/.config/broot/launcher/bash/br
 {{ end -}}
 
 
@@ -189,7 +189,7 @@ source /Users/{{ .username }}/.config/broot/launcher/bash/br
 # fzf: https://github.com/junegunn/fzf
 # ---------------------------------------------------------------------------------------------------------------------
 # source <(fzf --zsh)
-# [ -f ~/.fzf.zsh ] && source /Users/{{ .username }}/.fzf.zsh
+# [ -f ~/.fzf.zsh ] && source /Users/{{ .user.work.name }}/.fzf.zsh
 # autoload -U +X bashcompinit && bashcompinit
 # complete -o nospace -C /usr/local/bin/bit bit
 # fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"
@@ -198,10 +198,10 @@ source /Users/{{ .username }}/.config/broot/launcher/bash/br
 # ---------------------------------------------------------------------------------------------------------------------
 # dasel: https://github.com/TomWright/dasel
 # ---------------------------------------------------------------------------------------------------------------------
-# export fpath=(/Users/{{ .username }}/zsh/site-functions $fpath)
+# export fpath=(/Users/{{ .user.work.name }}/zsh/site-functions $fpath)
 
-# mkdir -p "/Users/{{ .username }}/zsh/site-functions"
-# dasel completion zsh > "/Users/{{ .username }}/zsh/site-functions/_dasel"
+# mkdir -p "/Users/{{ .user.work.name }}/zsh/site-functions"
+# dasel completion zsh > "/Users/{{ .user.work.name }}/zsh/site-functions/_dasel"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -232,7 +232,7 @@ eval "$(zoxide init --cmd cd zsh)"
 # ---------------------------------------------------------------------------------------------------------------------
 # Jenv: https://github.com/jenv/jenv
 # ---------------------------------------------------------------------------------------------------------------------
-export PATH="/Users/{{ .username }}/.jenv/bin:$PATH"
+export PATH="/Users/{{ .user.work.name }}/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 jenv enable-plugin export
 {{ end -}}
@@ -242,7 +242,7 @@ jenv enable-plugin export
 # rvm: Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 # ---------------------------------------------------------------------------------------------------------------------
 export PATH="/usr/local/opt/ruby/bin:$PATH"
-export RVM_HOME="/Users/{{ .username }}/.rvm"
+export RVM_HOME="/Users/{{ .user.work.name }}/.rvm"
 export PATH="$RVM_HOME/scripts/rvm:$PATH"
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$RVM_HOME/bin"

@@ -27,12 +27,12 @@ windows:
   - tabs:
       - title: Friday fun
         layout:
-          cwd: /Users/{{ .username }}/Projects/{{ .projects_dir }}/friday-fun/
+          cwd: /Users/{{ .user.work.name }}/Projects/{{ .projects_dir }}/friday-fun/
         color: blue
       - title: Trabajo
         layout:
-          cwd: /Users/{{ .username }}/Projects/{{ .projects_dir }}/
+          cwd: /Users/{{ .user.work.name }}/Projects/{{ .projects_dir }}/
       - title: Github
         layout:
-          cwd: /Users/{{ .username }}/Projects/{{ .gh_projects_dir }}/
+          cwd: /Users/{{ .user.work.name }}/Projects/{{ .gh_projects_dir }}/
         color: magenta
