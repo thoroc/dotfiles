@@ -1,0 +1,201 @@
+[color]
+	ui = auto
+
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold # line info
+	old = red # deletions
+	new = green # additions
+
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+
+[core]
+	excludesfile = /Users/{{ .username }}/.config/.gitignore_global
+	editor = vim
+	autocrlf = input
+
+[user]
+	userConfigOnly = true
+	name = {{ .gh_username}}
+	email = {{ .gh_email}}
+	signingkey = /Users/{{ .username }}/.ssh/id_ed25519.pub
+
+[includeIf "gitdir:~/{{ .work_project_dir }}/"]
+  path = ~/.config/.gitconfig_gitlab
+
+[alias]
+	dev = "!f() { git stash && co develop && git pull && git co - && git rebase develop && git stash pop; }; f"
+	fetch = fetch --prune
+	# fixup = "!f() { TARGET=$(git rev-parse "$1"); git commit --fixup=$TARGET ${@:2} && EDITOR=true git rebase -i --autostash --autosquash $TARGET^; }; f"   
+	# recent = "!r() { cur=$(git rev-parse --abbrev-ref HEAD); git for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset)|%(color:red)%(objectname:short)%(color:reset)|(%(color:green)%(committerdate:relative)%(color:reset))|%(color:bold green)%(color:magenta)%(authorname)%(color:reset)' | sed 's/m${cur}|/m* ${cur}|/' | column -ts'|'; }; r"
+
+	# https://davidwalsh.name/sort-git-branches
+	# branch sorted by Date
+	# sort = "!f() { git for-each-ref --sort='-committerdate' --format='%(color:yellow)%(committerdate:relative)%09%(color:bold green)%(refname)' refs/heads | sed -e 's-refs/heads/--'; }; f"
+  sort = branch --sort=-committerdate --format='%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)' --color=always | column -ts'|'
+  sort-remote = branch -r --sort=-committerdate --format='%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)' --color=always | column -ts'|'
+
+	# View the SHA, description, date, author and history graph
+	history = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' ;
+  on = "!f() { git log --pretty='format:%C(yellow)%h %G? %ad%Cred%d %Creset%s%C(cyan) [%cn]' --decorate --after=\"$1 0:00\" --before=\"$1 23:59\" --author \"`git config user.name`\"; }; f"
+	list = branch --sort=-committerdate
+	# http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/
+	# List commits in short form, with colors and branch/tag annotations.
+  # inverse the order of the commits
+	ls = log --pretty=format:%C(yellow)%h\\ %Cblue[%cn]\\ %Cred%cr\\ %Creset%s --decorate --reverse
+
+	# List commits showing changed files
+	ll = log --pretty=format:%C(yellow)%h\\ %Cblue[%cn]\\ %Cred%cr\\ %Creset%s%n%N --decorate --numstat
+
+	# Show the history of a file, with diffs
+	filelog = log -u
+	fl = log -u
+
+	# Search/grep your entire codebase for a string
+	grep = grep -Ii
+	gr = grep -Ii
+	
+	# List all your Aliases 
+
+	# Rename [branch] to done-[branch]
+	done = "!f() { git branch | grep $1 | cut -c 3- | grep -v done | xargs -I{} git branch -m {} done-{}; }; f"
+  # Rename [branch] to temp-[branch]
+  temp = "!f() { git branch | grep $1 | cut -c 3- | grep -v temp | xargs -I{} git branch -m {} temp-{}; }; f"
+	
+	# Show the last tag
+	lasttag = describe --tags --abbrev=0
+	lt = describe --tags --abbrev=0
+	
+	# fixup+squash one commit
+	# # fixup = "!f() { git commit --fixup $1 && git rebase -i --autosquash $1^; }; f"
+	fu = "!f() { git commit --fixup $1; EDITOR=cat git rebase --interactive --autosquash $1~; }; f"
+
+	stash-all = stash save --include-untracked
+
+	# Basic Shortcuts
+	cr = switch -c
+	sw = switch
+	# cp = cherry-pick
+	st = status -s
+	# cl = clone
+	# ci = commit
+	co = checkout
+	br = branch
+	diff = diff --word-diff
+	dc = diff --cached
+
+	pushme = push origin HEAD # push this branch
+	pushmemaybe = push origin HEAD --no-verify  # push but ignore githooks
+	pushmegently = push origin HEAD --force-with-lease # push it regardless 
+	pushit = "!f() { git rev-parse --abbrev-ref HEAD ; }; git push --set-upstream origin `f`" # push and set upstream
+
+	ec = config --global -e
+	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
+	cob = checkout -b
+	cm = !git add -A && git commit -m
+	save = !git add -A && git commit -m 'SAVEPOINT'
+	# wip = !git add -u && git commit -m "WIP" 
+	undo = reset HEAD~1 --mixed
+	amend = commit -a --amend
+	
+	# where from
+	url = remote -v ;
+	
+	# save wiped code
+	wipe = "!f() { rev=$(git rev-parse ${1-HEAD}); git add -A && git commit --allow-empty -qm 'WIPE SAVEPOINT' && git reset $rev --hard; }; f"
+	# Deletes all branches already merged into master
+	bclean = "!f() { git branch --merged ${1-master} | grep -v  ${1-master}$ | xargs -r git branch -d; }; f"
+	bdone = "!f() { git checkout ${1-master} && git up && git bclean ${1-master}; }; f"
+    
+	propre = "!f() { git fetch --prune && git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -d }; f"
+	
+	# contribution
+	who = shortlog -sne
+	# List contributors with number of commits
+	authors = log --format=%aN <%aE> | sort -u
+	contributors = shortlog -e --summary --numbered
+	# List of organisation
+	organisation = "!f() { git log --pretty='%aN <%aE>' | git -c mailmap.file=.organizationmap check-mailmap --stdin | sort | uniq -c | sort -rn | nl; }; f"
+	tree = log --graph --decorate --pretty=oneline --abbrev-commit
+	ftree = log --graph --pretty=format':%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset' --all
+	
+	# reset local branches
+	resetorigin = !git fetch origin && git reset --hard origin/master && git clean -f -d
+	resetupstream = !git fetch upstream && git reset --hard upstream/master && git clean -f -d
+    
+	prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d
+	cleanup = !git branch --merged | grep  -v '\\*\\|master\\|develop' | xargs -n 1 git branch -d
+	both-merged = !git-both-merged
+	both-unmerged = !git-both-unmerged
+
+	# uses https://www.npmjs.com/package/git-branch-status
+	branch-status = git-branch-status
+	# https://www.npmjs.com/package/git-removed-branches
+	# https://www.npmjs.com/package/check-it-out/v/0.7.2
+
+	hash = "!f() { ORIGIN=$(git config --get remote.origin.url); git ls-remote $ORIGIN HEAD | awk '{ print $1 }'; }; f"
+	origin = config --get remote.origin.url
+
+  branch-name = branch --show-current
+  set-upstream = !git branch --set-upstream-to=origin/$(git branch --show-current) $(git branch --show-current)
+	change-commits = "!f() { VAR=$1; OLD=$2; NEW=$3; shift 3; git filter-branch --env-filter \"if [[ \\\"$`echo $VAR`\\\" = '$OLD' ]]; then export $VAR='$NEW'; fi\" $@; }; f"
+
+[rerere]
+	enabled = true
+
+[log]
+	mailmap = true
+
+[mailmap]
+	file = /Users/{{ .username }}/.mailmap
+
+[rebase]
+	autosquash = true
+
+[help]
+	autocorrect = 1
+
+[init]
+	# templatedir = ~/.git/.git-template
+	defaultBranch = main
+
+[credential]
+	helper = osxkeychain
+
+[pager]
+	diff = delta
+	log = delta
+	reflog = delta
+	show = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	features = side-by-side line-numbers decorations
+	whitespace-error-style = 22 reverse
+
+[delta "decorations"]
+	commit-decoration-style = bold yellow box ul
+	file-style = bold yellow ul
+	file-decoration-style = none
+
+[pull]
+	ff = only
+
+[commit]
+	gpgsign = true
+
+[gpg]
+	format = ssh
+
+[push]
+	autoSetupRemote = true

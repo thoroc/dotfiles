@@ -1,0 +1,22 @@
+
+# export LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib"
+# export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include"
+
+source "/Users/{{ .username }}/.zshenv"
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# SSH config 
+# ---------------------------------------------------------------------------------------------------------------------
+# If your ssh keys are not being added automatically then uncomment the following:
+#/usr/bin/ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+#/usr/bin/ssh-add --apple-use-keychain ~/.ssh/id_ed25519_gitlab
+#/usr/bin/ssh-add --apple-use-keychain ~/.ssh/id_rsa
+/usr/bin/ssh-add --apple-load-keychain -q
+
+# Keychain
+# /usr/local/bin/keychain /Users/{{ .username }}/.ssh/id_rsa
+# source /Users/{{ .username }}/.keychain/id_rsa
+
+
+

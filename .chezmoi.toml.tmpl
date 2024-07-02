@@ -1,0 +1,12 @@
+{{- $email := promptStringOnce . "email" "Email address" -}}
+{{- $username := promptStringOnce . "username" "Username" -}}
+{{- $gh_email := promptStringOnce . "gh_email" "GitHub email address" -}}
+{{- $gh_username := promptStringOnce . "gh_username" "GitHub username" -}}
+{{- $work_project_dir := promptStringOnce . "work_project_dir" "Work project directory (without home prefix or trailing slash)" -}}
+
+[data]
+    email = {{ $email | quote }}
+    username = {{ $username | quote }}
+    gh_email = {{ $gh_email | quote }}
+    gh_username = {{ $gh_username | quote }}
+    work_project_dir = {{ $work_project_dir | quote }}
