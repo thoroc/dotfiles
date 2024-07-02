@@ -53,7 +53,7 @@ brew "azure-cli"
 brew "bash-completion"
 # C library implementing the SSH2 protocol
 brew "libssh2"
-{{ if eq .enable_bat true -}}
+{{ if eq .enable.bat true -}}
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 {{ end -}}
@@ -67,7 +67,7 @@ brew "binutils"
 brew "bit-git"
 # Collection of portable C++ source libraries
 brew "boost"
-{{ if eq .enable_broot true -}}
+{{ if eq .enable.broot true -}}
 # New way to see and navigate directory trees
 brew "broot"
 {{ end -}}
@@ -211,7 +211,7 @@ brew "hdf5"
 brew "htop"
 # Cost estimates for Terraform
 brew "infracost"
-{{ if eq .enable_jenv true -}}
+{{ if eq .enable.jenv true -}}
 # Manage your Java environment
 brew "jenv"
 {{ end -}}

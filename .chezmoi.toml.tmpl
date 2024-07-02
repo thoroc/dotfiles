@@ -4,10 +4,12 @@
 {{- $gh_username := promptStringOnce . "gh_username" "GitHub username" -}}
 {{- $projects_dir := promptStringOnce . "projects_dir" "Work project directory (name of directory for the work projects)" -}}
 {{- $gh_projects_dir := promptStringOnce . "gh_projects_dir" "GitHub project directory (name of directory for the GitHub projects)" -}}
-{{- $enable_bat := promptBoolOnce . "enable_bat" "Enable bat as a cat replacement (y/n)" -}}
-{{- $enable_nix := promptBoolOnce . "enable_nix" "Enable nix as a package manager (y/n)" -}}
-{{- $enable_broot := promptBoolOnce . "enable_broot" "Enable broot as a tree alternative (y/n)" -}}
-{{- $enable_jenv := promptBoolOnce . "enable_jenv" "Enable jenv as a Java version manager (y/n)" -}}
+
+; enable
+{{- $bat := promptBoolOnce .enable "bat" "Enable bat as a cat replacement (y/n)" -}}
+{{- $nix := promptBoolOnce .enable "nix" "Enable nix as a package manager (y/n)" -}}
+{{- $broot := promptBoolOnce .enable "broot" "Enable broot as a tree alternative (y/n)" -}}
+{{- $jenv := promptBoolOnce .enable "jenv" "Enable jenv as a Java version manager (y/n)" -}}
 
 [data]
     email = {{ $email | quote }}
@@ -16,7 +18,9 @@
     gh_email = {{ $gh_email | quote }}
     gh_username = {{ $gh_username | quote }}
     gh_projects_dir = {{ $gh_projects_dir | quote }}
-    enable_bat = {{ $enable_bat }}
-    enable_nix = {{ $enable_nix }}
-    enable_broot = {{ $enable_broot }}
-    enable_jenv = {{ $enable_jenv }}
+
+[data.enable]
+    bat = {{ $bat }}
+    nix = {{ $nix }}
+    broot = {{ $broot }}
+    jenv = {{ $jenv }}
