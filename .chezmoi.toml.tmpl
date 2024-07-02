@@ -6,10 +6,12 @@
 {{- $gh_username := promptStringOnce . "user.github.name" "GitHub username" -}}
 {{- $gh_projects_dir := promptStringOnce . "gh_projects_dir" "GitHub project directory (name of directory for the GitHub projects)" -}}
 
-{{- $bat := promptBoolOnce . "enable.bat" "Enable bat as a cat replacement (y/n)" -}}
-{{- $nix := promptBoolOnce . "enable.nix" "Enable nix as a package manager (y/n)" -}}
-{{- $broot := promptBoolOnce . "enable.broot" "Enable broot as a tree alternative (y/n)" -}}
-{{- $jenv := promptBoolOnce . "enable.jenv" "Enable jenv as a Java version manager (y/n)" -}}
+{{- $bat := promptBoolOnce . "enable.tool.bat" "Enable bat as a cat replacement (y/n)" -}}
+{{- $nix := promptBoolOnce . "enable.tool.nix" "Enable nix as a package manager (y/n)" -}}
+{{- $broot := promptBoolOnce . "enable.tool.broot" "Enable broot as a tree alternative (y/n)" -}}
+{{- $jenv := promptBoolOnce . "enable.tool.jenv" "Enable jenv as a Java version manager (y/n)" -}}
+{{- $dasel := promptBoolOnce . "enable.tool.dasel" "Enable dasel as a jq alternative (y/n)" -}}
+
 {{- $golang := promptBoolOnce . "enable.lang.golang" "Enable Go as a programming language (y/n)" -}}
 {{- $rust := promptBoolOnce . "enable.lang.rust" "Enable Rust as a programming language (y/n)" -}}
 {{- $java := promptBoolOnce . "enable.lang.java" "Enable Java as a programming language (y/n)" -}}
@@ -26,11 +28,12 @@
   name = {{ $gh_username | quote }}
   email = {{ $gh_email | quote }}
 
-[data.enable]
+[data.enable.tool]
   bat = {{ $bat }}
   nix = {{ $nix }}
   broot = {{ $broot }}
   jenv = {{ $jenv }}
+  dasel = {{ $dasel }}
 
 [data.enable.lang]
   golang = {{ $golang }}

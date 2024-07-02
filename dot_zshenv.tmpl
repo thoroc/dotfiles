@@ -67,7 +67,7 @@ export HOMEBREW_AUTO_UPDATE_SECS="86400"
 export PATH="$(brew --prefix)/opt/curl/bin:$PATH"
 
 
-{{ if eq .enable.bat true -}}
+{{ if eq .enable.tool.bat true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # bat: https://github.com/sharkdp/bat
 # ---------------------------------------------------------------------------------------------------------------------
@@ -108,7 +108,7 @@ fi
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 
 
-{{ if eq .enable.nix true -}}
+{{ if eq .enable.tool.nix true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # Nix
 # ---------------------------------------------------------------------------------------------------------------------
@@ -184,7 +184,7 @@ export PATH="$CARGO_HOME/bin:$PATH"
 {{ end -}}
 
 
-{{ if eq .enable.broot true -}}
+{{ if eq .enable.tool.broot true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # broot: https://github.com/Canop/broot
 # ---------------------------------------------------------------------------------------------------------------------
@@ -202,14 +202,14 @@ source /Users/{{ .user.work.name }}/.config/broot/launcher/bash/br
 # fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"
 
 
+{{ if eq .enable.tool.dasel true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # dasel: https://github.com/TomWright/dasel
 # ---------------------------------------------------------------------------------------------------------------------
-# export fpath=(/Users/{{ .user.work.name }}/zsh/site-functions $fpath)
-
-# mkdir -p "/Users/{{ .user.work.name }}/zsh/site-functions"
-# dasel completion zsh > "/Users/{{ .user.work.name }}/zsh/site-functions/_dasel"
-
+export fpath=(/Users/{{ .user.work.name }}/zsh/site-functions $fpath)
+mkdir -p "/Users/{{ .user.work.name }}/zsh/site-functions"
+dasel completion zsh > "/Users/{{ .user.work.name }}/zsh/site-functions/_dasel"
+{{ end -}}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # fnm: https://github.com/Schniz/fnm replacement for nvm
@@ -235,7 +235,7 @@ eval "$(thefuck --alias)"
 eval "$(zoxide init --cmd cd zsh)"
 
 
-{{ if eq .enable.jenv true -}}
+{{ if eq .enable.tool.jenv true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # Jenv: https://github.com/jenv/jenv
 # ---------------------------------------------------------------------------------------------------------------------

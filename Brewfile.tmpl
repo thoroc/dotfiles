@@ -53,7 +53,7 @@ brew "azure-cli"
 brew "bash-completion"
 # C library implementing the SSH2 protocol
 brew "libssh2"
-{{ if eq .enable.bat true -}}
+{{ if eq .enable.tool.bat true -}}
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 {{ end -}}
@@ -67,7 +67,7 @@ brew "binutils"
 brew "bit-git"
 # Collection of portable C++ source libraries
 brew "boost"
-{{ if eq .enable.broot true -}}
+{{ if eq .enable.tool.broot true -}}
 # New way to see and navigate directory trees
 brew "broot"
 {{ end -}}
@@ -101,8 +101,10 @@ brew "cookiecutter"
 brew "corrosion"
 # Common UNIX Printing System
 brew "cups"
+{{ if eq .enable.tool.dasel true -}}
 # JSON, YAML, TOML, XML, and CSV query and modification tool
 brew "dasel"
+{{ end -}}
 # DDC monitor controls (brightness) for Mac OSX command-line
 brew "ddcctl"
 # Secure runtime for JavaScript and TypeScript
@@ -211,7 +213,7 @@ brew "hdf5"
 brew "htop"
 # Cost estimates for Terraform
 brew "infracost"
-{{ if eq .enable.jenv true -}}
+{{ if eq .enable.tool.jenv true -}}
 # Manage your Java environment
 brew "jenv"
 {{ end -}}
