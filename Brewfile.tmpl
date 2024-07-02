@@ -53,8 +53,10 @@ brew "azure-cli"
 brew "bash-completion"
 # C library implementing the SSH2 protocol
 brew "libssh2"
+{{ if eq .enable_bat true -}}
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+{{ end -}}
 # OpenType text shaping engine
 brew "harfbuzz"
 # Remove large files or passwords from Git history like git-filter-branch
@@ -65,8 +67,10 @@ brew "binutils"
 brew "bit-git"
 # Collection of portable C++ source libraries
 brew "boost"
+{{ if eq .enable_broot true -}}
 # New way to see and navigate directory trees
 brew "broot"
+{{ end -}}
 # GNU File, Shell, and Text utilities
 brew "coreutils"
 # Library to load and enumerate PKCS#11 modules
@@ -207,8 +211,10 @@ brew "hdf5"
 brew "htop"
 # Cost estimates for Terraform
 brew "infracost"
+{{ if eq .enable_jenv true -}}
 # Manage your Java environment
 brew "jenv"
+{{ end -}}
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Handy way to save and run project-specific commands

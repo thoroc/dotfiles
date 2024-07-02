@@ -10,7 +10,10 @@
 
 **target**: MacOS with webdev emphasis
 
-Inspiration: <https://github.com/politician/dotfiles/>
+Inspiration:
+
+- <https://github.com/politician/dotfiles/>
+- <https://github.com/federicober/dotfiles>
 
 ## Prerequisite
 
