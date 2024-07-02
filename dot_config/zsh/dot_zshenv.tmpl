@@ -102,10 +102,12 @@ fi
 # export PATH="/usr/local/opt/binutils/bin:$PATH"
 
 
+{{ if eq .enable.tool.vscode true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # VS Code
 # ---------------------------------------------------------------------------------------------------------------------
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
+{{ end -}}
 
 
 {{ if eq .enable.tool.nix true -}}
@@ -210,6 +212,7 @@ export fpath=({{- .chezmoi.homeDir -}}/zsh/site-functions $fpath)
 mkdir -p "{{- .chezmoi.homeDir -}}/zsh/site-functions"
 dasel completion zsh > "{{- .chezmoi.homeDir -}}/zsh/site-functions/_dasel"
 {{ end -}}
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 # fnm: https://github.com/Schniz/fnm replacement for nvm

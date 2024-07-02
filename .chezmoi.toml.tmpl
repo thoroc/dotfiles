@@ -11,6 +11,8 @@
 {{- $broot := promptBoolOnce . "enable.tool.broot" "Enable broot as a tree alternative (y/n)" -}}
 {{- $jenv := promptBoolOnce . "enable.tool.jenv" "Enable jenv as a Java version manager (y/n)" -}}
 {{- $dasel := promptBoolOnce . "enable.tool.dasel" "Enable dasel as a jq alternative (y/n)" -}}
+{{- $vscode := promptBoolOnce . "enable.tool.vscode" "Enable Visual Studio Code as a IDE (y/n)" -}}
+{{- $zed := promptBoolOnce . "enable.tool.zed" "Enable Zed as an IDE editor (y/n)" -}}
 
 {{- $golang := promptBoolOnce . "enable.lang.golang" "Enable Go as a programming language (y/n)" -}}
 {{- $rust := promptBoolOnce . "enable.lang.rust" "Enable Rust as a programming language (y/n)" -}}
@@ -34,6 +36,8 @@
   broot = {{ $broot }}
   jenv = {{ $jenv }}
   dasel = {{ $dasel }}
+  vscode = {{ $vscode }}
+  zed = {{ $zed }}
 
 [data.enable.lang]
   golang = {{ $golang }}

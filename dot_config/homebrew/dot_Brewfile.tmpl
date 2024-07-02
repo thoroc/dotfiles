@@ -236,7 +236,6 @@
   "trunk-io"
   "vlc"
   "whatsapp"
-  "zed"
   "zoom"
 -}}
 
@@ -253,12 +252,20 @@
 {{ $formulaes = concat $formulaes ( list "dasel" ) -}}
 {{ end -}}
 
-{{ if eq .enable.lang.golang true -}}
-{{ $formulaes = concat $formulaes ( list "go" ) -}}
-{{ end -}}
-
 {{ if eq .enable.tool.jenv true -}}
 {{ $formulaes = concat $formulaes ( list "jenv" ) -}}
+{{ end -}}
+
+{{ if eq .enable.tool.vscode true -}}
+{{ $casks = concat $casks ( list "visual-studio-code" ) -}}
+{{ end -}}
+
+{{ if eq .enable.tool.zed true -}}
+{{ $casks = concat $casks ( list "zed" ) -}}
+{{ end -}}
+
+{{ if eq .enable.lang.golang true -}}
+{{ $formulaes = concat $formulaes ( list "go" ) -}}
 {{ end -}}
 
 {{ if eq .enable.lang.java true -}}
