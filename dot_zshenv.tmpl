@@ -108,10 +108,12 @@ fi
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 
 
+{{ if eq .enable.nix true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # Nix
 # ---------------------------------------------------------------------------------------------------------------------
 export PATH="$PATH:/nix/var/nix/profiles/default/bin"
+{{ end -}}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -159,7 +161,8 @@ esac
 # ---------------------------------------------------------------------------------------------------------------------
 # Yarn
 # ---------------------------------------------------------------------------------------------------------------------
-export PATH="/Users/{{ .user.work.name }}/.yarn/bin:/Users/{{ .user.work.name }}/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="/Users/{{ .user.work.name }}/.yarn/bin:$PATH"
+export PATH="/Users/{{ .user.work.name }}/.config/yarn/global/node_modules/.bin:$PATH"
 
 
 {{ if eq .enable.lang.golang true -}}

@@ -257,10 +257,12 @@ brew "nghttp2"
 brew "nmap"
 # Optimized BLAS library
 brew "openblas"
+{{ if eq .enable.lang.java true -}}
 # Development kit for the Java programming language
 brew "openjdk@11"
 # Development kit for the Java programming language
 brew "openjdk@8"
+{{ end -}}
 # OpenBSD freely-licensed SSH connectivity tools
 brew "openssh"
 # Perl compatible regular expressions library
@@ -469,7 +471,9 @@ vscode "felixfbecker.php-intellisense"
 vscode "firsttris.vscode-jest-runner"
 vscode "folke.vscode-monorepo-workspace"
 vscode "formulahendry.code-runner"
+{{ if eq .enable.lang.java true -}}
 vscode "georgewfraser.vscode-javac"
+{{ end -}}
 vscode "ginfuru.ginfuru-better-solarized-dark-theme"
 vscode "github.copilot"
 vscode "github.copilot-chat"
@@ -590,11 +594,13 @@ vscode "tushortz.python-extended-snippets"
 vscode "twxs.cmake"
 vscode "usernamehw.errorlens"
 vscode "visualstudioexptteam.vscodeintellicode"
+{{ if eq .enable.lang.java true -}}
 vscode "vscjava.vscode-java-debug"
 vscode "vscjava.vscode-java-dependency"
 vscode "vscjava.vscode-java-pack"
 vscode "vscjava.vscode-java-test"
 vscode "vscjava.vscode-maven"
+{{ end -}}
 vscode "vscode-icons-team.vscode-icons"
 vscode "whatwedo.twig"
 vscode "wholroyd.jinja"
