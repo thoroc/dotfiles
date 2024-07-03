@@ -8,6 +8,8 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+This repository uses [chezmoi](https://www.chezmoi.io/)
+
 **target**: MacOS with webdev emphasis
 
 Inspiration:
@@ -15,6 +17,7 @@ Inspiration:
 - <https://github.com/politician/dotfiles/>
 - <https://github.com/federicober/dotfiles>
 - <https://github.com/m0lson84/dotfiles>
+- <https://macos-defaults.com/>
 
 ## Prerequisite
 
@@ -26,7 +29,8 @@ install the following if not already present on the machine
 
 ## Setup
 
-Run `chezmoi init`. That should prompt you to inform all the variables in `chezmoi.toml.tmpl` and save a new config file
-under: `~/.config/chezmoi.toml`.
+Run:
 
-Run `brew bundle install --file=~/.config/homebrew/.Brewfile` to install all the required softwares
+```sh
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply thoroc
+```
