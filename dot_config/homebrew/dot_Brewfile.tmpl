@@ -256,6 +256,10 @@
 {{-   $formulaes = concat $formulaes ( list "jenv" ) -}}
 {{- end -}}
 
+{{- if eq .enable.tool.lsd true -}}
+{{-   $formulaes = concat $formulaes ( list "lsd" ) -}}
+{{- end -}}
+
 {{- if eq .enable.tool.vscode true -}}
 {{-   $casks = concat $casks ( list "visual-studio-code" ) -}}
 {{- end -}}

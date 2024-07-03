@@ -11,6 +11,8 @@
 {{- $broot := promptBoolOnce . "enable.tool.broot" "Enable broot as a tree alternative (y/n)" -}}
 {{- $jenv := promptBoolOnce . "enable.tool.jenv" "Enable jenv as a Java version manager (y/n)" -}}
 {{- $dasel := promptBoolOnce . "enable.tool.dasel" "Enable dasel as a jq alternative (y/n)" -}}
+{{- $lsd := promptBoolOnce . "enable.tool.lsd" "Enable lsd as a ls alternative (y/n)" -}}
+
 {{- $vscode := promptBoolOnce . "enable.tool.vscode" "Enable Visual Studio Code as a IDE (y/n)" -}}
 {{- $zed := promptBoolOnce . "enable.tool.zed" "Enable Zed as an IDE editor (y/n)" -}}
 
@@ -44,6 +46,7 @@
   nix = {{ $nix }}
   broot = {{ $broot }}
   jenv = {{ $jenv }}
+  lsd = {{ $lsd }}
   dasel = {{ $dasel }}
   vscode = {{ $vscode }}
   zed = {{ $zed }}

@@ -269,6 +269,9 @@ export PATH="$PATH:$RVM_HOME/bin"
 # ---------------------------------------------------------------------------------------------------------------------
 alias hal="ls -hal"
 alias le='eza --icons -F -H --group-directories-first --git -1'
+{{- if eq .enable.tool.lsd true -}}
+alias ls="lsd"
+{{- end -}}
 alias la="ls -A"
 alias ld="ls -d */"
 alias ll="ls -alF"
