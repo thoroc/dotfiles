@@ -220,10 +220,15 @@ dasel completion zsh > "{{- .chezmoi.homeDir -}}/zsh/site-functions/_dasel"
 eval "$(fnm env --use-on-cd)"
 
 
+{{-if eq .tools.prompt "starship" -}}
 # ---------------------------------------------------------------------------------------------------------------------
-# Starship
+# Starship: https://starship.rs/
 # ---------------------------------------------------------------------------------------------------------------------
+if [ -f "{{- .chezmoi.homeDir -}}/.config/starship/starship.toml" ]; then
+    export STARSHIP_CONFIG="{{- .chezmoi.homeDir -}}/.config/starship/starship.toml"
+fi
 eval "$(starship init zsh)"
+{{- end -}}
 
 
 # ---------------------------------------------------------------------------------------------------------------------

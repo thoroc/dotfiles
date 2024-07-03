@@ -32,6 +32,13 @@
   name = {{ $gh_username | quote }}
   email = {{ $gh_email | quote }}
 
+# we want to try and allow other shells/prompts to be used
+[data.tools]
+  shell = "zsh" # or "bash" or "fish"
+  prompt = "starship"
+  terminal = "warp" # or "iterm2" or "alacritty"
+  editor = "vscode" # or "vim" or "zed" or "sublime" or "atom"
+
 [data.enable.tool]
   bat = {{ $bat }}
   nix = {{ $nix }}
