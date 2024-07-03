@@ -4,6 +4,8 @@
 # Set default screenshot location
 mkdir -p ~/Pictures/Screenshots
 defaults write com.apple.screencapture "location" -string "~/Pictures/Screenshots" && killall SystemUIServer
+# set to alwys show hidden files
+defaults write -g AppleShowAllFiles -bool true
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -33,10 +35,13 @@ defaults write com.apple.dock persistent-others -array
 # Clear Dock of all default apps icons
 defaults write com.apple.dock persistent-apps -array
 # default apps that one might like: MS Teams, Outlook, Firefox, Chrome, VScode
-{{- $default_docks_ apps := list "Microsoft Teams.app" "Microsoft Outlook.app" "Firefox.app" "Google Chrome.app" "Visual Studio Code.app" -}}
+# Those can be either from /Applications or /System/Applications
+{{- $default_docks_apps := list "Microsoft Teams.app" "Microsoft Outlook.app" "Firefox.app" "Google Chrome.app" "Visual Studio Code.app" -}}
 {{- for $app in $default_docks_apps -}}
 defaults write com.apple.dock persistent-apps -array-add '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>file:///Applications/{{ $app }}.app/</string><key>_CFURLStringType</key><integer>15</integer></dict></dict></dict>'
 {{- end -}}
+
+killall Dock
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -56,3 +61,5 @@ sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdate
 sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate ScheduleFrequency -int 1
 # Install app updates automatically
 defaults write com.apple.commerce AutoUpdate -bool true
+
+killall Finder
