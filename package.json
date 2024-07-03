@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Chezmoi for devs macos",
   "scripts": {
+    "init": "chezmoi init",
+    "plan": "chezmoi diff",
+    "apply": "chezmoi apply",
     "format": "prettier --write README.md",
     "prepare": "npx lefthook install"
   },
