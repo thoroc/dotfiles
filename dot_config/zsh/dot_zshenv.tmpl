@@ -267,16 +267,18 @@ export PATH="$PATH:$RVM_HOME/bin"
 # ---------------------------------------------------------------------------------------------------------------------
 # aliases
 # ---------------------------------------------------------------------------------------------------------------------
-alias hal="ls -hal"
 alias le='eza --icons -F -H --group-directories-first --git -1'
 {{- if eq .enable.tool.lsd true -}}
 alias ls="lsd"
+{{- else if eq .enable.tool.eza true -}}
+alias ls="eza"
 {{- end -}}
+alias hal="ls -hal"
 alias la="ls -A"
 alias ld="ls -d */"
 alias ll="ls -alF"
 alias ls="ls --color"
-alias lt="eza --tree --level=2 . --icons"
+# alias lt="eza --tree --level=2 . --icons"
 
 alias dc="docker compose"
 alias docker-list-containers="docker ps -a"

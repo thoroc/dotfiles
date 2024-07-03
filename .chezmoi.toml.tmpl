@@ -7,11 +7,12 @@
 {{- $gh_projects_dir := promptStringOnce . "gh_projects_dir" "GitHub project directory (name of directory for the GitHub projects)" -}}
 
 {{- $bat := promptBoolOnce . "enable.tool.bat" "Enable bat as a cat replacement (y/n)" -}}
-{{- $nix := promptBoolOnce . "enable.tool.nix" "Enable nix as a package manager (y/n)" -}}
 {{- $broot := promptBoolOnce . "enable.tool.broot" "Enable broot as a tree alternative (y/n)" -}}
-{{- $jenv := promptBoolOnce . "enable.tool.jenv" "Enable jenv as a Java version manager (y/n)" -}}
 {{- $dasel := promptBoolOnce . "enable.tool.dasel" "Enable dasel as a jq alternative (y/n)" -}}
+{{- $eza := promptBoolOnce . "enable.tool.eza" "Enable eza as a ls alternative (y/n)" -}}
+{{- $jenv := promptBoolOnce . "enable.tool.jenv" "Enable jenv as a Java version manager (y/n)" -}}
 {{- $lsd := promptBoolOnce . "enable.tool.lsd" "Enable lsd as a ls alternative (y/n)" -}}
+{{- $nix := promptBoolOnce . "enable.tool.nix" "Enable nix as a package manager (y/n)" -}}
 
 {{- $vscode := promptBoolOnce . "enable.tool.vscode" "Enable Visual Studio Code as a IDE (y/n)" -}}
 {{- $zed := promptBoolOnce . "enable.tool.zed" "Enable Zed as an IDE editor (y/n)" -}}
@@ -23,36 +24,43 @@
 {{- $java := promptBoolOnce . "enable.lang.java" "Enable Java as a programming language (y/n)" -}}
 
 [data]
-  projects_dir = {{ $projects_dir | quote }}
-  gh_projects_dir = {{ $gh_projects_dir | quote }}
+  projects_dir = {{- $projects_dir | quote -}}
+  gh_projects_dir = {{- $gh_projects_dir | quote -}}
 
 [data.user.work]
-  name = {{ $username | quote }}
-  email = {{ $email | quote }}
+  name = {{- $username | quote -}}
+  email = {{- $email | quote -}}
 
 [data.user.github]
-  name = {{ $gh_username | quote }}
-  email = {{ $gh_email | quote }}
+  name = {{- $gh_username | quote -}}
+  email = {{- $gh_email | quote -}}
 
-# we want to try and allow other shells/prompts to be used
 [data.tools]
-  shell = "zsh" # or "bash" or "fish"
+{{- /* we want to try and allow other shells/prompts to be used */ -}}
+{{- /* shell = "zsh" or "bash" or "fish" */ -}}
+  shell = "zsh"
+{{- /* prompt = "starship" */ -}}
   prompt = "starship"
-  terminal = "warp" # or "iterm2" or "alacritty"
-  editor = "vscode" # or "vim" or "zed" or "sublime" or "atom"
+{{- /* terminal = "warp" or "iterm2" or "alacritty" */ -}}
+  terminal = "warp"
+{{- /* editor = "vscode" or "vim" or "zed" or "sublime" or "atom" */ -}}
+  editor = "vscode"
+{{- /* list = "lsd" or "exa" or "lsd" or "dust" or "dircolors" */ -}}
+  list = "lsd"
 
 [data.enable.tool]
-  bat = {{ $bat }}
-  nix = {{ $nix }}
-  broot = {{ $broot }}
-  jenv = {{ $jenv }}
-  lsd = {{ $lsd }}
-  dasel = {{ $dasel }}
-  vscode = {{ $vscode }}
-  zed = {{ $zed }}
-  one_drive = {{ $one_drive }}
+  bat = {{- $bat -}}
+  broot = {{- $broot -}}
+  dasel = {{- $dasel -}}
+  eza = {{- $eza -}}
+  jenv = {{- $jenv -}}
+  lsd = {{- $lsd -}}
+  nix = {{- $nix -}}
+  one_drive = {{- $one_drive -}}
+  vscode = {{- $vscode -}}
+  zed = {{- $zed -}}
 
 [data.enable.lang]
-  golang = {{ $golang }}
-  rust = {{ $rust }}
-  java = {{ $java }}
+  golang = {{- $golang -}}
+  rust = {{- $rust -}}
+  java = {{- $java -}}
