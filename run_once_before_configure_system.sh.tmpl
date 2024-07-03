@@ -36,8 +36,8 @@ defaults write com.apple.dock persistent-others -array
 defaults write com.apple.dock persistent-apps -array
 # default apps that one might like: MS Teams, Outlook, Firefox, Chrome, VScode
 # Those can be either from /Applications or /System/Applications
-{{- $default_docks_apps := list "Microsoft Teams.app" "Microsoft Outlook.app" "Firefox.app" "Google Chrome.app" "Visual Studio Code.app" -}}
-{{- for $app in $default_docks_apps -}}
+{{- $default_docks_apps := list "Microsoft Teams" "Microsoft Outlook" "Firefox" "Google Chrome" "Visual Studio Code" -}}
+{{- range $app := $default_docks_apps -}}
 defaults write com.apple.dock persistent-apps -array-add '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>file:///Applications/{{ $app }}.app/</string><key>_CFURLStringType</key><integer>15</integer></dict></dict></dict>'
 {{- end -}}
 
