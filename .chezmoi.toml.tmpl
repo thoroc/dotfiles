@@ -14,6 +14,8 @@
 {{- $vscode := promptBoolOnce . "enable.tool.vscode" "Enable Visual Studio Code as a IDE (y/n)" -}}
 {{- $zed := promptBoolOnce . "enable.tool.zed" "Enable Zed as an IDE editor (y/n)" -}}
 
+{{- $one_drive := promptBoolOnce . "enable.tool.one_drive" "Enable OneDrive autostart (y/n)" -}}
+
 {{- $golang := promptBoolOnce . "enable.lang.golang" "Enable Go as a programming language (y/n)" -}}
 {{- $rust := promptBoolOnce . "enable.lang.rust" "Enable Rust as a programming language (y/n)" -}}
 {{- $java := promptBoolOnce . "enable.lang.java" "Enable Java as a programming language (y/n)" -}}
@@ -38,6 +40,7 @@
   dasel = {{ $dasel }}
   vscode = {{ $vscode }}
   zed = {{ $zed }}
+  one_drive = {{ $one_drive }}
 
 [data.enable.lang]
   golang = {{ $golang }}
