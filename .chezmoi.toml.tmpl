@@ -1,66 +1,70 @@
-{{- $email := promptStringOnce . "user.work.email" "Email address" -}}
-{{- $username := promptStringOnce . "user.work.name" "Username" -}}
-{{- $projects_dir := promptStringOnce . "projects_dir" "Work project directory (name of directory for the work projects)" -}}
+{{- $email := promptStringOnce . "user.work.email" "Email address" "john.doe@example.com" -}}
+{{- $username := promptStringOnce . "user.work.name" "Username" "john.doe" -}}
+{{- $projects_dir := promptStringOnce . "projects_dir" "Work project directory (name of directory for the work projects)" "acme" -}}
 
-{{- $gh_email := promptStringOnce . "user.github.email" "GitHub email address" -}}
-{{- $gh_username := promptStringOnce . "user.github.name" "GitHub username" -}}
-{{- $gh_projects_dir := promptStringOnce . "gh_projects_dir" "GitHub project directory (name of directory for the GitHub projects)" -}}
+{{- $gh_email := promptStringOnce . "user.github.email" "GitHub email address" "john.doe@example.com" -}}
+{{- $gh_username := promptStringOnce . "user.github.name" "GitHub username" "john.doe" -}}
+{{- $gh_projects_dir := promptStringOnce . "gh_projects_dir" "GitHub project directory (name of directory for the GitHub projects)" "github" -}}
 
-{{- $bat := promptBoolOnce . "enable.tool.bat" "Enable bat as a cat replacement (y/n)" -}}
-{{- $broot := promptBoolOnce . "enable.tool.broot" "Enable broot as a tree alternative (y/n)" -}}
-{{- $dasel := promptBoolOnce . "enable.tool.dasel" "Enable dasel as a jq alternative (y/n)" -}}
-{{- $eza := promptBoolOnce . "enable.tool.eza" "Enable eza as a ls alternative (y/n)" -}}
-{{- $jenv := promptBoolOnce . "enable.tool.jenv" "Enable jenv as a Java version manager (y/n)" -}}
-{{- $lsd := promptBoolOnce . "enable.tool.lsd" "Enable lsd as a ls alternative (y/n)" -}}
-{{- $nix := promptBoolOnce . "enable.tool.nix" "Enable nix as a package manager (y/n)" -}}
+{{- $bat := promptBoolOnce . "enable.tool.bat" "Enable bat as a cat replacement (y/n)" true -}}
+{{- $broot := promptBoolOnce . "enable.tool.broot" "Enable broot as a tree alternative (y/n)" false -}}
+{{- $dasel := promptBoolOnce . "enable.tool.dasel" "Enable dasel as a jq alternative (y/n)" false -}}
+{{- $eza := promptBoolOnce . "enable.tool.eza" "Enable eza as a ls alternative (y/n)" true -}}
+{{- $jenv := promptBoolOnce . "enable.tool.jenv" "Enable jenv as a Java version manager (y/n)" false -}}
+{{- $lsd := promptBoolOnce . "enable.tool.lsd" "Enable lsd as a ls alternative (y/n)" false -}}
+{{- $nix := promptBoolOnce . "enable.tool.nix" "Enable nix as a package manager (y/n)" false -}}
 
-{{- $vscode := promptBoolOnce . "enable.tool.vscode" "Enable Visual Studio Code as a IDE (y/n)" -}}
-{{- $zed := promptBoolOnce . "enable.tool.zed" "Enable Zed as an IDE editor (y/n)" -}}
+{{- $vscode := promptBoolOnce . "enable.tool.vscode" "Enable Visual Studio Code as a IDE (y/n)" true -}}
+{{- $zed := promptBoolOnce . "enable.tool.zed" "Enable Zed as an IDE editor (y/n)" true -}}
 
-{{- $one_drive := promptBoolOnce . "enable.tool.one_drive" "Enable OneDrive autostart (y/n)" -}}
+{{- $one_drive := promptBoolOnce . "enable.tool.one_drive" "Enable OneDrive autostart (y/n)" false -}}
 
-{{- $golang := promptBoolOnce . "enable.lang.golang" "Enable Go as a programming language (y/n)" -}}
-{{- $rust := promptBoolOnce . "enable.lang.rust" "Enable Rust as a programming language (y/n)" -}}
-{{- $java := promptBoolOnce . "enable.lang.java" "Enable Java as a programming language (y/n)" -}}
+{{- $nodejs := promptBoolOnce . "enable.lang.nodejs" "Enable NodeJS as a programming language (Y/n)" true -}}
+{{- $python := promptBoolOnce . "enable.lang.python" "Enable Python as a programming language (Y/n)" true -}}
+{{- $golang := promptBoolOnce . "enable.lang.golang" "Enable Go as a programming language (Y/n)" true -}}
+{{- $rust := promptBoolOnce . "enable.lang.rust" "Enable Rust as a programming language (Y/n)" true -}}
+{{- $java := promptBoolOnce . "enable.lang.java" "Enable Java as a programming language (N/n)" false -}}
 
 [data]
-  projects_dir = {{- $projects_dir | quote -}}
-  gh_projects_dir = {{- $gh_projects_dir | quote -}}
+projects_dir = {{ $projects_dir | quote }}
+gh_projects_dir = {{ $gh_projects_dir | quote }}
 
 [data.user.work]
-  name = {{- $username | quote -}}
-  email = {{- $email | quote -}}
+name = {{ $username | quote }}
+email = {{ $email | quote }}
 
 [data.user.github]
-  name = {{- $gh_username | quote -}}
-  email = {{- $gh_email | quote -}}
+name = {{ $gh_username | quote }}
+email = {{ $gh_email | quote }}
 
 [data.tools]
-{{- /* we want to try and allow other shells/prompts to be used */ -}}
-{{- /* shell = "zsh" or "bash" or "fish" */ -}}
-  shell = "zsh"
-{{- /* prompt = "starship" */ -}}
-  prompt = "starship"
-{{- /* terminal = "warp" or "iterm2" or "alacritty" */ -}}
-  terminal = "warp"
-{{- /* editor = "vscode" or "vim" or "zed" or "sublime" or "atom" */ -}}
-  editor = "vscode"
-{{- /* list = "lsd" or "exa" or "lsd" or "dust" or "dircolors" */ -}}
-  list = "lsd"
+# we want to try and allow other shells/prompts to be used
+# "zsh" or "bash" or "fish"
+shell = "zsh"
+# "starship"
+prompt = "starship"
+# "warp" or "iterm2" or "alacritty" or "kitty" or "hyper" or "terminal"
+terminal = "warp"
+# "vscode" or "vim" or "zed" or "sublime" or "atom"
+editor = "vscode"
+# "lsd" or "exa" or "lsd" or "dust" or "dircolors"
+list = "lsd"
 
 [data.enable.tool]
-  bat = {{- $bat -}}
-  broot = {{- $broot -}}
-  dasel = {{- $dasel -}}
-  eza = {{- $eza -}}
-  jenv = {{- $jenv -}}
-  lsd = {{- $lsd -}}
-  nix = {{- $nix -}}
-  one_drive = {{- $one_drive -}}
-  vscode = {{- $vscode -}}
-  zed = {{- $zed -}}
+bat = {{ $bat }}
+broot = {{ $broot }}
+dasel = {{ $dasel }}
+eza = {{ $eza }}
+jenv = {{ $jenv }}
+lsd = {{ $lsd }}
+nix = {{ $nix }}
+one_drive = {{ $one_drive }}
+vscode = {{ $vscode }}
+zed = {{ $zed }}
 
 [data.enable.lang]
-  golang = {{- $golang -}}
-  rust = {{- $rust -}}
-  java = {{- $java -}}
+nodejs = {{ $nodejs }}
+python = {{ $python }}
+golang = {{ $golang }}
+rust = {{ $rust }}
+java = {{ $java }}
