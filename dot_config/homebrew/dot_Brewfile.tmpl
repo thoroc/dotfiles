@@ -1,4 +1,4 @@
-{{ $taps := list 
+{{- $taps := list 
   "aws/tap"
   "buo/cask-upgrade"
   "dagger/tap"
@@ -20,7 +20,7 @@
   "tylerbrock/saw"
 -}}
 
-{{ $formulaes := list
+{{- $formulaes := list
   "act"
   "pycparser"
   "cffi"
@@ -215,7 +215,7 @@
   "zoom"
 -}}
 
-{{ $casks := list 
+{{- $casks := list 
   "alt-tab"
   "applite"
   "docker"
@@ -240,37 +240,37 @@
 -}}
 
 
-{{ if eq .enable.tool.bat true -}}
-{{ $formulaes = concat $formulaes ( list "bat" ) -}}
-{{ end -}}
+{{- if eq .enable.tool.bat true -}}
+{{-   $formulaes = concat $formulaes ( list "bat" ) -}}
+{{- end -}}
 
-{{ if eq .enable.tool.broot true -}}
-{{ $formulaes = concat $formulaes ( list "broot" ) -}}
-{{ end -}}
+{{- if eq .enable.tool.broot true -}}
+{{-   $formulaes = concat $formulaes ( list "broot" ) -}}
+{{- end -}}
 
-{{ if eq .enable.tool.dasel true -}}
-{{ $formulaes = concat $formulaes ( list "dasel" ) -}}
-{{ end -}}
+{{- if eq .enable.tool.dasel true -}}
+{{-   $formulaes = concat $formulaes ( list "dasel" ) -}}
+{{- end -}}
 
-{{ if eq .enable.tool.jenv true -}}
-{{ $formulaes = concat $formulaes ( list "jenv" ) -}}
-{{ end -}}
+{{- if eq .enable.tool.jenv true -}}
+{{-   $formulaes = concat $formulaes ( list "jenv" ) -}}
+{{- end -}}
 
-{{ if eq .enable.tool.vscode true -}}
-{{ $casks = concat $casks ( list "visual-studio-code" ) -}}
-{{ end -}}
+{{- if eq .enable.tool.vscode true -}}
+{{-   $casks = concat $casks ( list "visual-studio-code" ) -}}
+{{- end -}}
 
-{{ if eq .enable.tool.zed true -}}
-{{ $casks = concat $casks ( list "zed" ) -}}
-{{ end -}}
+{{- if eq .enable.tool.zed true -}}
+{{-   $casks = concat $casks ( list "zed" ) -}}
+{{- end -}}
 
-{{ if eq .enable.lang.golang true -}}
-{{ $formulaes = concat $formulaes ( list "go" ) -}}
-{{ end -}}
+{{- if eq .enable.lang.golang true -}}
+{{-   $formulaes = concat $formulaes ( list "go" ) -}}
+{{- end -}}
 
-{{ if eq .enable.lang.java true -}}
-{{ $formulaes = concat $formulaes ( list "openjdk@11" "openjdk@8" ) -}}
-{{ end -}}
+{{- if eq .enable.lang.java true -}}
+{{-   $formulaes = concat $formulaes ( list "openjdk@11" "openjdk@8" ) -}}
+{{- end -}}
 
 #    ______                    __ _ _
 #    | ___ \                  / _(_) |
@@ -282,19 +282,19 @@
 #
 
 {{- /* Taps */ -}}
-{{- range ( $taps | sortAlpha | uniq ) }}
+{{- range ( $taps | sortAlpha | uniq ) -}}
 tap "{{ . }}"
 {{- end }}
 
 {{- /* Formula */ -}}
-{{- range ( $formulaes | sortAlpha | uniq ) }}
+{{- range ( $formulaes | sortAlpha | uniq ) -}}
 brew "{{ . }}"
 {{- end }}
 
 {{- /* Casks */ -}}
-{{- range ( $casks | sortAlpha | uniq ) }}
+{{- range ( $casks | sortAlpha | uniq ) -}}
 cask "{{ . }}"
-{{- end }}
+{{- end -}}
 
 {{- /* Mac App Store */ -}}
 mas "Boop", id: 1518425043

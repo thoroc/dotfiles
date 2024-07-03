@@ -67,7 +67,7 @@ export HOMEBREW_AUTO_UPDATE_SECS="86400"
 export PATH="$(brew --prefix)/opt/curl/bin:$PATH"
 
 
-{{ if eq .enable.tool.bat true -}}
+{{- if eq .enable.tool.bat true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # bat: https://github.com/sharkdp/bat
 # ---------------------------------------------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 alias cat="bat --theme=\$(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo default || echo GitHub)"
 alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
 alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
-{{ end -}}
+{{- end -}}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -102,20 +102,20 @@ fi
 # export PATH="/usr/local/opt/binutils/bin:$PATH"
 
 
-{{ if eq .enable.tool.vscode true -}}
+{{- if eq .enable.tool.vscode true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # VS Code
 # ---------------------------------------------------------------------------------------------------------------------
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
-{{ end -}}
+{{- end -}}
 
 
-{{ if eq .enable.tool.nix true -}}
+{{- if eq .enable.tool.nix true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # Nix
 # ---------------------------------------------------------------------------------------------------------------------
 export PATH="$PATH:/nix/var/nix/profiles/default/bin"
-{{ end -}}
+{{- end -}}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -167,31 +167,31 @@ export PATH="{{- .chezmoi.homeDir -}}/.yarn/bin:$PATH"
 export PATH="{{- .chezmoi.homeDir -}}/.config/yarn/global/node_modules/.bin:$PATH"
 
 
-{{ if eq .enable.lang.golang true -}}
+{{- if eq .enable.lang.golang true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # golang
 # ---------------------------------------------------------------------------------------------------------------------
 export GOPATH="{{- .chezmoi.homeDir -}}/go" 
 export PATH="$PATH:$GOPATH/bin"
-{{ end -}}
+{{- end -}}
 
 
-{{ if eq .enable.lang.rust true -}}
+{{- if eq .enable.lang.rust true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # Cargo the rust tool
 # ---------------------------------------------------------------------------------------------------------------------
 export CARGO_HOME="{{- .chezmoi.homeDir -}}/.cargo"
 export PATH="$CARGO_HOME/bin:$PATH"
 [[ -s "$CARGO_HOME" ]] && source "{{- .chezmoi.homeDir -}}/.cargo/env"
-{{ end -}}
+{{- end -}}
 
 
-{{ if eq .enable.tool.broot true -}}
+{{- if eq .enable.tool.broot true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # broot: https://github.com/Canop/broot
 # ---------------------------------------------------------------------------------------------------------------------
 source {{- .chezmoi.homeDir -}}/.config/broot/launcher/bash/br
-{{ end -}}
+{{- end -}}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -204,14 +204,14 @@ source {{- .chezmoi.homeDir -}}/.config/broot/launcher/bash/br
 # fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"
 
 
-{{ if eq .enable.tool.dasel true -}}
+{{- if eq .enable.tool.dasel true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # dasel: https://github.com/TomWright/dasel
 # ---------------------------------------------------------------------------------------------------------------------
 export fpath=({{- .chezmoi.homeDir -}}/zsh/site-functions $fpath)
 mkdir -p "{{- .chezmoi.homeDir -}}/zsh/site-functions"
 dasel completion zsh > "{{- .chezmoi.homeDir -}}/zsh/site-functions/_dasel"
-{{ end -}}
+{{- end -}}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -238,14 +238,14 @@ eval "$(thefuck --alias)"
 eval "$(zoxide init --cmd cd zsh)"
 
 
-{{ if eq .enable.tool.jenv true -}}
+{{- if eq .enable.tool.jenv true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # Jenv: https://github.com/jenv/jenv
 # ---------------------------------------------------------------------------------------------------------------------
 export PATH="{{- .chezmoi.homeDir -}}/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 jenv enable-plugin export
-{{ end -}}
+{{- end -}}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
