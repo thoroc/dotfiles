@@ -6,6 +6,8 @@ mkdir -p ~/Pictures/Screenshots
 defaults write com.apple.screencapture "location" -string "~/Pictures/Screenshots" && killall SystemUIServer
 # set to alwys show hidden files
 defaults write -g AppleShowAllFiles -bool true
+# Disable automatic capitalization
+defaults write -g NSAutomaticCapitalizationEnabled -bool false
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -63,5 +65,3 @@ sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdate
 sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate ScheduleFrequency -int 1
 # Install app updates automatically
 defaults write com.apple.commerce AutoUpdate -bool true
-
-killall Finder
