@@ -32,14 +32,16 @@ defaults write com.apple.dock "tilesize" -int 71
 defaults write com.apple.dock show-recents -bool false
 # Clear Dock of all default documents icons
 defaults write com.apple.dock persistent-others -array
-# Clear Dock of all default apps icons
-defaults write com.apple.dock persistent-apps -array
+# Clear Dock of all default apps icons and add instead some other apps
 # default apps that one might like: MS Teams, Outlook, Firefox, Chrome, VScode
 # Those can be either from /Applications or /System/Applications
+defaults write com.apple.dock persistent-apps -array\
 {{- $default_docks_apps := list "Microsoft Teams" "Microsoft Outlook" "Firefox" "Google Chrome" "Visual Studio Code" -}}
 {{- range $app := $default_docks_apps -}}
-defaults write com.apple.dock persistent-apps -array-add '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>file:///Applications/{{ $app }}.app/</string><key>_CFURLStringType</key><integer>15</integer></dict></dict></dict>'
+{{- printf "\n'<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>file:///Applications/%s.app/</string><key>_CFURLStringType</key><integer>15</integer></dict></dict></dict>'" $app -}}
 {{- end -}}
+
+{{- printf "\n" -}}
 
 killall Dock
 
