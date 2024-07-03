@@ -1,0 +1,37 @@
+# ---------------------------------------------------------------------------------------------------------------------
+# Global settings
+# ---------------------------------------------------------------------------------------------------------------------
+# Set default screenshot location
+mkdir -p ~/Pictures/Screenshots
+defaults write com.apple.screencapture "location" -string "~/Pictures/Screenshots" && killall SystemUIServer
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Security settings
+# ---------------------------------------------------------------------------------------------------------------------
+# Enable TouchID for sudo
+# ! grep -q pam_tid.so /etc/pam.d/sudo && sudo gsed -i '2iauth        sufficient     pam_tid.so' /etc/pam.d/sudo
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Dock settings: https://developer.apple.com/documentation/devicemanagement/dock
+# ---------------------------------------------------------------------------------------------------------------------
+# Set dock to autohide
+defaults write com.apple.dock autohide -bool true
+# Set dock to disable magnification
+defaults write com.apple.dock magnification -bool false
+# Minimize windows into their application’s icon
+defaults write com.apple.dock minimize-to-application -bool true
+# Set dock position
+defaults write com.apple.dock orientation -string "bottom"
+# Set the icon size of Dock items in pixels
+defaults write com.apple.dock "tilesize" -int 71
+# Don’t show recent applications in Dock
+defaults write com.apple.dock show-recents -bool false
+# Clear Dock of all default documents icons
+defaults write com.apple.dock persistent-others -array
+# Clear Dock of all default apps icons
+defaults write com.apple.dock persistent-apps -array
+# default apps that one might like: MS Teams, Outlook, Firefox, Chrome, VScode
+{{- $default_docks_ apps := list "Microsoft Teams.app" "Microsoft Outlook.app" "Firefox.app" "Google Chrome.app" "Visual Studio Code.app" -}}
+{{- for $app in $default_docks_apps -}}
+defaults write com.apple.dock persistent-apps -array-add '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>file:///Applications/{{ $app }}.app/</string><key>_CFURLStringType</key><integer>15</integer></dict></dict></dict>'
+{{- end -}}
