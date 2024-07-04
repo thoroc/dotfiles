@@ -15,7 +15,6 @@
   "mike-engel/jwt-cli"
   "minamijoyo/hcledit"
   "minamijoyo/tfupdate"
-  "mtslzr/marmaduke-chromium"
   "turbot/tap"
   "tylerbrock/saw"
 -}}
@@ -191,27 +190,6 @@
   "minamijoyo/hcledit/hcledit"
   "minamijoyo/tfupdate/tfupdate"
   "tylerbrock/saw/saw"
-  "alt-tab"
-  "applite"
-  "docker"
-  "fing"
-  "font-hack-nerd-font"
-  "iterm2"
-  "keepassxc"
-  "keycastr"
-  "leapp"
-  "marmaduke-chromium"
-  "obsidian"
-  "opera"
-  "postman"
-  "processing"
-  "spotter"
-  "stats"
-  "temurin"
-  "trunk-io"
-  "vlc"
-  "whatsapp"
-  "zoom"
 -}}
 
 {{- $casks := list 
@@ -224,9 +202,7 @@
   "keepassxc"
   "keycastr"
   "leapp"
-  "marmaduke-chromium"
   "obsidian"
-  "opera"
   "postman"
   "processing"
   "spotter"
@@ -238,6 +214,38 @@
   "zoom"
 -}}
 
+{{- if eq .tools.install.browser.brave true -}}
+{{-  $casks = concat $casks ( list "brave-browser" ) -}}
+{{- end -}}
+
+{{- if eq .tools.install.browser.firefox true -}}
+{{-   $casks = concat $casks ( list "firefox" ) -}}
+{{- end -}}
+
+{{- if eq .tools.install.browser.chrome true -}}
+{{-   $casks = concat $casks ( list "google-chrome" ) -}}
+{{- end -}}
+
+{{- if eq .tools.install.browser.chromium true -}}
+{{- /* Alternatively you may choose to select https://github.com/mtslzr/homebrew-marmaduke-chromium */ -}}
+{{-   $casks = concat $casks ( list "chromium" ) -}}
+{{- end -}}
+
+{{- if eq .tools.install.browser.edge true -}}
+{{-   $casks = concat $casks ( list "microsoft-edge" ) -}}
+{{- end -}}
+
+{{- if eq .tools.install.browser.vivaldi true -}}
+{{-   $casks = concat $casks ( list "vivaldi" ) -}}
+{{- end -}}
+
+{{- if eq .tools.install.browser.opera true -}}
+{{-   $casks = concat $casks ( list "opera" ) -}}
+{{- end -}}
+
+{{- if eq .tools.install.browser.arc true -}}
+{{-   $casks = concat $casks ( list "arc" ) -}}
+{{- end -}}
 
 {{- if eq .tools.enable.bat true -}}
 {{-   $formulaes = concat $formulaes ( list "bat" ) -}}
