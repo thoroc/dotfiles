@@ -9,18 +9,47 @@
 {{- $broot      := promptBoolOnce . "tools.enable.broot"      "Enable broot as a tree alternative (y/n)"    false -}}
 {{- $dasel      := promptBoolOnce . "tools.enable.dasel"      "Enable dasel as a jq alternative (y/n)"      false -}}
 {{- $eza        := promptBoolOnce . "tools.enable.eza"        "Enable eza as a ls alternative (y/n)"        true -}}
-{{- $jenv       := promptBoolOnce . "tools.enable.jenv"       "Enable jenv as a Java version manager (y/n)" false -}}
 {{- $lsd        := promptBoolOnce . "tools.enable.lsd"        "Enable lsd as a ls alternative (y/n)"        false -}}
 {{- $nix        := promptBoolOnce . "tools.enable.nix"        "Enable nix as a package manager (y/n)"       false -}}
 {{- $vscode     := promptBoolOnce . "tools.enable.vscode"     "Enable Visual Studio Code as a IDE (y/n)"    true -}}
 {{- $zed        := promptBoolOnce . "tools.enable.zed"        "Enable Zed as an IDE editor (y/n)"           true -}}
 {{- $one_drive  := promptBoolOnce . "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
 
-{{- $nodejs := promptBoolOnce . "lang.enable.nodejs"  "Enable NodeJS as a programming language (Y/n)" true -}}
-{{- $python := promptBoolOnce . "lang.enable.python"  "Enable Python as a programming language (Y/n)" true -}}
-{{- $golang := promptBoolOnce . "lang.enable.golang"  "Enable Go as a programming language (Y/n)"     true -}}
-{{- $rust   := promptBoolOnce . "lang.enable.rust"    "Enable Rust as a programming language (Y/n)"   true -}}
-{{- $java   := promptBoolOnce . "lang.enable.java"    "Enable Java as a programming language (N/n)"   false -}}
+{{- /* NodeJS */ -}}
+{{- $enable_nodejs := promptBoolOnce . "lang.nodejs.enabled" "Enable NodeJS as a programming language (Y/n)" true -}}
+{{- if eq $enable_nodejs true -}}
+{{- end -}}
+
+{{- /* Python */ -}}
+{{- $enable_python := promptBoolOnce . "lang.python.enable" "Enable Python as a programming language (Y/n)" true -}}
+{{- $poetry := false -}}
+{{- $pyenv := false -}}
+{{- if eq $enable_python true -}}
+{{-   $poetry = promptBoolOnce . "lang.python.poetry" "Enable Poetry as a Python package manager (Y/n)" $poetry -}}
+{{-   $pyenv  = promptBoolOnce . "lang.python.pyenv"  "Enable pyenv as a Python version manager (Y/n)"  $pyenv -}}
+{{- end -}}
+  
+{{- /* Go */ -}}
+{{- $enable_golang := promptBoolOnce . "lang.golang.enabled" "Enable Go as a programming language (Y/n)" true -}}
+
+{{- /* Rust */ -}}
+{{- $enable_rust := promptBoolOnce . "lang.rust.enabled" "Enable Rust as a programming language (Y/n)" true -}}
+
+{{- /* Java */ -}}
+{{- $enable_java := promptBoolOnce . "lang.java.enabled" "Enable Java as a programming language (N/n)" false -}}
+{{- $jenv := false -}}
+{{- if eq $enable_java true -}}
+{{-   $jenv = promptBoolOnce . "lang.java.jenv" "Enable jenv as a Java version manager (y/n)" false -}}
+{{- end -}}
+
+{{- $instal_brave     := promptBoolOnce . "tools.install.browser.brave"     "Install Brave browser (Y/n)"     false -}}
+{{- $instal_firefox   := promptBoolOnce . "tools.install.browser.firefox"   "Install Firefox browser (Y/n)"   true -}}
+{{- $instal_chrome    := promptBoolOnce . "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
+{{- $instal_chromium  := promptBoolOnce . "tools.install.browser.chromium"  "Install Chromium browser (Y/n)"  false -}}
+{{- $instal_edge      := promptBoolOnce . "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
+{{- $instal_vivaldi   := promptBoolOnce . "tools.install.browser.vivaldi"   "Install Vivaldi browser (Y/n)"   false -}}
+{{- $instal_opera     := promptBoolOnce . "tools.install.browser.opera"     "Install Opera browser (Y/n)"     false -}}
+{{- $instal_arc       := promptBoolOnce . "tools.install.browser.arc"       "Install Arc browser (Y/n)"       false -}}
 
 {{- $instal_brave     := promptBoolOnce . "tools.install.browser.brave"     "Install Brave browser (Y/n)"     false -}}
 {{- $instal_firefox   := promptBoolOnce . "tools.install.browser.firefox"   "Install Firefox browser (Y/n)"   true -}}
@@ -61,19 +90,29 @@ bat = {{ $bat }}
 broot = {{ $broot }}
 dasel = {{ $dasel }}
 eza = {{ $eza }}
-jenv = {{ $jenv }}
 lsd = {{ $lsd }}
 nix = {{ $nix }}
 one_drive = {{ $one_drive }}
 vscode = {{ $vscode }}
 zed = {{ $zed }}
 
-[data.lang.enable]
-nodejs = {{ $nodejs }}
-python = {{ $python }}
-golang = {{ $golang }}
-rust = {{ $rust }}
-java = {{ $java }}
+[data.lang.golang]
+enabled = {{ $enable_golang }}
+
+[data.lang.rust]
+enabled = {{ $enable_rust }}
+
+[data.lang.java]
+enabled = {{ $enable_java }}
+jenv = {{ $jenv }}
+
+[data.lang.nodejs]
+enabled = {{ $enable_nodejs }}
+
+[data.lang.python]
+enabled = {{ $enable_python }}
+poetry = {{ $poetry }}
+pyenv = {{ $pyenv }}
 
 [data.tools.install.browser]
 brave = {{ $instal_brave }}

@@ -144,8 +144,6 @@
   "pre-commit"
   "prettier"
   "proj"
-  "pyenv"
-  "pyenv-virtualenv"
   "python-markdown"
   "python@3.10"
   "qemu"
@@ -214,6 +212,14 @@
   "zoom"
 -}}
 
+{{- if eq .lang.python.enabled true -}}
+{{- $formulaes = concat $formulaes ( list "pipx" ) -}}
+{{- end -}}
+
+{{- if eq .lang.python.pyenv true -}}
+{{- $formulaes = concat $formulaes (list "pyenv" "pyenv-virtualenv") -}}
+{{- end -}}
+
 {{- if eq .tools.install.browser.brave true -}}
 {{-  $casks = concat $casks ( list "brave-browser" ) -}}
 {{- end -}}
@@ -259,7 +265,7 @@
 {{-   $formulaes = concat $formulaes ( list "dasel" ) -}}
 {{- end -}}
 
-{{- if eq .tools.enable.jenv true -}}
+{{- if eq .lang.java.jenv true -}}
 {{-   $formulaes = concat $formulaes ( list "jenv" ) -}}
 {{- end -}}
 
@@ -275,11 +281,11 @@
 {{-   $formulaes = concat $formulaes ( list "zed" ) -}}
 {{- end -}}
 
-{{- if eq .lang.enable.golang true -}}
+{{- if eq .lang.golang.enabled true -}}
 {{-   $formulaes = concat $formulaes ( list "go" ) -}}
 {{- end -}}
 
-{{- if eq .lang.enable.java true -}}
+{{- if eq .lang.java.enabled true -}}
 {{-   $formulaes = concat $formulaes ( list "openjdk@11" "openjdk@8" ) -}}
 {{- end -}}
 
@@ -294,18 +300,20 @@
 
 {{- /* Taps */ -}}
 {{- range ( $taps | sortAlpha | uniq ) -}}
-tap "{{ . }}"
+{{- printf "\ntap \"%s\"" . -}}
 {{- end }}
 
 {{- /* Formula */ -}}
 {{- range ( $formulaes | sortAlpha | uniq ) -}}
-brew "{{ . }}"
+{{- printf "\nbrew \"%s\"" . -}}
 {{- end }}
 
 {{- /* Casks */ -}}
 {{- range ( $casks | sortAlpha | uniq ) -}}
-cask "{{ . }}"
+{{- printf "\ncask \"%s\"" . -}}
 {{- end -}}
+
+{{- printf "\n" -}}
 
 {{- /* Mac App Store */ -}}
 mas "Boop", id: 1518425043
