@@ -211,7 +211,6 @@
   "trunk-io"
   "vlc"
   "whatsapp"
-  "zed"
   "zoom"
 -}}
 
@@ -265,7 +264,7 @@
 {{- end -}}
 
 {{- if eq .enable.tool.zed true -}}
-{{-   $casks = concat $casks ( list "zed" ) -}}
+{{-   $formulaes = concat $formulaes ( list "zed" ) -}}
 {{- end -}}
 
 {{- if eq .enable.lang.golang true -}}

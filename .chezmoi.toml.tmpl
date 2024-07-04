@@ -25,6 +25,15 @@
 {{- $rust := promptBoolOnce . "enable.lang.rust" "Enable Rust as a programming language (Y/n)" true -}}
 {{- $java := promptBoolOnce . "enable.lang.java" "Enable Java as a programming language (N/n)" false -}}
 
+{{- $instal_brave := promptBoolOnce . "tool.install.browswer.brave" "Install Brave browser (Y/n)" false -}}
+{{- $instal_firefox := promptBoolOnce . "tool.install.browswer.firefox" "Install Firefox browser (Y/n)" true -}}
+{{- $instal_chrome := promptBoolOnce . "tool.install.browswer.chrome" "Install Chrome browser (Y/n)" true -}}
+{{- $instal_chromium := promptBoolOnce . "tool.install.browswer.chromium" "Install Chromium browser (Y/n)" false -}}
+{{- $instal_edge := promptBoolOnce . "tool.install.browswer.edge" "Install Edge browser (Y/n)" false -}}
+{{- $instal_vivaldi := promptBoolOnce . "tool.install.browswer.vivaldi" "Install Vivaldi browser (Y/n)" false -}}
+{{- $instal_opera := promptBoolOnce . "tool.install.browswer.opera" "Install Opera browser (Y/n)" false -}}
+{{- $instal_arc := promptBoolOnce . "tool.install.browswer.arc" "Install Arc browser (Y/n)" false -}}
+
 [data]
 projects_dir = {{ $projects_dir | quote }}
 gh_projects_dir = {{ $gh_projects_dir | quote }}
@@ -68,3 +77,13 @@ python = {{ $python }}
 golang = {{ $golang }}
 rust = {{ $rust }}
 java = {{ $java }}
+
+[data.tools.install.browwer]
+brave = {{ $instal_brave }}
+firefox = {{ $instal_firefox }}
+chrome = {{ $instal_chrome }}
+chromium = {{ $instal_chromium }}
+edge = {{ $instal_edge }}
+vivaldi = {{ $instal_vivaldi }}
+opera = {{ $instal_opera }}
+arc = {{ $instal_arc }}
