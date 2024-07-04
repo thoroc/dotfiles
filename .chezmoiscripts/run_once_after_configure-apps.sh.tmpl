@@ -79,3 +79,17 @@ sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate "CriticalUpdat
 sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate "ScheduleFrequency" -int 1
 # Install app updates automatically
 defaults write com.apple.commerce "AutoUpdate" -bool true
+
+
+{{ if eq .lang.python.enabled true -}}
+# ---------------------------------------------------------------------------------------------------------------------
+# Python settings
+# ---------------------------------------------------------------------------------------------------------------------
+{{-  if eq .lang.python.poetry true }}
+# setup pipx
+pipx ensurepath
+sudo pipx ensurepath
+# https://python-poetry.org/docs/
+pipx install poetry
+{{-   end -}}
+{{- end }}
