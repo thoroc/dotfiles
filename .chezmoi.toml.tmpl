@@ -1,38 +1,35 @@
-{{- $email := promptStringOnce . "user.work.email" "Email address" "john.doe@example.com" -}}
-{{- $username := promptStringOnce . "user.work.name" "Username" "john.doe" -}}
-{{- $projects_dir := promptStringOnce . "projects_dir" "Work project directory (name of directory for the work projects)" "acme" -}}
+{{- $email            := promptStringOnce . "user.work.email"   "Email address"                                                         "john.doe@example.com" -}}
+{{- $username         := promptStringOnce . "user.work.name"    "Username"                                                              "john.doe" -}}
+{{- $projects_dir     := promptStringOnce . "projects_dir"      "Work project directory (name of directory for the work projects)"      "acme" -}}
+{{- $gh_email         := promptStringOnce . "user.github.email" "GitHub email address"                                                  "john.doe@example.com" -}}
+{{- $gh_username      := promptStringOnce . "user.github.name"  "GitHub username"                                                       "john.doe" -}}
+{{- $gh_projects_dir  := promptStringOnce . "gh_projects_dir"   "GitHub project directory (name of directory for the GitHub projects)"  "github" -}}
 
-{{- $gh_email := promptStringOnce . "user.github.email" "GitHub email address" "john.doe@example.com" -}}
-{{- $gh_username := promptStringOnce . "user.github.name" "GitHub username" "john.doe" -}}
-{{- $gh_projects_dir := promptStringOnce . "gh_projects_dir" "GitHub project directory (name of directory for the GitHub projects)" "github" -}}
+{{- $bat        := promptBoolOnce . "tools.enable.bat"        "Enable bat as a cat replacement (y/n)"       true -}}
+{{- $broot      := promptBoolOnce . "tools.enable.broot"      "Enable broot as a tree alternative (y/n)"    false -}}
+{{- $dasel      := promptBoolOnce . "tools.enable.dasel"      "Enable dasel as a jq alternative (y/n)"      false -}}
+{{- $eza        := promptBoolOnce . "tools.enable.eza"        "Enable eza as a ls alternative (y/n)"        true -}}
+{{- $jenv       := promptBoolOnce . "tools.enable.jenv"       "Enable jenv as a Java version manager (y/n)" false -}}
+{{- $lsd        := promptBoolOnce . "tools.enable.lsd"        "Enable lsd as a ls alternative (y/n)"        false -}}
+{{- $nix        := promptBoolOnce . "tools.enable.nix"        "Enable nix as a package manager (y/n)"       false -}}
+{{- $vscode     := promptBoolOnce . "tools.enable.vscode"     "Enable Visual Studio Code as a IDE (y/n)"    true -}}
+{{- $zed        := promptBoolOnce . "tools.enable.zed"        "Enable Zed as an IDE editor (y/n)"           true -}}
+{{- $one_drive  := promptBoolOnce . "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
 
-{{- $bat := promptBoolOnce . "enable.tool.bat" "Enable bat as a cat replacement (y/n)" true -}}
-{{- $broot := promptBoolOnce . "enable.tool.broot" "Enable broot as a tree alternative (y/n)" false -}}
-{{- $dasel := promptBoolOnce . "enable.tool.dasel" "Enable dasel as a jq alternative (y/n)" false -}}
-{{- $eza := promptBoolOnce . "enable.tool.eza" "Enable eza as a ls alternative (y/n)" true -}}
-{{- $jenv := promptBoolOnce . "enable.tool.jenv" "Enable jenv as a Java version manager (y/n)" false -}}
-{{- $lsd := promptBoolOnce . "enable.tool.lsd" "Enable lsd as a ls alternative (y/n)" false -}}
-{{- $nix := promptBoolOnce . "enable.tool.nix" "Enable nix as a package manager (y/n)" false -}}
+{{- $nodejs := promptBoolOnce . "lang.enable.nodejs"  "Enable NodeJS as a programming language (Y/n)" true -}}
+{{- $python := promptBoolOnce . "lang.enable.python"  "Enable Python as a programming language (Y/n)" true -}}
+{{- $golang := promptBoolOnce . "lang.enable.golang"  "Enable Go as a programming language (Y/n)"     true -}}
+{{- $rust   := promptBoolOnce . "lang.enable.rust"    "Enable Rust as a programming language (Y/n)"   true -}}
+{{- $java   := promptBoolOnce . "lang.enable.java"    "Enable Java as a programming language (N/n)"   false -}}
 
-{{- $vscode := promptBoolOnce . "enable.tool.vscode" "Enable Visual Studio Code as a IDE (y/n)" true -}}
-{{- $zed := promptBoolOnce . "enable.tool.zed" "Enable Zed as an IDE editor (y/n)" true -}}
-
-{{- $one_drive := promptBoolOnce . "enable.tool.one_drive" "Enable OneDrive autostart (y/n)" false -}}
-
-{{- $nodejs := promptBoolOnce . "enable.lang.nodejs" "Enable NodeJS as a programming language (Y/n)" true -}}
-{{- $python := promptBoolOnce . "enable.lang.python" "Enable Python as a programming language (Y/n)" true -}}
-{{- $golang := promptBoolOnce . "enable.lang.golang" "Enable Go as a programming language (Y/n)" true -}}
-{{- $rust := promptBoolOnce . "enable.lang.rust" "Enable Rust as a programming language (Y/n)" true -}}
-{{- $java := promptBoolOnce . "enable.lang.java" "Enable Java as a programming language (N/n)" false -}}
-
-{{- $instal_brave := promptBoolOnce . "tool.install.browswer.brave" "Install Brave browser (Y/n)" false -}}
-{{- $instal_firefox := promptBoolOnce . "tool.install.browswer.firefox" "Install Firefox browser (Y/n)" true -}}
-{{- $instal_chrome := promptBoolOnce . "tool.install.browswer.chrome" "Install Chrome browser (Y/n)" true -}}
-{{- $instal_chromium := promptBoolOnce . "tool.install.browswer.chromium" "Install Chromium browser (Y/n)" false -}}
-{{- $instal_edge := promptBoolOnce . "tool.install.browswer.edge" "Install Edge browser (Y/n)" false -}}
-{{- $instal_vivaldi := promptBoolOnce . "tool.install.browswer.vivaldi" "Install Vivaldi browser (Y/n)" false -}}
-{{- $instal_opera := promptBoolOnce . "tool.install.browswer.opera" "Install Opera browser (Y/n)" false -}}
-{{- $instal_arc := promptBoolOnce . "tool.install.browswer.arc" "Install Arc browser (Y/n)" false -}}
+{{- $instal_brave     := promptBoolOnce . "tools.install.browser.brave"     "Install Brave browser (Y/n)"     false -}}
+{{- $instal_firefox   := promptBoolOnce . "tools.install.browser.firefox"   "Install Firefox browser (Y/n)"   true -}}
+{{- $instal_chrome    := promptBoolOnce . "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
+{{- $instal_chromium  := promptBoolOnce . "tools.install.browser.chromium"  "Install Chromium browser (Y/n)"  false -}}
+{{- $instal_edge      := promptBoolOnce . "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
+{{- $instal_vivaldi   := promptBoolOnce . "tools.install.browser.vivaldi"   "Install Vivaldi browser (Y/n)"   false -}}
+{{- $instal_opera     := promptBoolOnce . "tools.install.browser.opera"     "Install Opera browser (Y/n)"     false -}}
+{{- $instal_arc       := promptBoolOnce . "tools.install.browser.arc"       "Install Arc browser (Y/n)"       false -}}
 
 [data]
 projects_dir = {{ $projects_dir | quote }}
@@ -59,7 +56,7 @@ editor = "vscode"
 # "lsd" or "exa" or "lsd" or "dust" or "dircolors"
 list = "lsd"
 
-[data.enable.tool]
+[data.tools.enable]
 bat = {{ $bat }}
 broot = {{ $broot }}
 dasel = {{ $dasel }}
@@ -71,14 +68,14 @@ one_drive = {{ $one_drive }}
 vscode = {{ $vscode }}
 zed = {{ $zed }}
 
-[data.enable.lang]
+[data.lang.enable]
 nodejs = {{ $nodejs }}
 python = {{ $python }}
 golang = {{ $golang }}
 rust = {{ $rust }}
 java = {{ $java }}
 
-[data.tools.install.browwer]
+[data.tools.install.browser]
 brave = {{ $instal_brave }}
 firefox = {{ $instal_firefox }}
 chrome = {{ $instal_chrome }}

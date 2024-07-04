@@ -239,39 +239,39 @@
 -}}
 
 
-{{- if eq .enable.tool.bat true -}}
+{{- if eq .tools.enable.bat true -}}
 {{-   $formulaes = concat $formulaes ( list "bat" ) -}}
 {{- end -}}
 
-{{- if eq .enable.tool.broot true -}}
+{{- if eq .tools.enable.broot true -}}
 {{-   $formulaes = concat $formulaes ( list "broot" ) -}}
 {{- end -}}
 
-{{- if eq .enable.tool.dasel true -}}
+{{- if eq .tools.enable.dasel true -}}
 {{-   $formulaes = concat $formulaes ( list "dasel" ) -}}
 {{- end -}}
 
-{{- if eq .enable.tool.jenv true -}}
+{{- if eq .tools.enable.jenv true -}}
 {{-   $formulaes = concat $formulaes ( list "jenv" ) -}}
 {{- end -}}
 
-{{- if eq .enable.tool.lsd true -}}
+{{- if eq .tools.enable.lsd true -}}
 {{-   $formulaes = concat $formulaes ( list "lsd" ) -}}
 {{- end -}}
 
-{{- if eq .enable.tool.vscode true -}}
+{{- if eq .tools.enable.vscode true -}}
 {{-   $casks = concat $casks ( list "visual-studio-code" ) -}}
 {{- end -}}
 
-{{- if eq .enable.tool.zed true -}}
+{{- if eq .tools.enable.zed true -}}
 {{-   $formulaes = concat $formulaes ( list "zed" ) -}}
 {{- end -}}
 
-{{- if eq .enable.lang.golang true -}}
+{{- if eq .lang.enable.golang true -}}
 {{-   $formulaes = concat $formulaes ( list "go" ) -}}
 {{- end -}}
 
-{{- if eq .enable.lang.java true -}}
+{{- if eq .lang.enable.java true -}}
 {{-   $formulaes = concat $formulaes ( list "openjdk@11" "openjdk@8" ) -}}
 {{- end -}}
 

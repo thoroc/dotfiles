@@ -67,7 +67,7 @@ export HOMEBREW_AUTO_UPDATE_SECS="86400"
 export PATH="$(brew --prefix)/opt/curl/bin:$PATH"
 
 
-{{- if eq .enable.tool.bat true -}}
+{{- if eq .tools.enable.bat true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # bat: https://github.com/sharkdp/bat
 # ---------------------------------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ fi
 # export PATH="/usr/local/opt/binutils/bin:$PATH"
 
 
-{{- if eq .enable.tool.vscode true -}}
+{{- if eq .tools.enable.vscode true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # VS Code
 # ---------------------------------------------------------------------------------------------------------------------
@@ -110,7 +110,7 @@ export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PA
 {{- end -}}
 
 
-{{- if eq .enable.tool.nix true -}}
+{{- if eq .tools.enable.nix true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # Nix
 # ---------------------------------------------------------------------------------------------------------------------
@@ -167,7 +167,7 @@ export PATH="{{- .chezmoi.homeDir -}}/.yarn/bin:$PATH"
 export PATH="{{- .chezmoi.homeDir -}}/.config/yarn/global/node_modules/.bin:$PATH"
 
 
-{{- if eq .enable.lang.golang true -}}
+{{- if eq .lang.enable.golang true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # golang
 # ---------------------------------------------------------------------------------------------------------------------
@@ -176,7 +176,7 @@ export PATH="$PATH:$GOPATH/bin"
 {{- end -}}
 
 
-{{- if eq .enable.lang.rust true -}}
+{{- if eq .lang.enable.rust true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # Cargo the rust tool
 # ---------------------------------------------------------------------------------------------------------------------
@@ -186,7 +186,7 @@ export PATH="$CARGO_HOME/bin:$PATH"
 {{- end -}}
 
 
-{{- if eq .enable.tool.broot true -}}
+{{- if eq .tools.enable.broot true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # broot: https://github.com/Canop/broot
 # ---------------------------------------------------------------------------------------------------------------------
@@ -204,7 +204,7 @@ source {{- .chezmoi.homeDir -}}/.config/broot/launcher/bash/br
 # fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"
 
 
-{{- if eq .enable.tool.dasel true -}}
+{{- if eq .tools.enable.dasel true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # dasel: https://github.com/TomWright/dasel
 # ---------------------------------------------------------------------------------------------------------------------
@@ -243,7 +243,7 @@ eval "$(thefuck --alias)"
 eval "$(zoxide init --cmd cd zsh)"
 
 
-{{- if eq .enable.tool.jenv true -}}
+{{- if eq .tools.enable.jenv true -}}
 # ---------------------------------------------------------------------------------------------------------------------
 # Jenv: https://github.com/jenv/jenv
 # ---------------------------------------------------------------------------------------------------------------------
@@ -268,9 +268,9 @@ export PATH="$PATH:$RVM_HOME/bin"
 # aliases
 # ---------------------------------------------------------------------------------------------------------------------
 alias le='eza --icons -F -H --group-directories-first --git -1'
-{{- if eq .enable.tool.lsd true -}}
+{{- if eq .tools.enable.lsd true -}}
 alias ls="lsd"
-{{- else if eq .enable.tool.eza true -}}
+{{- else if eq .tools.enable.eza true -}}
 alias ls="eza"
 {{- end -}}
 alias hal="ls -hal"
