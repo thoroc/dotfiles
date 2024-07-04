@@ -5,15 +5,29 @@
 {{- $gh_username      := promptStringOnce . "user.github.name"  "GitHub username"                                                       "john.doe" -}}
 {{- $gh_projects_dir  := promptStringOnce . "gh_projects_dir"   "GitHub project directory (name of directory for the GitHub projects)"  "github" -}}
 
+{{- /* Tools */ -}}
 {{- $bat        := promptBoolOnce . "tools.enable.bat"        "Enable bat as a cat replacement (y/n)"       true -}}
 {{- $broot      := promptBoolOnce . "tools.enable.broot"      "Enable broot as a tree alternative (y/n)"    false -}}
 {{- $dasel      := promptBoolOnce . "tools.enable.dasel"      "Enable dasel as a jq alternative (y/n)"      false -}}
 {{- $eza        := promptBoolOnce . "tools.enable.eza"        "Enable eza as a ls alternative (y/n)"        true -}}
 {{- $lsd        := promptBoolOnce . "tools.enable.lsd"        "Enable lsd as a ls alternative (y/n)"        false -}}
 {{- $nix        := promptBoolOnce . "tools.enable.nix"        "Enable nix as a package manager (y/n)"       false -}}
-{{- $vscode     := promptBoolOnce . "tools.enable.vscode"     "Enable Visual Studio Code as a IDE (y/n)"    true -}}
-{{- $zed        := promptBoolOnce . "tools.enable.zed"        "Enable Zed as an IDE editor (y/n)"           true -}}
 {{- $one_drive  := promptBoolOnce . "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
+
+{{- /* Terminals */ -}}
+
+{{- $vscode := promptBoolOnce . "tools.install.ide.vscode" "Install Visual Studio Code as a IDE (Y/n)" true -}}
+{{- $zed    := promptBoolOnce . "tools.install.ide.zed"    "Install Zed as an IDE editor (Y/n)"        true -}}
+
+{{- /* Shells */ -}}
+
+{{- /* Prompts */ -}}
+
+{{- /* Editors */ -}}
+
+{{- /* Lists */ -}}
+
+{{- /* Languages */ -}}
 
 {{- /* NodeJS */ -}}
 {{- $enable_nodejs := promptBoolOnce . "lang.nodejs.enabled" "Enable NodeJS as a programming language (Y/n)" true -}}
@@ -85,6 +99,10 @@ editor = "vscode"
 # "lsd" or "exa" or "lsd" or "dust" or "dircolors"
 list = "lsd"
 
+[data.tools.ide]
+vscode = {{ $vscode }}
+zed = {{ $zed }}
+
 [data.tools.enable]
 bat = {{ $bat }}
 broot = {{ $broot }}
@@ -93,8 +111,6 @@ eza = {{ $eza }}
 lsd = {{ $lsd }}
 nix = {{ $nix }}
 one_drive = {{ $one_drive }}
-vscode = {{ $vscode }}
-zed = {{ $zed }}
 
 [data.lang.golang]
 enabled = {{ $enable_golang }}

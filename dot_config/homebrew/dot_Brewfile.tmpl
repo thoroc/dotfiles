@@ -273,13 +273,17 @@
 {{-   $formulaes = concat $formulaes ( list "lsd" ) -}}
 {{- end -}}
 
-{{- if eq .tools.enable.vscode true -}}
+{{- /* Editors /* -}}
+
+{{- if eq .tools.install.ide.vscode true -}}
 {{-   $casks = concat $casks ( list "visual-studio-code" ) -}}
 {{- end -}}
 
-{{- if eq .tools.enable.zed true -}}
+{{- if eq .tools.install.ide.zed true -}}
 {{-   $formulaes = concat $formulaes ( list "zed" ) -}}
 {{- end -}}
+
+{{- /* Languages /* -}}
 
 {{- if eq .lang.golang.enabled true -}}
 {{-   $formulaes = concat $formulaes ( list "go" ) -}}
