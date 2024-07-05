@@ -5,6 +5,14 @@
 {{- $gh_username      := promptStringOnce . "user.github.name"  "GitHub username"                                                       "john.doe" -}}
 {{- $gh_projects_dir  := promptStringOnce . "gh_projects_dir"   "GitHub project directory (name of directory for the GitHub projects)"  "github" -}}
 
+{{- /* Homebrew prefix */ -}}
+{{- $homebrew_prefix := "" -}}
+{{- if eq .chezmoi.arch "x86_64" -}}
+{{-   $homebrew_prefix = "/usr/local" -}}
+{{- else -}}
+{{-   $homebrew_prefix = "/opt/homebrew" -}}
+{{- end -}}
+
 {{- /* Tools */ -}}
 {{- $bat        := promptBoolOnce . "tools.enable.bat"        "Enable bat as a cat replacement (y/n)"       true -}}
 {{- $broot      := promptBoolOnce . "tools.enable.broot"      "Enable broot as a tree alternative (y/n)"    false -}}
@@ -74,6 +82,7 @@
 {{- $instal_arc       := promptBoolOnce . "tools.install.browser.arc"       "Install Arc browser (Y/n)"       false -}}
 
 [data]
+homebrew_prefix = {{ $homebrew_prefix | quote }}
 projects_dir = {{ $projects_dir | quote }}
 gh_projects_dir = {{ $gh_projects_dir | quote }}
 
