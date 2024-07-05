@@ -18,7 +18,7 @@
   "tylerbrock/saw"
 -}}
 
-{{- $formulaes := list
+{{- $formulas := list
   "act"
   "ansible"
   "aom"
@@ -210,11 +210,11 @@
 -}}
 
 {{- if eq .lang.python.enabled true -}}
-{{- $formulaes = concat $formulaes ( list "pipx" ) -}}
+{{- $formulas = concat $formulas ( list "pipx" ) -}}
 {{- end -}}
 
 {{- if eq .lang.python.pyenv true -}}
-{{- $formulaes = concat $formulaes (list "pyenv" "pyenv-virtualenv") -}}
+{{- $formulas = concat $formulas (list "pyenv" "pyenv-virtualenv") -}}
 {{- end -}}
 
 {{- if eq .tools.install.browser.brave true -}}
@@ -251,23 +251,23 @@
 {{- end -}}
 
 {{- if eq .tools.enable.bat true -}}
-{{-   $formulaes = concat $formulaes ( list "bat" ) -}}
+{{-   $formulas = concat $formulas ( list "bat" ) -}}
 {{- end -}}
 
 {{- if eq .tools.enable.broot true -}}
-{{-   $formulaes = concat $formulaes ( list "broot" ) -}}
+{{-   $formulas = concat $formulas ( list "broot" ) -}}
 {{- end -}}
 
 {{- if eq .tools.enable.dasel true -}}
-{{-   $formulaes = concat $formulaes ( list "dasel" ) -}}
+{{-   $formulas = concat $formulas ( list "dasel" ) -}}
 {{- end -}}
 
 {{- if eq .lang.java.jenv true -}}
-{{-   $formulaes = concat $formulaes ( list "jenv" ) -}}
+{{-   $formulas = concat $formulas ( list "jenv" ) -}}
 {{- end -}}
 
 {{- if eq .tools.enable.lsd true -}}
-{{-   $formulaes = concat $formulaes ( list "lsd" ) -}}
+{{-   $formulas = concat $formulas ( list "lsd" ) -}}
 {{- end -}}
 
 {{- /* Editors /* -}}
@@ -277,17 +277,17 @@
 {{- end -}}
 
 {{- if eq .tools.install.ide.zed true -}}
-{{-   $formulaes = concat $formulaes ( list "zed" ) -}}
+{{-   $formulas = concat $formulas ( list "zed" ) -}}
 {{- end -}}
 
 {{- /* Languages /* -}}
 
 {{- if eq .lang.golang.enabled true -}}
-{{-   $formulaes = concat $formulaes ( list "go" ) -}}
+{{-   $formulas = concat $formulas ( list "go" ) -}}
 {{- end -}}
 
 {{- if eq .lang.java.enabled true -}}
-{{-   $formulaes = concat $formulaes ( list "openjdk@11" "openjdk@8" ) -}}
+{{-   $formulas = concat $formulas ( list "openjdk@11" "openjdk@8" ) -}}
 {{- end -}}
 
 #    ______                    __ _ _
@@ -305,7 +305,7 @@
 {{- end }}
 
 {{- /* Formula */ -}}
-{{- range ( $formulaes | sortAlpha | uniq ) -}}
+{{- range ( $formulas | sortAlpha | uniq ) -}}
 {{- printf "\nbrew \"%s\"" . -}}
 {{- end }}
 
