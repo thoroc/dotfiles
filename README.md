@@ -17,6 +17,7 @@ Inspiration:
 - <https://github.com/politician/dotfiles/>
 - <https://github.com/federicober/dotfiles>
 - <https://github.com/m0lson84/dotfiles>
+- <https://github.com/pgumeson-fabric/dotfiles>
 - <https://macos-defaults.com/>
 
 ## Prerequisite

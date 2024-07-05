@@ -1,0 +1,36 @@
+
+# ---------------------------------------------------------------------------------------------------------------------
+# aliases
+# ---------------------------------------------------------------------------------------------------------------------
+
+{{- if eq .tools.enable.bat true }}
+# ---------------------------------------------------------------------------------------------------------------------
+# bat: https://github.com/sharkdp/bat
+# ---------------------------------------------------------------------------------------------------------------------
+alias cat="bat --theme=\$(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo default || echo GitHub)"
+alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
+alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+{{ end -}}
+
+{{- if eq .tools.enable.lsd true }}
+alias ls="lsd"
+{{ else if eq .tools.enable.eza true }}
+alias ls="eza"
+alias le="ls --icons -F -H --group-directories-first --git -1"
+alias lt="eza --tree --level=2 . --icons"
+{{ end -}}
+
+alias hal="ls -hal"
+alias la="ls -A"
+alias ld="ls -d */"
+alias ll="ls -alF"
+alias ls="ls --color"
+
+alias dc="docker compose"
+alias docker-list-containers="docker ps -a"
+alias docker-remove-containers="docker rm $(docker ps -a -q)"
+alias docker-remove-iamges="docker rmi $(docker images -q)"
+
+# fucked ok, don't question me! node is SHITE
+alias npm="npq-hero"
+alias yarn="NPQ_PKG_MGR=yarn npq-hero"
