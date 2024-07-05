@@ -15,7 +15,6 @@
 {{- $one_drive  := promptBoolOnce . "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
 
 {{- /* Terminals */ -}}
-
 {{- $vscode := promptBoolOnce . "tools.install.ide.vscode" "Install Visual Studio Code as a IDE (Y/n)" true -}}
 {{- $zed    := promptBoolOnce . "tools.install.ide.zed"    "Install Zed as an IDE editor (Y/n)"        true -}}
 
@@ -88,20 +87,28 @@ email = {{ $gh_email | quote }}
 
 [data.tools]
 # we want to try and allow other shells/prompts to be used
-# "zsh" or "bash" or "fish"
-shell = "zsh"
 # "starship"
 prompt = "starship"
-# "warp" or "iterm2" or "alacritty" or "kitty" or "hyper" or "terminal"
-terminal = "warp"
+# "warp" or "iterm2" or "alacritty" or "kitty" or "hyper" or "terminal" or "wezterm"
+shell = "warp"
 # "vscode" or "vim" or "zed" or "sublime" or "atom"
 editor = "vscode"
 # "lsd" or "exa" or "lsd" or "dust" or "dircolors"
 list = "lsd"
 
-[data.tools.ide]
+[data.tools.install.ide]
 vscode = {{ $vscode }}
 zed = {{ $zed }}
+
+[data.tools.install.browser]
+brave = {{ $instal_brave }}
+firefox = {{ $instal_firefox }}
+chrome = {{ $instal_chrome }}
+chromium = {{ $instal_chromium }}
+edge = {{ $instal_edge }}
+vivaldi = {{ $instal_vivaldi }}
+opera = {{ $instal_opera }}
+arc = {{ $instal_arc }}
 
 [data.tools.enable]
 bat = {{ $bat }}
@@ -129,13 +136,3 @@ enabled = {{ $enable_nodejs }}
 enabled = {{ $enable_python }}
 poetry = {{ $poetry }}
 pyenv = {{ $pyenv }}
-
-[data.tools.install.browser]
-brave = {{ $instal_brave }}
-firefox = {{ $instal_firefox }}
-chrome = {{ $instal_chrome }}
-chromium = {{ $instal_chromium }}
-edge = {{ $instal_edge }}
-vivaldi = {{ $instal_vivaldi }}
-opera = {{ $instal_opera }}
-arc = {{ $instal_arc }}
