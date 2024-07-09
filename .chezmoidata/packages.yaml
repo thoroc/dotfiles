@@ -1,0 +1,73 @@
+packages:
+  darwin:
+    brews:
+    # Automate deployment, configuration, and upgrading
+    - 'ansible'
+    # Remove large files or passwords from Git history like git-filter-branch
+    - 'bfg'
+    # GNU binary tools for native development
+    - 'binutils'
+    # GNU File, Shell, and Text utilities
+    - 'coreutils'
+    # Collection of GNU find, xargs, and locate
+    - 'findutils'
+    # Distributed revision control system
+    - 'git'
+    # Lightweight and flexible command-line JSON processor
+    - 'jq'
+    # Graph visualization software from AT&T and Bell Labs
+    - 'graphviz'
+    # GNU grep, egrep and fgrep
+    - 'grep'
+    # Popular GNU data compression program
+    - 'gzip'
+    # Improved top (interactive process viewer)
+    - 'htop'
+    # Utility for directing compilation
+    - 'make'
+    # Mac App Store command-line interface
+    - 'mas'
+    # Tail multiple files in one terminal simultaneously
+    - 'multitail'    
+    # PAM module for reattaching to the user's GUI (Aqua) session
+    - 'pam-reattach'
+    # Highly capable, feature-rich programming language
+    - 'perl'
+    # Search tool like grep and The Silver Searcher
+    - 'ripgrep'
+    # Programmatically correct mistyped console commands
+    - 'thefuck'
+    # Send macOS User Notifications from the command-line
+    - 'terminal-notifier'
+    # Display directories as trees (with optional color/HTML output)
+    - 'tree'
+    # Extraction utility for .zip compressed archives
+    - 'unzip'
+    # Vi 'workalike' with many additional features
+    - 'vim'
+    # Internet file retriever
+    - 'wget'
+    # Process YAML, JSON, XML, CSV and properties documents from the CLI
+    - 'yq'
+    # General-purpose lossless data-compression library
+    - 'zlib'
+    # Shell extension to navigate your filesystem faster
+    - 'zoxide'
+    casks:
+    # Enable Windows-like alt-tab
+    - 'alt-tab'
+    # User-friendly GUI app for Homebrew
+    - 'applite'
+    # Clipboard manager
+    - 'maccy'
+    # Open-source keystroke visualiser
+    - 'keycastr'
+    # Cloud credentials manager
+    - 'leapp'
+    # Collaboration platform for API development
+    - 'postman'
+    # System monitor for the menu bar
+    - 'stats'
+    - 'google-chrome'
+    # Video communication and virtual meeting platform
+    - 'zoom'
