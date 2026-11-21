@@ -67,7 +67,6 @@
 {{- $instal_brave     := promptBoolOnce . "tools.install.browser.brave"     "Install Brave browser (Y/n)"     false -}}
 {{- $instal_firefox   := promptBoolOnce . "tools.install.browser.firefox"   "Install Firefox browser (Y/n)"   true -}}
 {{- $instal_chrome    := promptBoolOnce . "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
-{{- $instal_chromium  := promptBoolOnce . "tools.install.browser.chromium"  "Install Chromium browser (Y/n)"  false -}}
 {{- $instal_edge      := promptBoolOnce . "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
 
 [data]
@@ -102,7 +101,6 @@ vscode = {{ $vscode }}
 brave = {{ $instal_brave }}
 firefox = {{ $instal_firefox }}
 chrome = {{ $instal_chrome }}
-chromium = {{ $instal_chromium }}
 edge = {{ $instal_edge }}
 
 [data.tools.enable]

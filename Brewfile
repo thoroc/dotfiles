@@ -5,7 +5,6 @@ tap "fabianishere/personal"
 tap "homebrew/autoupdate"
 tap "homebrew/bundle"
 tap "homebrew/services"
-tap "mtslzr/marmaduke-chromium"
 tap "turbot/tap"
 # C parser in Python
 brew "pycparser"
@@ -266,7 +265,6 @@ cask "iterm2"
 cask "keycastr"
 # Clipboard manager
 cask "maccy"
-cask "marmaduke-chromium"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
 # Flexible software sketchbook and a language for learning how to code

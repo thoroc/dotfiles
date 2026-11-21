@@ -77,3 +77,4 @@ zoxide = "latest"
 [settings]
 idiomatic_version_file_enable_tools = ["node", "python", "rust", "terraform"]
 experimental = true
+min_days_until_upgrade = 7
