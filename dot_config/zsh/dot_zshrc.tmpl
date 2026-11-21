@@ -9,11 +9,11 @@ export LANG=en_US.UTF-8
 # ---------------------------------------------------------------------------------------------------------------------
 # bin on the path
 # ---------------------------------------------------------------------------------------------------------------------
-eval "$(/usr/local/bin/brew shellenv)"
+eval "$({{ .homebrew_prefix }}/bin/brew shellenv)"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Manual 
+# Manual
 # ---------------------------------------------------------------------------------------------------------------------
 export MANPATH="/usr/local/man:$MANPATH"
 
@@ -37,12 +37,12 @@ export PATH="$(brew --prefix curl)/bin:$PATH"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# local bin directories 
+# local bin directories
 # ---------------------------------------------------------------------------------------------------------------------
-export PATH="/Users/thomas.roche/Bin:$PATH"
-export PATH="/Users/thomas.roche/.bin:$PATH"
-export PATH="/Users/thomas.roche/.local/bin:$PATH"
-export PATH="/Users/thomas.roche/bin:$PATH"
+export PATH="{{ .chezmoi.homeDir }}/Bin:$PATH"
+export PATH="{{ .chezmoi.homeDir }}/.bin:$PATH"
+export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
+export PATH="{{ .chezmoi.homeDir }}/bin:$PATH"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -55,22 +55,15 @@ eval "$($HOME/.local/share/mise/installs/fnox/latest/fnox export --format shell 
 # ---------------------------------------------------------------------------------------------------------------------
 # mise: https://mise.jdx.dev
 # ---------------------------------------------------------------------------------------------------------------------
-# eval "$(mise activate zsh)"
-eval "$(/Users/thomas.roche/.local/bin/mise activate zsh)"
+eval "$({{ .chezmoi.homeDir }}/.local/bin/mise activate zsh)"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Default Python
-# ---------------------------------------------------------------------------------------------------------------------
-export PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# AWS 
+# AWS
 # ---------------------------------------------------------------------------------------------------------------------
 export AWS_SDK_LOAD_CONFIG=1
-export AWS_CONFIG_FILE=/Users/thomas.roche/.aws/config
-export AWS_SHARED_CREDENTIALS_FILE=/Users/thomas.roche/.aws/credentials
+export AWS_CONFIG_FILE={{ .chezmoi.homeDir }}/.aws/config
+export AWS_SHARED_CREDENTIALS_FILE={{ .chezmoi.homeDir }}/.aws/credentials
 
 
 # declare the AWS_PROFILE var
@@ -78,12 +71,12 @@ export AWS_PROFILE
 
 okta() {
     # Argument is the okta profile name, defined in ~/.okta-aws (e.g. tooling)
-    if [ ! -f/Users/thomas.roche/.okta-aws ];then
-      echo "Missing/Users/thomas.roche/.okta-aws, please set it up."
+    if [ ! -f {{ .chezmoi.homeDir }}/.okta-aws ];then
+      echo "Missing {{ .chezmoi.homeDir }}/.okta-aws, please set it up."
       return 1
     elif [ -z "$1" ]; then
       echo "Missing profile argument, please provide one of the following:"
-      cat "/Users/thomas.roche/.okta-aws" | sed -n 's/^\[/  * /p' | tr -d '\]' | sort
+      cat "{{ .chezmoi.homeDir }}/.okta-aws" | sed -n 's/^\[/  * /p' | tr -d '\]' | sort
       return 1
     else
         unset AWS_PROFILE
@@ -121,11 +114,6 @@ if type "${BREW_BIN}" &> /dev/null; then
     for mandir in "${BREW_PREFIX}/opt/"*"/share/man/man1"; do export MANPATH=$mandir:$MANPATH; done
 fi
 
-# Old version:
-# export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-# export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-# export PATH="/usr/local/opt/binutils/bin:$PATH"
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 # docker
@@ -143,7 +131,7 @@ export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PA
 # ---------------------------------------------------------------------------------------------------------------------
 # pnpm
 # ---------------------------------------------------------------------------------------------------------------------
-export PNPM_HOME="/Users/thomas.roche/Library/pnpm"
+export PNPM_HOME="{{ .chezmoi.homeDir }}/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -153,30 +141,30 @@ esac
 # ---------------------------------------------------------------------------------------------------------------------
 # Yarn
 # ---------------------------------------------------------------------------------------------------------------------
-export PATH="/Users/thomas.roche/.yarn/bin:$PATH"
-export PATH="/Users/thomas.roche/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="{{ .chezmoi.homeDir }}/.yarn/bin:$PATH"
+export PATH="{{ .chezmoi.homeDir }}/.config/yarn/global/node_modules/.bin:$PATH"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # golang
 # ---------------------------------------------------------------------------------------------------------------------
-export GOPATH="/Users/thomas.roche/go" 
+export GOPATH="{{ .chezmoi.homeDir }}/go"
 export PATH="$PATH:$GOPATH/bin"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Cargo the rust tool
 # ---------------------------------------------------------------------------------------------------------------------
-export CARGO_HOME="/Users/thomas.roche/.cargo"
+export CARGO_HOME="{{ .chezmoi.homeDir }}/.cargo"
 export PATH="$CARGO_HOME/bin:$PATH"
-[[ -s "$CARGO_HOME" ]] && source "/Users/thomas.roche/.cargo/env"
+[[ -s "$CARGO_HOME" ]] && source "{{ .chezmoi.homeDir }}/.cargo/env"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # fzf: https://github.com/junegunn/fzf
 # ---------------------------------------------------------------------------------------------------------------------
 # source <(fzf --zsh)
-# [ -f ~/.fzf.zsh ] && source/Users/thomas.roche/.fzf.zsh
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # autoload -U +X bashcompinit && bashcompinit
 # complete -o nospace -C /usr/local/bin/bit bit
 # fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"
@@ -208,7 +196,7 @@ fi
 # rvm: Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 # ---------------------------------------------------------------------------------------------------------------------
 export PATH="/usr/local/opt/ruby/bin:$PATH"
-export RVM_HOME="/Users/thomas.roche/.rvm"
+export RVM_HOME="{{ .chezmoi.homeDir }}/.rvm"
 export PATH="$RVM_HOME/scripts/rvm:$PATH"
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$RVM_HOME/bin"
@@ -216,7 +204,7 @@ export PATH="$PATH:$RVM_HOME/bin"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# SSH config 
+# SSH config
 # ---------------------------------------------------------------------------------------------------------------------
 # If your ssh keys are not being added automatically then uncomment the following:
 #/usr/bin/ssh-add --apple-use-keychain ~/.ssh/id_ed25519
@@ -225,8 +213,8 @@ export PATH="$PATH:$RVM_HOME/bin"
 /usr/bin/ssh-add --apple-load-keychain -q
 
 # Keychain
-# /usr/local/bin/keychain/Users/thomas.roche/.ssh/id_rsa
-# source/Users/thomas.roche/.keychain/id_rsa
+# /usr/local/bin/keychain ~/.ssh/id_rsa
+# source ~/.keychain/id_rsa
 
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
@@ -235,13 +223,13 @@ if type brew &>/dev/null; then
   # compinit
 fi
 
-# PATH duplication 
+# PATH duplication
 typeset -U PATH
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Deno
 # ---------------------------------------------------------------------------------------------------------------------
-# . "/Users/thomas.roche/.deno/env"
+# . "$HOME/.deno/env"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -260,10 +248,10 @@ typeset -U PATH
 # ---------------------------------------------------------------------------------------------------------------------
 autoload -U compinit
 compinit
-source <(jj util completion zsh)
+command -v jj &>/dev/null && source <(jj util completion zsh)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # opencode
 # ---------------------------------------------------------------------------------------------------------------------
-export PATH=/Users/thomas.roche/.opencode/bin:$PATH
+export PATH={{ .chezmoi.homeDir }}/.opencode/bin:$PATH
