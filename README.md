@@ -64,6 +64,10 @@ mise: if you accept, `mise install` runs first and the Homebrew formula is then 
 it (that is reported, never forced). mise has no built-in migration; `mise sync node`/`ruby` can link Homebrew versions
 of those two, but everything else is a fresh `mise install` followed by `brew uninstall`.
 
+A few Homebrew tools that mise can provide as prebuilt binaries (currently `colima`, `d2` and `mas`) can be moved the
+same way: `init` lists the ones you have installed with Homebrew and you pick which to move (none by default). `ffmpeg`,
+`make` and `poppler` are not offered, because mise would build or repackage them rather than ship a binary.
+
 The terminal emulator is a single choice (`iterm2` by default, or `warp`, `alacritty`, `kitty`, `hyper`, `wezterm`,
 `terminal`). The chosen one is installed as a Homebrew cask; `terminal` means the built-in Terminal.app and installs
 nothing.

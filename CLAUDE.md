@@ -69,6 +69,13 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   `run_onchange_after_darwin-migrate-brew-to-mise`, which runs `mise install` then a non-forcing `brew uninstall`
   (formulae with dependents stay, e.g. `python@3.x` and `openjdk` on most machines). Keep helper prompts (poetry, pyenv,
   jenv) on the same detect-first rule.
+- **Brew tools moved to mise** are the multi-select `tools.migrate_to_mise` (plain names; mise and Homebrew use the same
+  one). Candidates are an allowlist (`$movable` in `.chezmoi.toml.tmpl`) intersected with `brew list --formula`, so
+  nothing is offered that is not installed. Only add a tool after proving it installs on both architectures from a
+  prebuilt binary (use an isolated `MISE_DATA_DIR` and an empty `MISE_GLOBAL_CONFIG_FILE`); mise tools backed by
+  `conda:` or an asdf plugin build or repackage software and are excluded. Chosen tools get a mise config entry and are
+  handled by the same migration script as languages (`mise install`, then a non-forcing `brew uninstall`). Like the
+  language prompts, the answer can be pre-set with `tools.migrate_to_mise = [...]` in `init-defaults.toml`.
 - **Prompt and ls replacement** are single choices (`tools.prompt`: `oh-my-posh` | `none`, default `oh-my-posh`;
   `tools.ls`: `eza` | `lsd` | `none`, default `eza`). They gate the mise entries (`dot_config/mise/config.toml.tmpl`),
   the zprofile init block, the aliases, and the `.config/oh-my-posh` and `.config/lsd` applies (`.chezmoiignore`).
