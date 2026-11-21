@@ -34,7 +34,7 @@ cask {{ . | quote }}
 {{ if eq .chezmoi.arch "amd64" }}
 brew "git-delta"
 {{ end }}
-{{ if eq .lang.java.enabled true }}
+{{ if eq (dig "lang" "java" "manager" (ternary "brew" "none" .lang.java.enabled) .) "brew" }}
 brew "openjdk@11"
 brew "openjdk@8"
 {{ end }}

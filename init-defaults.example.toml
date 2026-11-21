@@ -31,3 +31,9 @@ logseq = false
 # [user.work]
 # name = "john.doe"
 # email = "john.doe@example.com"
+
+# Languages: detected when already installed. Only the Homebrew-to-mise offer needs an answer.
+# [lang.golang]
+# migrate = false
+# [lang.python]
+# migrate = false

@@ -46,19 +46,27 @@ eza = "latest"
 fd = "latest"
 fnox = "latest"
 fzf = "latest"
+{{ if eq (dig "lang" "golang" "manager" "mise" .) "mise" -}}
 go = "1.24"
+{{ end -}}
+{{ if eq (dig "lang" "java" "manager" "mise" .) "mise" -}}
 java = "openjdk-11"
+{{ end -}}
 jq = "latest"
 {{ if eq (dig "tools" "ls" "eza" .) "lsd" -}}
 lsd = "latest"
 {{ end -}}
+{{ if eq (dig "lang" "nodejs" "manager" "mise" .) "mise" -}}
 node = "latest"
+{{ end -}}
 perl = "latest"
 pipx = "latest"
 pnpm = "latest"
 prettier = "latest"
 protobuf = "latest"
+{{ if eq (dig "lang" "python" "manager" "mise" .) "mise" -}}
 python = "3.13"
+{{ end -}}
 ripgrep = "latest"
 {{ if ne .chezmoi.arch "amd64" -}}
 {{- /* no prebuilt delta for darwin/amd64 in mise's registry; Intel Macs get git-delta from Homebrew instead (install-packages script) */ -}}
@@ -66,7 +74,9 @@ delta = "latest"
 {{ end -}}
 rlwrap = "latest"
 rumdl = "latest"
+{{ if eq (dig "lang" "rust" "manager" "mise" .) "mise" -}}
 rust = "latest"
+{{ end -}}
 semgrep = "latest"
 sqlite = "latest"
 terraform = "latest"

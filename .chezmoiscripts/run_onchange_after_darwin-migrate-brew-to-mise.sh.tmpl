@@ -1,0 +1,31 @@
+{{- /* Moves the languages the user opted in to (lang.<name>.migrate) from Homebrew to mise. Renders empty, so chezmoi skips it, when there is nothing to move. */ -}}
+{{- $migrations := dict "nodejs" (list "node" "^node(@[0-9.]+)?$") "python" (list "python" "^python(@[0-9.]+)?$") "golang" (list "go" "^go$") "java" (list "java" "^openjdk(@[0-9]+)?$") -}}
+{{- $wanted := list -}}
+{{- range $key, $spec := $migrations -}}
+{{-   if dig "lang" $key "migrate" false $ -}}
+{{-     $wanted = append $wanted $key -}}
+{{-   end -}}
+{{- end -}}
+{{- if and (eq .chezmoi.os "darwin") $wanted -}}
+#!{{ .os_shell }}
+# Homebrew to mise, opt-in per language. Nothing is forced: brew refuses to uninstall a formula that other formulae
+# depend on, and that is reported rather than overridden.
+
+eval "$({{ .homebrew_prefix }}/bin/brew shellenv)"
+
+if ! command -v mise >/dev/null 2>&1; then
+  echo "mise not found, skipping the Homebrew to mise migration"
+  exit 0
+fi
+{{ range $key := $wanted }}
+{{-   $spec := index $migrations $key }}
+echo "==> {{ $key }}: installing {{ index $spec 0 }} with mise"
+if mise install {{ index $spec 0 | quote }}; then
+  for formula in $(brew list --formula | grep -E {{ index $spec 1 | squote }} || true); do
+    brew uninstall "$formula" || echo "kept $formula (other formulae depend on it)"
+  done
+else
+  echo "mise could not install {{ index $spec 0 }}; leaving the Homebrew copy alone"
+fi
+{{ end -}}
+{{ end -}}

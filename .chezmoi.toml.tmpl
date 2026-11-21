@@ -68,33 +68,77 @@
 
 {{- /* Lists */ -}}
 
-{{- /* Languages */ -}}
-
-{{- /* NodeJS */ -}}
-{{- $enable_nodejs := promptBoolOnce $d "lang.nodejs.enabled" "Enable NodeJS as a programming language (Y/n)" true -}}
-{{- if eq $enable_nodejs true -}}
+{{- /* Languages. An installed language is enabled without asking and its source is detected from where it resolves
+       on PATH ("mise", "brew", "rustup", "other"; the /usr/bin stubs count as not installed). For a Homebrew one the user
+       may opt in to moving it to mise. "manager" is who owns installs: mise, brew, rustup, other or none. */ -}}
+{{- $langSpecs := list
+      (dict "key" "nodejs" "label" "NodeJS" "bin" "node"    "default" true)
+      (dict "key" "python" "label" "Python" "bin" "python3" "default" true)
+      (dict "key" "golang" "label" "Go"     "bin" "go"      "default" true)
+      (dict "key" "rust"   "label" "Rust"   "bin" "rustc"   "default" true)
+      (dict "key" "java"   "label" "Java"   "bin" "java"    "default" false) -}}
+{{- $lang := dict -}}
+{{- range $langSpecs -}}
+{{-   $spec := . -}}
+{{-   $path := lookPath $spec.bin -}}
+{{-   $source := "" -}}
+{{-   if $path -}}
+{{-     if contains "/.local/share/mise/" $path -}}
+{{-       $source = "mise" -}}
+{{-     else if or (contains "/usr/local/opt/" $path) (contains "/usr/local/Cellar/" $path) (contains "/opt/homebrew/" $path) -}}
+{{-       $source = "brew" -}}
+{{-     else if contains "/.cargo/" $path -}}
+{{-       $source = "rustup" -}}
+{{-     else if not (hasPrefix "/usr/bin/" $path) -}}
+{{-       $source = "other" -}}
+{{-     end -}}
+{{-   end -}}
+{{-   $enabled := dig "lang" $spec.key "enabled" "" $d -}}
+{{-   if not (kindIs "bool" $enabled) -}}
+{{-     if $source -}}
+{{-       $enabled = true -}}
+{{-     else -}}
+{{-       $enabled = promptBool (printf "Enable %s as a programming language (%s)" $spec.label (ternary "Y/n" "y/N" $spec.default)) $spec.default -}}
+{{-     end -}}
+{{-   end -}}
+{{-   $migrate := dig "lang" $spec.key "migrate" "" $d -}}
+{{-   if not (kindIs "bool" $migrate) -}}
+{{-     $migrate = false -}}
+{{-     if and $enabled (eq $source "brew") -}}
+{{-       $migrate = promptBool (printf "%s is installed with Homebrew. Move it to mise (installs it with mise, then removes the Homebrew formula unless something depends on it) (y/N)" $spec.label) false -}}
+{{-     end -}}
+{{-   end -}}
+{{-   $manager := "none" -}}
+{{-   if $enabled -}}
+{{-     if or (eq $source "") (eq $source "mise") $migrate -}}
+{{-       $manager = "mise" -}}
+{{-     else -}}
+{{-       $manager = $source -}}
+{{-     end -}}
+{{-   end -}}
+{{-   $_ := set $lang $spec.key (dict "enabled" $enabled "source" $source "migrate" $migrate "manager" $manager) -}}
 {{- end -}}
 
-{{- /* Python */ -}}
-{{- $enable_python := promptBoolOnce $d "lang.python.enabled" "Enable Python as a programming language (Y/n)" true -}}
-{{- $poetry := false -}}
-{{- $pyenv := false -}}
-{{- if eq $enable_python true -}}
-{{-   $poetry = promptBoolOnce $d "lang.python.poetry" "Enable Poetry as a Python package manager (Y/n)" $poetry -}}
-{{-   $pyenv  = promptBoolOnce $d "lang.python.pyenv"  "Enable pyenv as a Python version manager (Y/n)"  $pyenv -}}
-{{- end -}}
-  
-{{- /* Go */ -}}
-{{- $enable_golang := promptBoolOnce $d "lang.golang.enabled" "Enable Go as a programming language (Y/n)" true -}}
-
-{{- /* Rust */ -}}
-{{- $enable_rust := promptBoolOnce $d "lang.rust.enabled" "Enable Rust as a programming language (Y/n)" true -}}
-
-{{- /* Java */ -}}
-{{- $enable_java := promptBoolOnce $d "lang.java.enabled" "Enable Java as a programming language (N/n)" false -}}
-{{- $jenv := false -}}
-{{- if eq $enable_java true -}}
-{{-   $jenv = promptBoolOnce $d "lang.java.jenv" "Enable jenv as a Java version manager (y/n)" false -}}
+{{- /* Version managers and helpers: already present means enabled, otherwise ask only when the language is enabled */ -}}
+{{- $helpers := list (list "python" "poetry" "poetry" "Poetry as a Python package manager") (list "python" "pyenv" "pyenv" "pyenv as a Python version manager") (list "java" "jenv" "jenv" "jenv as a Java version manager") -}}
+{{- range $helpers -}}
+{{-   $parent := index . 0 -}}
+{{-   $name := index . 1 -}}
+{{-   $bin := index . 2 -}}
+{{-   $text := index . 3 -}}
+{{-   $parentKey := ternary "python" "java" (eq $parent "python") -}}
+{{-   $value := dig "lang" $parentKey $name "" $d -}}
+{{-   if not (kindIs "bool" $value) -}}
+{{-     $value = false -}}
+{{-     if (index $lang $parentKey).enabled -}}
+{{-       if lookPath $bin -}}
+{{-         $value = true -}}
+{{-       else -}}
+{{-         $value = promptBool (printf "Enable %s (y/N)" $text) false -}}
+{{-       end -}}
+{{-     end -}}
+{{-   end -}}
+{{-   $_ := set (index $lang $parentKey) $name $value -}}
 {{- end -}}
 
 {{- $instal_brave     := promptBoolOnce $d "tools.install.browser.brave"     "Install Brave browser (Y/n)"     false -}}
@@ -179,20 +223,9 @@ bat = {{ $bat }}
 nix = {{ $nix }}
 one_drive = {{ $one_drive }}
 
-[data.lang.golang]
-enabled = {{ $enable_golang }}
-
-[data.lang.rust]
-enabled = {{ $enable_rust }}
-
-[data.lang.java]
-enabled = {{ $enable_java }}
-jenv = {{ $jenv }}
-
-[data.lang.nodejs]
-enabled = {{ $enable_nodejs }}
-
-[data.lang.python]
-enabled = {{ $enable_python }}
-poetry = {{ $poetry }}
-pyenv = {{ $pyenv }}
+{{ range $k, $v := $lang }}
+[data.lang.{{ $k }}]
+{{- range $f, $val := $v }}
+{{ $f }} = {{ if kindIs "string" $val }}{{ $val | quote }}{{ else }}{{ $val }}{{ end }}
+{{- end }}
+{{ end -}}
