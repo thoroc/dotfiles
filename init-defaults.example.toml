@@ -4,6 +4,10 @@
 # `[data]` table written to ~/.config/chezmoi/chezmoi.toml. Anything set here is used instead of prompting, and wins over
 # an answer already stored in the generated config. Keys left out keep their stored answer or are prompted.
 
+[tools]
+# "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in, installs nothing)
+terminal = "iterm2"
+
 [tools.ai]
 claude = false
 gemini = false

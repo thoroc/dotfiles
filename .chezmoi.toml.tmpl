@@ -42,7 +42,10 @@
 {{-   $logseq_graph = promptStringOnce . "tools.notes.logseq_graph" "Logseq graph path (absolute)" (printf "%s/Documents/logseq-graph" .chezmoi.homeDir) -}}
 {{- end -}}
 
-{{- /* Terminals */ -}}
+{{- /* Terminal emulator: pick one ("terminal" is the built-in Terminal.app, nothing is installed for it) */ -}}
+{{- $terminal := promptChoiceOnce . "tools.terminal" "Terminal emulator" (list "iterm2" "warp" "alacritty" "kitty" "hyper" "wezterm" "terminal") "iterm2" -}}
+
+{{- /* IDEs */ -}}
 {{- $vscode := promptBoolOnce . "tools.install.ide.vscode" "Install Visual Studio Code as a IDE (Y/n)" true -}}
 
 {{- /* Shells */ -}}
@@ -111,8 +114,8 @@ email = {{ $gh_email | quote }}
 # we want to try and allow other shells/prompts to be used
 # "starship"
 prompt = "oh-my-posh"
-# "warp" or "iterm2" or "alacritty" or "kitty" or "hyper" or "terminal" or "wezterm"
-shell = "warp"
+# one of "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in Terminal.app)
+terminal = {{ $terminal | quote }}
 # "vscode" or "vim" or "zed" or "sublime" or "atom"
 editor = "vscode"
 # "lsd" or "exa" or "lsd" or "dust" or "dircolors"
