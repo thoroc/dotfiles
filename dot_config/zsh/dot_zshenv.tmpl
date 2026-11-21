@@ -4,13 +4,13 @@
 export LANG=en_US.UTF-8
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Manual 
+# Manual
 # ---------------------------------------------------------------------------------------------------------------------
 export MANPATH="/usr/local/man:$MANPATH"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# local bin directories 
+# local bin directories
 # ---------------------------------------------------------------------------------------------------------------------
 export PATH="{{ .chezmoi.homeDir }}/Bin:$PATH"
 export PATH="{{ .chezmoi.homeDir }}/.bin:$PATH"
@@ -21,13 +21,7 @@ export PATH="/usr/local/bin:$PATH"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Default Python
-# ---------------------------------------------------------------------------------------------------------------------
-export PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# AWS 
+# AWS
 # ---------------------------------------------------------------------------------------------------------------------
 export AWS_SDK_LOAD_CONFIG=1
 export AWS_CONFIG_FILE={{ .chezmoi.homeDir }}/.aws/config
@@ -99,11 +93,6 @@ if type "${BREW_BIN}" &> /dev/null; then
     for mandir in "${BREW_PREFIX}/opt/"*"/share/man/man1"; do export MANPATH=$mandir:$MANPATH; done
 fi
 
-# Old version:
-# export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-# export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-# export PATH="/usr/local/opt/binutils/bin:$PATH"
-
 
 {{- if eq .tools.install.ide.vscode true }}
 # ---------------------------------------------------------------------------------------------------------------------
@@ -140,20 +129,6 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# nvm
-# ---------------------------------------------------------------------------------------------------------------------
-# export NVM_DIR="{{ .chezmoi.homeDir }}/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# npm
-# ---------------------------------------------------------------------------------------------------------------------
-export PATH="{{ .chezmoi.homeDir }}/.npm-global/bin:$PATH"
-
-
-# ---------------------------------------------------------------------------------------------------------------------
 # pnpm
 # ---------------------------------------------------------------------------------------------------------------------
 export PNPM_HOME="{{ .chezmoi.homeDir }}/Library/pnpm"
@@ -163,58 +138,21 @@ case ":$PATH:" in
 esac
 
 
-# ---------------------------------------------------------------------------------------------------------------------
-# Yarn
-# ---------------------------------------------------------------------------------------------------------------------
-export PATH="{{ .chezmoi.homeDir }}/.yarn/bin:$PATH"
-export PATH="{{ .chezmoi.homeDir }}/.config/yarn/global/node_modules/.bin:$PATH"
-
-
 {{- if eq .lang.golang.enabled true }}
 # ---------------------------------------------------------------------------------------------------------------------
 # golang
 # ---------------------------------------------------------------------------------------------------------------------
-export GOPATH="{{ .chezmoi.homeDir }}/go" 
+export GOPATH="{{ .chezmoi.homeDir }}/go"
 export PATH="$PATH:$GOPATH/bin"
 {{ end -}}
 
 
 {{- if eq .lang.rust.enabled true }}
 # ---------------------------------------------------------------------------------------------------------------------
-# Cargo the rust tool
+# Cargo
 # ---------------------------------------------------------------------------------------------------------------------
 export CARGO_HOME="{{ .chezmoi.homeDir }}/.cargo"
 export PATH="$CARGO_HOME/bin:$PATH"
-{{ end -}}
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# fzf: https://github.com/junegunn/fzf
-# ---------------------------------------------------------------------------------------------------------------------
-# source <(fzf --zsh)
-# [ -f ~/.fzf.zsh ] && source {{ .chezmoi.homeDir }}/.fzf.zsh
-# autoload -U +X bashcompinit && bashcompinit
-# complete -o nospace -C /usr/local/bin/bit bit
-# fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"
-
-
-{{ if eq .tools.enable.dasel true }}
-# ---------------------------------------------------------------------------------------------------------------------
-# dasel: https://github.com/TomWright/dasel
-# ---------------------------------------------------------------------------------------------------------------------
-export fpath=({{ .chezmoi.homeDir }}/zsh/site-functions $fpath)
-mkdir -p "{{ .chezmoi.homeDir }}/zsh/site-functions"
-dasel completion zsh > "{{ .chezmoi.homeDir }}/zsh/site-functions/_dasel"
-{{ end -}}
-
-
-{{- if eq .tools.prompt "starship" }}
-# ---------------------------------------------------------------------------------------------------------------------
-# Starship: https://starship.rs/
-# ---------------------------------------------------------------------------------------------------------------------
-if [ -f "{{ .chezmoi.homeDir }}/.config/starship/starship.toml" ]; then
-    export STARSHIP_CONFIG="{{ .chezmoi.homeDir }}/.config/starship/starship.toml"
-fi
 {{ end -}}
 
 
@@ -224,13 +162,3 @@ fi
 # ---------------------------------------------------------------------------------------------------------------------
 export PATH="{{ .chezmoi.homeDir }}/.jenv/bin:$PATH"
 {{ end -}}
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# rvm: Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-# ---------------------------------------------------------------------------------------------------------------------
-export PATH="/usr/local/opt/ruby/bin:$PATH"
-export RVM_HOME="{{ .chezmoi.homeDir }}/.rvm"
-export PATH="$RVM_HOME/scripts/rvm:$PATH"
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$RVM_HOME/bin"
