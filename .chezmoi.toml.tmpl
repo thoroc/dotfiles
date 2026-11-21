@@ -45,8 +45,12 @@
 {{- /* Terminal emulator: pick one ("terminal" is the built-in Terminal.app, nothing is installed for it) */ -}}
 {{- $terminal := promptChoiceOnce . "tools.terminal" "Terminal emulator" (list "iterm2" "warp" "alacritty" "kitty" "hyper" "wezterm" "terminal") "iterm2" -}}
 
-{{- /* IDEs */ -}}
-{{- $vscode := promptBoolOnce . "tools.install.ide.vscode" "Install Visual Studio Code as a IDE (Y/n)" true -}}
+{{- /* Editors/IDEs: any combination; the value is the Homebrew cask name. VS Code only by default. */ -}}
+{{- /* promptMultichoiceOnce ignores stored or overridden lists, so only prompt when no list is present */ -}}
+{{- $editors := dig "tools" "editors" "" . -}}
+{{- if not (kindIs "slice" $editors) -}}
+{{-   $editors = promptMultichoice "Editors/IDEs to install" (list "visual-studio-code" "zed" "cursor" "vscodium" "sublime-text" "webstorm" "intellij-idea" "pycharm") (list "visual-studio-code") -}}
+{{- end -}}
 
 {{- /* Shells */ -}}
 
@@ -116,8 +120,8 @@ email = {{ $gh_email | quote }}
 prompt = "oh-my-posh"
 # one of "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in Terminal.app)
 terminal = {{ $terminal | quote }}
-# "vscode" or "vim" or "zed" or "sublime" or "atom"
-editor = "vscode"
+# editors/IDEs to install, by Homebrew cask name (see the "Editors/IDEs" prompt)
+editors = {{ $editors | toJson }}
 # "lsd" or "exa" or "lsd" or "dust" or "dircolors"
 list = "lsd"
 
@@ -137,9 +141,6 @@ obsidian_vault = {{ $obsidian_vault | quote }}
 {{- if $notes_logseq }}
 logseq_graph = {{ $logseq_graph | quote }}
 {{- end }}
-
-[data.tools.install.ide]
-vscode = {{ $vscode }}
 
 [data.tools.install.browser]
 brave = {{ $instal_brave }}

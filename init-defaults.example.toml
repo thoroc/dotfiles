@@ -7,6 +7,9 @@
 [tools]
 # "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in, installs nothing)
 terminal = "iterm2"
+# Editors/IDEs by Homebrew cask name: "visual-studio-code", "zed", "cursor", "vscodium", "sublime-text", "webstorm",
+# "intellij-idea", "pycharm"
+editors = ["visual-studio-code"]
 
 [tools.ai]
 claude = false

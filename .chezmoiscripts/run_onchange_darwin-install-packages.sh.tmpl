@@ -28,8 +28,8 @@ cask "orbstack"
 {{ if and (hasKey .tools "terminal") (ne .tools.terminal "terminal") }}
 cask {{ .tools.terminal | quote }}
 {{ end }}
-{{ if eq .tools.install.ide.vscode true }}
-cask "visual-studio-code"
+{{ range (dig "tools" "editors" (list "visual-studio-code") .) }}
+cask {{ . | quote }}
 {{ end }}
 {{ if eq .lang.java.enabled true }}
 brew "openjdk@11"
