@@ -1,9 +1,8 @@
 README.md
-package.json
-package-lock.json
-lefthook.yml
+CLAUDE.md
+hk.pkl
+mise.toml
 .markdownlint.yml
 .prettierrc
 .vscode/
-node_modules/
 Brewfile
