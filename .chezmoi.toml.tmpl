@@ -9,7 +9,7 @@
 
 {{- /* Homebrew prefix */ -}}
 {{- $homebrew_prefix := "" -}}
-{{- if eq .chezmoi.arch "x86_64" -}}
+{{- if eq .chezmoi.arch "amd64" -}}
 {{-   $homebrew_prefix = "/usr/local" -}}
 {{- else -}}
 {{-   $homebrew_prefix = "/opt/homebrew" -}}
