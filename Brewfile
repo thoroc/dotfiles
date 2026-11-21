@@ -5,12 +5,8 @@ tap "fabianishere/personal"
 tap "homebrew/autoupdate"
 tap "homebrew/bundle"
 tap "homebrew/services"
-tap "jmespath/jmespath"
-tap "mike-engel/jwt-cli"
-tap "minamijoyo/hcledit"
 tap "mtslzr/marmaduke-chromium"
 tap "turbot/tap"
-tap "tylerbrock/saw"
 # C parser in Python
 brew "pycparser"
 # C Foreign Function Interface for Python
@@ -257,14 +253,6 @@ brew "zlib"
 brew "zsh"
 # Additional completion definitions for zsh
 brew "zsh-completions"
-# Command-line interface to JMESPath, a query language for JSON
-brew "jmespath/jmespath/jp"
-# Super fast CLI tool to decode and encode JWTs built in Rust
-brew "mike-engel/jwt-cli/jwt-cli"
-# A command line editor for HCL
-brew "minamijoyo/hcledit/hcledit"
-# Fast, multipurpose tool for AWS CloudWatch Logs
-brew "tylerbrock/saw/saw"
 # Enable Windows-like alt-tab
 cask "alt-tab"
 # User-friendly GUI app for Homebrew
