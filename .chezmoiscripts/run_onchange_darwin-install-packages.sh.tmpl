@@ -1,6 +1,8 @@
 {{ if eq .chezmoi.os "darwin" -}}
 #!{{ .os_shell }}
 
+eval "$({{ .homebrew_prefix }}/bin/brew shellenv)"
+
 brew bundle --file=/dev/stdin <<EOF
 {{ if eq .tools.install.browser.brave true }}
 cask "brave-browser"
