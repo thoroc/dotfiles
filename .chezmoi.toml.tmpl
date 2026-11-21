@@ -103,8 +103,23 @@
 {{- $instal_edge      := promptBoolOnce $d "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
 
 {{- /* Container runtimes: either, both or neither */ -}}
-{{- $install_docker   := promptBoolOnce $d "tools.install.container.docker"   "Install Docker Desktop (Y/n)" true -}}
-{{- $install_orbstack := promptBoolOnce $d "tools.install.container.orbstack" "Install OrbStack (y/N)"       false -}}
+{{- /* An app that is already installed is simply enabled, without asking */ -}}
+{{- $install_docker := dig "tools" "install" "container" "docker" "" $d -}}
+{{- if not (kindIs "bool" $install_docker) -}}
+{{-   if stat "/Applications/Docker.app" -}}
+{{-     $install_docker = true -}}
+{{-   else -}}
+{{-     $install_docker = promptBool "Install Docker Desktop (Y/n)" true -}}
+{{-   end -}}
+{{- end -}}
+{{- $install_orbstack := dig "tools" "install" "container" "orbstack" "" $d -}}
+{{- if not (kindIs "bool" $install_orbstack) -}}
+{{-   if stat "/Applications/OrbStack.app" -}}
+{{-     $install_orbstack = true -}}
+{{-   else -}}
+{{-     $install_orbstack = promptBool "Install OrbStack (y/N)" false -}}
+{{-   end -}}
+{{- end -}}
 
 sourceDir = "{{ .chezmoi.homeDir }}/.dotfiles"
 
