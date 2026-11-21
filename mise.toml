@@ -8,13 +8,6 @@ enter = "hk install --quiet 2>/dev/null || true"
 [tasks.init]
 description = "Initialise chezmoi (reads ~/.config/chezmoi/init-defaults.toml for answers when present)"
 run = "chezmoi init --source ~/.dotfiles"
-defaults="${CHEZMOI_INIT_DEFAULTS:-$HOME/.config/chezmoi/init-defaults.toml}"
-if [ -f "$defaults" ]; then
-  chezmoi init --source ~/.dotfiles --override-data-file "$defaults"
-else
-  chezmoi init --source ~/.dotfiles
-fi
-'''
 
 [tasks.plan]
 description = "Preview what chezmoi would change"
