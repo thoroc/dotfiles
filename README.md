@@ -56,6 +56,10 @@ The terminal emulator is a single choice (`iterm2` by default, or `warp`, `alacr
 `terminal`). The chosen one is installed as a Homebrew cask; `terminal` means the built-in Terminal.app and installs
 nothing.
 
+Editors and IDEs are a multi-select that defaults to Visual Studio Code only. Alternatives are Zed, Cursor, VSCodium,
+Sublime Text, WebStorm, IntelliJ IDEA and PyCharm; each selected one is installed as a Homebrew cask. In
+`init-defaults.toml` the key is `tools.editors`, a list of cask names.
+
 AI coding assistants (Claude Code, Gemini CLI, Codex CLI, opencode) are independent yes/no answers that default to no.
 Each selected tool is installed through `mise` (npm backend). Only Claude Code has managed config so far (see below),
 and it is applied only when Claude Code is enabled.
@@ -80,6 +84,7 @@ Obsidian additionally asks for a vault path and Logseq for a graph path; neither
 - `CLAUDE.md`, `commands/`, the `cbm-*` hook scripts
 - `settings.json` and `.mcp.json`, rendered from templates so machine paths use the home directory instead of being
   hardcoded
+- With iTerm2 as the terminal only: the `it2` agent-status hooks (all other hooks are unaffected)
 - With Obsidian enabled only: the Obsidian MCP server entry, its two hooks (`obsidian-context.sh`, `capture-insight.sh`)
   and the `obsidian/*.py` scripts, with the vault path filled in from your answer
 

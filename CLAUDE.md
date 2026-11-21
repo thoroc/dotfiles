@@ -57,8 +57,15 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   paths and other private values in that file, not in the repo.
 - **Terminal emulator** is one `promptChoiceOnce` (`tools.terminal`, default `iterm2`) whose value is also the Homebrew
   cask name, installed by `run_onchange_darwin-install-packages`; `terminal` (Terminal.app) installs nothing. Adding a
-  terminal means adding it to the choice list in `.chezmoi.toml.tmpl` after confirming the cask name. Nothing else
-  consumes it yet (the Claude hooks in `dot_claude/settings.json.tmpl` still call iTerm2's `it2`).
+  terminal means adding it to the choice list in `.chezmoi.toml.tmpl` after confirming the cask name. The iTerm2 `it2`
+  agent hooks in `dot_claude/settings.json.tmpl` are only emitted when it is `iterm2` (or unset, for older configs);
+  events that contain only that hook are omitted entirely.
+- **Editors/IDEs** are a multi-select stored as the list `tools.editors` (cask names, default `visual-studio-code`
+  only), installed by looping over it in `run_onchange_darwin-install-packages`. `promptMultichoiceOnce` ignores stored
+  and overridden lists (it would re-prompt on every `init` and ignore `init-defaults.toml`), so `.chezmoi.toml.tmpl`
+  checks for an existing list with `dig`/`kindIs "slice"` and only then calls `promptMultichoice`. Templates read it
+  with `dig "tools" "editors" (list "visual-studio-code") .` so older configs keep working. To test the prompt use
+  `--promptMultichoice "Editors/IDEs to install=zed/cursor"` (values are `/`-separated).
 - **AI coding assistants** are four independent toggles in `.chezmoi.toml.tmpl`
   (`tools.ai.claude|gemini|codex|opencode`, default false). They are installed via mise, so
   `dot_config/mise/config.toml.tmpl` is a template that gates each npm entry on its toggle. `dot_claude/` is applied
