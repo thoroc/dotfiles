@@ -1,0 +1,6 @@
+[providers.keychain]
+type = "keychain"
+service = "fnox"
+
+[secrets]
+GITHUB_TOKEN= { provider = "keychain", value = "GITHUB_TOKEN" }

@@ -6,16 +6,9 @@ brew bundle --no-lock --file=/dev/stdin <<EOF
 brew {{ . | quote }}
 {{ end -}}
 
-{{- if eq .lang.python.enabled true -}}
-brew "pipx"
-{{- end -}}
+{{- /* python and node are managed by mise — no brew installs needed */ -}}
 
-{{- if eq .lang.python.pyenv true -}}
-brew "pyenv"
-brew "pyenv-virtualenv"
-{{- end -}}
-
-{{- /* Web browser /* -}}
+{{- /* Web browser */ -}}
 
 {{- if eq .tools.install.browser.brave true -}}
 cask "brave-browser"
@@ -38,17 +31,6 @@ cask "chromium"
 cask "microsoft-edge"
 {{- end -}}
 
-{{- if eq .tools.install.browser.vivaldi true -}}
-cask "vivaldi"
-{{- end -}}
-
-{{- if eq .tools.install.browser.opera true -}}
-cask "opera"
-{{- end -}}
-
-{{- if eq .tools.install.browser.arc true -}}
-cask "arc"
-{{- end -}}
 
 {{- if eq .tools.enable.bat true -}}
 brew "bat"
@@ -70,21 +52,16 @@ brew "jenv"
 brew "lsd"
 {{- end -}}
 
-{{- /* Editors /* -}}
+{{- /* Editors */ -}}
 
 {{- if eq .tools.install.ide.vscode true -}}
 cask "visual-studio-code"
 {{- end -}}
 
-{{- if eq .tools.install.ide.zed true -}}
-brew "zed"
-{{- end -}}
 
-{{- /* Languages /* -}}
+{{- /* Languages */ -}}
 
-{{- if eq .lang.golang.enabled true -}}
-brew "go"
-{{- end -}}
+{{- /* go, python, node managed by mise — no brew installs needed */ -}}
 
 {{- if eq .lang.java.enabled true -}}
 brew "openjdk@11"

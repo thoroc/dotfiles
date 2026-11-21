@@ -1,3 +1,0 @@
-name: aws rds describe-db-instances
-command: aws rds describe-db-instances
-tags: ["aws", "rds"]

@@ -1,4 +1,0 @@
-name: Uninstall husky git hooks
-command: npm uninstall husky && git config --unset core.hooksPath
-
-tags: ["git", "husky", "hooks"]

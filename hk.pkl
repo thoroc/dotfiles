@@ -1,0 +1,20 @@
+amends "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Builtins.pkl"
+// Using a coding agent? See https://hk.jdx.dev/agents
+
+steps {
+    ["format-docs"] {
+        glob = "*.md"
+        fix = "prettier --write --prose-wrap always {{ files }}"
+        check = "prettier --check --prose-wrap always {{ files }}"
+    }
+    ["lint-docs"] {
+        glob = "*.md"
+        fix = "markdownlint-cli2 --fix {{ files }}"
+        check = "markdownlint-cli2 {{ files }}"
+    }
+    ["markdown-toc"] {
+        glob = "*.md"
+        fix = "doctoc {{ files }}"
+    }
+}

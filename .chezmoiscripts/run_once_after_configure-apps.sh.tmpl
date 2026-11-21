@@ -5,8 +5,8 @@
 # Homebrew settings
 # ---------------------------------------------------------------------------------------------------------------------
 printf '\n\n\e[33mHomebrew not found. \e[0mInstalling Homebrew...'
-{{ .os_shell}} -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-eval "$({{ .homebrew_prefix }}/bin/brew shellenv)"
+{{ $.os_shell}} -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$({{ $.homebrew_prefix }}/bin/brew shellenv)"
 {{ end -}}
 
 # ---------------------------------------------------------------------------------------------------------------------

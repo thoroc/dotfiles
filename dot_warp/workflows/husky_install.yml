@@ -1,4 +1,0 @@
-name: Install husky git hooks
-command: npx husky-init
-
-tags: ["git", "husky", "hooks"]

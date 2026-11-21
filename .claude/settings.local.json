@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
+      "Bash(mise ls:*)",
+      "Bash(brew list:*)",
+      "Bash(uv tool:*)",
+      "Read(//Users/thomas.roche/.cargo/bin/**)",
+      "Bash(chezmoi status:*)",
+      "Bash(chezmoi source-path:*)",
+      "Bash(chezmoi managed:*)",
+      "Bash(mise registry:*)",
+      "Bash(mise search:*)",
+      "Bash(brew search:*)",
+      "Bash(mise install:*)",
+      "Bash(fnox --version)",
+      "Bash(fnox --help)",
+      "Bash(mise use:*)",
+      "Bash(mise x:*)",
+      "Bash(chezmoi add:*)",
+      "Bash(chezmoi diff:*)",
+      "Bash(mise env:*)",
+      "Bash(mise --version)",
+      "Read(//Users/thomas.roche/.local/share/mise/installs/fnox/**)",
+      "Bash(/Users/thomas.roche/.local/share/mise/installs/fnox/latest/fnox activate:*)",
+      "Bash(/Users/thomas.roche/.local/share/mise/installs/fnox/latest/fnox export:*)",
+      "Bash(chezmoi --source ~/.dotfiles doctor)",
+      "Bash(cp -r ~/.local/share/chezmoi/. ~/.dotfiles/)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(chezmoi doctor:*)",
+      "Bash(chezmoi data:*)",
+      "Bash(chezmoi execute-template:*)",
+      "Bash(sed -n '210,220p' ~/.dotfiles/Brewfile)",
+      "Bash(sed -n '368,415p' ~/.dotfiles/Brewfile)",
+      "Bash(sed -n '173,180p' ~/.dotfiles/Brewfile)",
+      "Bash(sed -n '275,282p' ~/.dotfiles/Brewfile)",
+      "Bash(sed -n '25,35p' ~/.dotfiles/.chezmoi.toml.tmpl)",
+      "Bash(sed -n '68,90p' ~/.dotfiles/.chezmoi.toml.tmpl)",
+      "Bash(sed -n '108,130p' ~/.dotfiles/.chezmoi.toml.tmpl)"
+    ]
+  }
+}

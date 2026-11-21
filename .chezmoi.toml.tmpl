@@ -26,7 +26,6 @@
 
 {{- /* Terminals */ -}}
 {{- $vscode := promptBoolOnce . "tools.install.ide.vscode" "Install Visual Studio Code as a IDE (Y/n)" true -}}
-{{- $zed    := promptBoolOnce . "tools.install.ide.zed"    "Install Zed as an IDE editor (Y/n)"        true -}}
 
 {{- /* Shells */ -}}
 
@@ -70,18 +69,6 @@
 {{- $instal_chrome    := promptBoolOnce . "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
 {{- $instal_chromium  := promptBoolOnce . "tools.install.browser.chromium"  "Install Chromium browser (Y/n)"  false -}}
 {{- $instal_edge      := promptBoolOnce . "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
-{{- $instal_vivaldi   := promptBoolOnce . "tools.install.browser.vivaldi"   "Install Vivaldi browser (Y/n)"   false -}}
-{{- $instal_opera     := promptBoolOnce . "tools.install.browser.opera"     "Install Opera browser (Y/n)"     false -}}
-{{- $instal_arc       := promptBoolOnce . "tools.install.browser.arc"       "Install Arc browser (Y/n)"       false -}}
-
-{{- $instal_brave     := promptBoolOnce . "tools.install.browser.brave"     "Install Brave browser (Y/n)"     false -}}
-{{- $instal_firefox   := promptBoolOnce . "tools.install.browser.firefox"   "Install Firefox browser (Y/n)"   true -}}
-{{- $instal_chrome    := promptBoolOnce . "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
-{{- $instal_chromium  := promptBoolOnce . "tools.install.browser.chromium"  "Install Chromium browser (Y/n)"  false -}}
-{{- $instal_edge      := promptBoolOnce . "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
-{{- $instal_vivaldi   := promptBoolOnce . "tools.install.browser.vivaldi"   "Install Vivaldi browser (Y/n)"   false -}}
-{{- $instal_opera     := promptBoolOnce . "tools.install.browser.opera"     "Install Opera browser (Y/n)"     false -}}
-{{- $instal_arc       := promptBoolOnce . "tools.install.browser.arc"       "Install Arc browser (Y/n)"       false -}}
 
 [data]
 os_shell = "/bin/{{ $os_shell }}"
@@ -110,7 +97,6 @@ list = "lsd"
 
 [data.tools.install.ide]
 vscode = {{ $vscode }}
-zed = {{ $zed }}
 
 [data.tools.install.browser]
 brave = {{ $instal_brave }}
@@ -118,9 +104,6 @@ firefox = {{ $instal_firefox }}
 chrome = {{ $instal_chrome }}
 chromium = {{ $instal_chromium }}
 edge = {{ $instal_edge }}
-vivaldi = {{ $instal_vivaldi }}
-opera = {{ $instal_opera }}
-arc = {{ $instal_arc }}
 
 [data.tools.enable]
 bat = {{ $bat }}

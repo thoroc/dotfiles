@@ -1,4 +1,0 @@
-name: Run pre-commit hooks without installing them
-command: pre-commit run -a
-
-tags: ["git", "pre-commit", "hooks"]
