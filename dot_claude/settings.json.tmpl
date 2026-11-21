@@ -1,47 +1,8 @@
 {{- $obsidian := dig "tools" "notes" "obsidian" false . -}}
+{{- /* iTerm2 agent hooks only make sense with iTerm2; missing key means an older config that used it */ -}}
+{{- $it2 := eq (dig "tools" "terminal" "iterm2" .) "iterm2" -}}
 {
   "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-{{- if $obsidian }}
-      {
-        "matcher": ".*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/post-tool-use/capture-insight.sh"
-          }
-        ]
-      },
-{{- end }}
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
 {{- if $obsidian }}
       {
@@ -62,7 +23,8 @@
             "command": "~/.claude/hooks/cbm-code-discovery-gate"
           }
         ]
-      },
+      }
+{{- if $it2 }},
       {
         "hooks": [
           {
@@ -71,16 +33,7 @@
           }
         ]
       }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
-          }
-        ]
-      }
+{{- end }}
     ],
     "SessionStart": [
       {
@@ -118,7 +71,8 @@
             "command": "~/.claude/hooks/cbm-session-reminder"
           }
         ]
-      },
+      }
+{{- if $it2 }},
       {
         "hooks": [
           {
@@ -127,7 +81,70 @@
           }
         ]
       }
-    ],
+{{- end }}
+    ]
+{{- if or $obsidian $it2 }},
+    "PostToolUse": [
+{{- if $obsidian }}
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/post-tool-use/capture-insight.sh"
+          }
+        ]
+      }
+{{- end }}
+{{- if $it2 }}{{ if $obsidian }},{{ end }}
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+{{- end }}
+    ]
+{{- end }}
+{{- if $it2 }},
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ]
+{{- end }}
+{{- if $it2 }},
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ]
+{{- end }}
+{{- if $it2 }},
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ]
+{{- end }}
+{{- if $it2 }},
     "Stop": [
       {
         "hooks": [
@@ -137,7 +154,9 @@
           }
         ]
       }
-    ],
+    ]
+{{- end }}
+{{- if $it2 }},
     "StopFailure": [
       {
         "hooks": [
@@ -147,7 +166,9 @@
           }
         ]
       }
-    ],
+    ]
+{{- end }}
+{{- if $it2 }},
     "SubagentStop": [
       {
         "hooks": [
@@ -157,7 +178,9 @@
           }
         ]
       }
-    ],
+    ]
+{{- end }}
+{{- if $it2 }},
     "UserPromptSubmit": [
       {
         "hooks": [
@@ -168,6 +191,7 @@
         ]
       }
     ]
+{{- end }}
   },
   "enabledPlugins": {
     "context-mode@context-mode": true,
