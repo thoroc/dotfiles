@@ -57,6 +57,13 @@ The shell prompt (`oh-my-posh` by default, or `none`) and the `ls` replacement (
 single choices too. Only the selected tool is installed through `mise`, and only its config (the oh-my-posh theme, the
 lsd config) is applied.
 
+Languages (Node, Python, Go, Rust, Java) that are already on the machine are enabled without asking. `init` records
+where each one comes from (`mise`, `brew`, `rustup` or `other`; the `/usr/bin` stubs do not count) and only mise-managed
+or missing languages get a mise entry, so nothing is installed twice. For a Homebrew language it offers to move it to
+mise: if you accept, `mise install` runs first and the Homebrew formula is then removed unless other formulae depend on
+it (that is reported, never forced). mise has no built-in migration; `mise sync node`/`ruby` can link Homebrew versions
+of those two, but everything else is a fresh `mise install` followed by `brew uninstall`.
+
 The terminal emulator is a single choice (`iterm2` by default, or `warp`, `alacritty`, `kitty`, `hyper`, `wezterm`,
 `terminal`). The chosen one is installed as a Homebrew cask; `terminal` means the built-in Terminal.app and installs
 nothing.

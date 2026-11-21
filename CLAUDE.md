@@ -61,6 +61,14 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   (`promptBool`, not `...Once`, because the answer is derived). Reuse that pattern for other app prompts. Each
   `prompt*Once` path must match the key the data table writes (the Python prompt used `lang.python.enable` while the
   data key is `enabled`, so it re-prompted on every init).
+- **Languages** are detected, not asked about, when already installed. `.chezmoi.toml.tmpl` resolves each binary with
+  `lookPath`, classifies the path (`mise`, `brew`, `rustup`, `other`; `/usr/bin` stubs are ignored) and writes
+  `lang.<name>.{enabled,source,migrate,manager}`. `manager` (`mise`, `brew`, `rustup`, `other`, `none`) is what
+  consumers read: `dot_config/mise/config.toml.tmpl` only lists a language when its manager is `mise`, and the brew Java
+  block only when it is `brew`. `migrate` is an opt-in prompt for Homebrew-sourced languages; it drives
+  `run_onchange_after_darwin-migrate-brew-to-mise`, which runs `mise install` then a non-forcing `brew uninstall`
+  (formulae with dependents stay, e.g. `python@3.x` and `openjdk` on most machines). Keep helper prompts (poetry, pyenv,
+  jenv) on the same detect-first rule.
 - **Prompt and ls replacement** are single choices (`tools.prompt`: `oh-my-posh` | `none`, default `oh-my-posh`;
   `tools.ls`: `eza` | `lsd` | `none`, default `eza`). They gate the mise entries (`dot_config/mise/config.toml.tmpl`),
   the zprofile init block, the aliases, and the `.config/oh-my-posh` and `.config/lsd` applies (`.chezmoiignore`).
