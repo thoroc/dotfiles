@@ -48,6 +48,10 @@ and which optional tools, languages and browsers to install. Answers are stored 
 each question is only asked once. The config pins chezmoi's source directory to `~/.dotfiles`, so always clone there and
 pass `--source ~/.dotfiles`: chezmoi's default location (`~/.local/share/chezmoi`) is not used.
 
+AI coding assistants (Claude Code, Gemini CLI, Codex CLI, opencode) are independent yes/no answers that default to no.
+Each selected tool is installed through `mise` (npm backend). Only Claude Code has managed config so far (see below),
+and it is applied only when Claude Code is enabled.
+
 Notes tools (Obsidian, Notion, Logseq) are independent yes/no answers, so any combination works, including none.
 Obsidian additionally asks for a vault path and Logseq for a graph path; neither is asked unless that tool is selected.
 
@@ -63,7 +67,7 @@ Obsidian additionally asks for a vault path and Logseq for a graph path; neither
 
 ## Claude Code config
 
-`dot_claude/` manages the portable parts of `~/.claude`:
+`dot_claude/` manages the portable parts of `~/.claude` (only when Claude Code is enabled):
 
 - `CLAUDE.md`, `commands/`, the `cbm-*` hook scripts
 - `settings.json` and `.mcp.json`, rendered from templates so machine paths use the home directory instead of being
