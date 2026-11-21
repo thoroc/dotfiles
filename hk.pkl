@@ -10,8 +10,8 @@ steps {
     }
     ["lint-docs"] {
         glob = "*.md"
-        fix = "markdownlint-cli2 --fix {{ files }}"
-        check = "markdownlint-cli2 {{ files }}"
+        fix = "rumdl check --fix {{ files }}"
+        check = "rumdl check {{ files }}"
     }
     ["markdown-toc"] {
         glob = "*.md"

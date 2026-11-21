@@ -1,2 +1,30 @@
 [tools]
 hk = "latest"
+rumdl = "latest"
+
+[hooks]
+enter = "hk install --quiet 2>/dev/null || true"
+
+[tasks.init]
+description = "Initialise chezmoi on a new machine"
+run = "chezmoi init"
+
+[tasks.plan]
+description = "Preview what chezmoi would change"
+run = "chezmoi diff"
+
+[tasks.apply]
+description = "Apply chezmoi dotfiles to home directory"
+run = "chezmoi apply"
+
+[tasks.format]
+description = "Format markdown files"
+run = "prettier --write --prose-wrap always '*.md'"
+
+[tasks.lint]
+description = "Lint markdown files"
+run = "rumdl check ."
+
+[tasks.prepare]
+description = "Install git hooks"
+run = "hk install"

@@ -1,4 +1,3 @@
-node_modules/
-.vscode/.osgrep/
 .claude/
-node_modules/
+.osgrep/
+.vscode/
