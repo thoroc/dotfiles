@@ -49,8 +49,9 @@ each question is only asked once. The config pins chezmoi's source directory to 
 pass `--source ~/.dotfiles`: chezmoi's default location (`~/.local/share/chezmoi`) is not used.
 
 To skip the prompts, copy `init-defaults.example.toml` to `~/.config/chezmoi/init-defaults.toml` and edit it (it stays
-outside the repo, so private values such as vault paths are not committed). `mise run init` passes that file to
-`chezmoi init --override-data-file`; keys in it are used instead of prompting and win over previously stored answers.
+outside the repo, so private values such as vault paths are not committed). `chezmoi init` (and `mise run init`) reads
+that file from the config template; keys in it are used instead of prompting and win over previously stored answers. Set
+`CHEZMOI_INIT_DEFAULTS` to read a different file.
 
 The shell prompt (`oh-my-posh` by default, or `none`) and the `ls` replacement (`eza` by default, `lsd` or `none`) are
 single choices too. Only the selected tool is installed through `mise`, and only its config (the oh-my-posh theme, the
@@ -65,8 +66,9 @@ Sublime Text, WebStorm, IntelliJ IDEA and PyCharm; each selected one is installe
 `init-defaults.toml` the key is `tools.editors`, a list of cask names.
 
 AI coding assistants (Claude Code, Gemini CLI, Codex CLI, opencode) are independent yes/no answers that default to no.
-Each selected tool is installed through `mise` (npm backend). Only Claude Code has managed config so far (see below),
-and it is applied only when Claude Code is enabled.
+Gemini CLI and Codex CLI are installed through `mise` (npm backend). Claude Code and opencode are installed with
+Homebrew only when `claude` or `opencode` is not already on the PATH, so an existing install is left alone. Only Claude
+Code has managed config so far (see below), and it is applied only when Claude Code is enabled.
 
 Notes tools (Obsidian, Notion, Logseq) are independent yes/no answers, so any combination works, including none.
 Obsidian additionally asks for a vault path and Logseq for a graph path; neither is asked unless that tool is selected.

@@ -52,9 +52,10 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   `.tools.notes.obsidian`, both inside the templates and in a templated block of `.chezmoiignore`. Read toggles with
   `dig "tools" "notes" "obsidian" false .` so templates still render on machines whose config predates the key.
 - **Init defaults** live in `~/.config/chezmoi/init-defaults.toml` (per machine, untracked; template in
-  `init-defaults.example.toml`, repo-only). `mise run init` passes it via `chezmoi init --override-data-file`, which
-  feeds the `prompt*Once` functions, so listed keys are not prompted and override stored answers. Keep emails, vault
-  paths and other private values in that file, not in the repo.
+  `init-defaults.example.toml`, repo-only). `.chezmoi.toml.tmpl` reads it itself (`include`/`fromToml`, merged over the
+  data as `$d`, which every `prompt*Once` call uses), so listed keys are not prompted and override stored answers. Do
+  not rely on `chezmoi init --override-data-file`: it is ignored for prompts (only `execute-template` honours it). Keep
+  emails, vault paths and other private values in that file, not in the repo.
 - **Prompt and ls replacement** are single choices (`tools.prompt`: `oh-my-posh` | `none`, default `oh-my-posh`;
   `tools.ls`: `eza` | `lsd` | `none`, default `eza`). They gate the mise entries (`dot_config/mise/config.toml.tmpl`),
   the zprofile init block, the aliases, and the `.config/oh-my-posh` and `.config/lsd` applies (`.chezmoiignore`).
@@ -73,12 +74,14 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   with `dig "tools" "editors" (list "visual-studio-code") .` so older configs keep working. To test the prompt use
   `--promptMultichoice "Editors/IDEs to install=zed/cursor"` (values are `/`-separated).
 - **AI coding assistants** are four independent toggles in `.chezmoi.toml.tmpl`
-  (`tools.ai.claude|gemini|codex|opencode`, default false). They are installed via mise, so
-  `dot_config/mise/config.toml.tmpl` is a template that gates each npm entry on its toggle. `dot_claude/` is applied
-  only when `tools.ai.claude` is true (a templated `.claude` ignore in `.chezmoiignore`). Gemini, Codex and opencode
-  have no managed config yet; add it under `dot_gemini/`, `dot_codex/` or `dot_config/opencode/` and gate it the same
-  way. Existing machines must run `mise run init` to answer the new prompts: until then the `dig` defaults treat every
-  assistant as off.
+  (`tools.ai.claude|gemini|codex|opencode`, default false). Gemini and Codex are installed via mise
+  (`dot_config/mise/config.toml.tmpl` gates each npm entry on its toggle). Claude Code and opencode ship their own
+  installers and are usually already present, so the install script only runs `brew install` for them when `command -v`
+  finds nothing. Never add an install for something already provided another way. On Intel, delta comes from Homebrew
+  (`git-delta`) because mise has no darwin/amd64 build. `dot_claude/` is applied only when `tools.ai.claude` is true (a
+  templated `.claude` ignore in `.chezmoiignore`). Gemini, Codex and opencode have no managed config yet; add it under
+  `dot_gemini/`, `dot_codex/` or `dot_config/opencode/` and gate it the same way. Existing machines must run
+  `mise run init` to answer the new prompts: until then the `dig` defaults treat every assistant as off.
 - **Notes tools** are three independent toggles in `.chezmoi.toml.tmpl` (`tools.notes.obsidian|notion|logseq`).
   `obsidian_vault` and `logseq_graph` paths are only prompted when the matching toggle is on. Only Obsidian is consumed
   by templates so far; Notion and Logseq are recorded but unused. To test prompts non-interactively:
