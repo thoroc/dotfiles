@@ -1,7 +1,7 @@
 {{ if eq .chezmoi.os "darwin" -}}
 #!{{ .os_shell }}
 
-brew bundle --no-lock --file=/dev/stdin <<EOF
+brew bundle --file=/dev/stdin <<EOF
 {{ if eq .tools.install.browser.brave true }}
 cask "brave-browser"
 {{ end }}
