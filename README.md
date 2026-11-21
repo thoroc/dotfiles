@@ -48,6 +48,14 @@ and which optional tools, languages and browsers to install. Answers are stored 
 each question is only asked once. The config pins chezmoi's source directory to `~/.dotfiles`, so always clone there and
 pass `--source ~/.dotfiles`: chezmoi's default location (`~/.local/share/chezmoi`) is not used.
 
+To skip the prompts, copy `init-defaults.example.toml` to `~/.config/chezmoi/init-defaults.toml` and edit it (it stays
+outside the repo, so private values such as vault paths are not committed). `mise run init` passes that file to
+`chezmoi init --override-data-file`; keys in it are used instead of prompting and win over previously stored answers.
+
+The terminal emulator is a single choice (`iterm2` by default, or `warp`, `alacritty`, `kitty`, `hyper`, `wezterm`,
+`terminal`). The chosen one is installed as a Homebrew cask; `terminal` means the built-in Terminal.app and installs
+nothing.
+
 AI coding assistants (Claude Code, Gemini CLI, Codex CLI, opencode) are independent yes/no answers that default to no.
 Each selected tool is installed through `mise` (npm backend). Only Claude Code has managed config so far (see below),
 and it is applied only when Claude Code is enabled.

@@ -51,6 +51,14 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   scripts need the `executable_` prefix. Everything Obsidian-related (MCP entry, two hooks, `obsidian/`) is gated on
   `.tools.notes.obsidian`, both inside the templates and in a templated block of `.chezmoiignore`. Read toggles with
   `dig "tools" "notes" "obsidian" false .` so templates still render on machines whose config predates the key.
+- **Init defaults** live in `~/.config/chezmoi/init-defaults.toml` (per machine, untracked; template in
+  `init-defaults.example.toml`, repo-only). `mise run init` passes it via `chezmoi init --override-data-file`, which
+  feeds the `prompt*Once` functions, so listed keys are not prompted and override stored answers. Keep emails, vault
+  paths and other private values in that file, not in the repo.
+- **Terminal emulator** is one `promptChoiceOnce` (`tools.terminal`, default `iterm2`) whose value is also the Homebrew
+  cask name, installed by `run_onchange_darwin-install-packages`; `terminal` (Terminal.app) installs nothing. Adding a
+  terminal means adding it to the choice list in `.chezmoi.toml.tmpl` after confirming the cask name. Nothing else
+  consumes it yet (the Claude hooks in `dot_claude/settings.json.tmpl` still call iTerm2's `it2`).
 - **AI coding assistants** are four independent toggles in `.chezmoi.toml.tmpl`
   (`tools.ai.claude|gemini|codex|opencode`, default false). They are installed via mise, so
   `dot_config/mise/config.toml.tmpl` is a template that gates each npm entry on its toggle. `dot_claude/` is applied
