@@ -1,13 +1,15 @@
-#!{{ .os_shell}}
+{{ if eq .chezmoi.os "darwin" -}}
+#!{{ .os_shell }}
 
-{{ with .homebrew_prefix }}
 # ---------------------------------------------------------------------------------------------------------------------
-# Homebrew settings
+# Homebrew bootstrap (only if not already installed)
 # ---------------------------------------------------------------------------------------------------------------------
-printf '\n\n\e[33mHomebrew not found. \e[0mInstalling Homebrew...'
-{{ $.os_shell}} -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-eval "$({{ $.homebrew_prefix }}/bin/brew shellenv)"
-{{ end -}}
+if ! command -v brew &>/dev/null; then
+  printf '\n\n\e[33mHomebrew not found.\e[0m Installing Homebrew...\n'
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$({{ .homebrew_prefix }}/bin/brew shellenv)"
+fi
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Global settings
@@ -22,8 +24,13 @@ defaults write -g "NSAutomaticCapitalizationEnabled" -bool false
 # ---------------------------------------------------------------------------------------------------------------------
 # Security settings
 # ---------------------------------------------------------------------------------------------------------------------
-# Enable TouchID for sudo
-# ! grep -q pam_tid.so /etc/pam.d/sudo && sudo gsed -i '2iauth        sufficient     pam_tid.so' /etc/pam.d/sudo
+# Enable TouchID for sudo (macOS Sonoma/Sequoia: use sudo_local instead of patching sudo)
+if [ ! -f /etc/pam.d/sudo_local ]; then
+  sudo tee /etc/pam.d/sudo_local >/dev/null <<'PAM'
+# sudo_local: local config file which survives system update and is included for sudo
+auth       sufficient     pam_tid.so
+PAM
+fi
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -33,26 +40,17 @@ defaults write -g "NSAutomaticCapitalizationEnabled" -bool false
 defaults write com.apple.dock "autohide" -bool true
 # Set dock to disable magnification
 defaults write com.apple.dock "magnification" -bool false
-# Minimize windows into their application’s icon
+# Minimize windows into their application's icon
 defaults write com.apple.dock "minimize-to-application" -bool true
 # Set dock position
 defaults write com.apple.dock "orientation" -string "bottom"
 # Set the icon size of Dock items in pixels
 defaults write com.apple.dock "tilesize" -int 71
-# Don’t show recent applications in Dock
+# Don't show recent applications in Dock
 defaults write com.apple.dock "show-recents" -bool false
-# Clear Dock of all default documents icons
+# Clear Dock of all icons
 defaults write com.apple.dock "persistent-others" -array
-# Clear Dock of all default apps icons and add instead some other apps
-# default apps that one might like: MS Teams, Outlook, Firefox, Chrome, VScode
-# Those can be either from /Applications or /System/Applications
-defaults write com.apple.dock "persistent-apps" -array\
-{{- $default_docks_apps := list "Microsoft Teams" "Microsoft Outlook" "Firefox" "Google Chrome" "Visual Studio Code" -}}
-{{- range $app := $default_docks_apps -}}
-{{- printf "\n'<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>file:///Applications/%s.app/</string><key>_CFURLStringType</key><integer>15</integer></dict></dict></dict>'" $app -}}
-{{- end -}}
-
-{{- printf "\n" -}}
+defaults write com.apple.dock "persistent-apps" -array
 
 killall Dock
 
@@ -62,7 +60,7 @@ killall Dock
 # ---------------------------------------------------------------------------------------------------------------------
 # Show hidden files in the Finder
 defaults write com.apple.Finder "AppleShowAllFiles" -bool true
-# Allowing text selection in Quick Look/Preview in Finder by default
+# Allow text selection in Quick Look/Preview in Finder by default
 defaults write com.apple.finder QLEnableTextSelection -bool true
 # When performing a search, search the current folder by default
 defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf"
@@ -80,7 +78,7 @@ killall Finder
 sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate "AutomaticCheckEnabled" -bool true
 # Download updates automatically in the background
 sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate "AutomaticDownload" -bool true
-# Install macos updates automatically
+# Install macOS updates automatically
 sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate "AutomaticallyInstallMacOSUpdates" -bool true
 # Install system data file updates automatically
 sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate "ConfigDataInstall" -bool true
@@ -104,3 +102,4 @@ sudo pipx ensurepath
 pipx install poetry
 {{-   end -}}
 {{- end }}
+{{ end -}}

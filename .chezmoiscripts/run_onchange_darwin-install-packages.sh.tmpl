@@ -1,0 +1,31 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!{{ .os_shell }}
+
+brew bundle --no-lock --file=/dev/stdin <<EOF
+{{ if eq .tools.install.browser.brave true }}
+cask "brave-browser"
+{{ end }}
+{{ if eq .tools.install.browser.firefox true }}
+cask "firefox"
+{{ end }}
+{{ if eq .tools.install.browser.chrome true }}
+cask "google-chrome"
+{{ end }}
+{{ if eq .tools.install.browser.chromium true }}
+cask "chromium"
+{{ end }}
+{{ if eq .tools.install.browser.edge true }}
+cask "microsoft-edge"
+{{ end }}
+{{ if eq .lang.java.jenv true }}
+brew "jenv"
+{{ end }}
+{{ if eq .tools.install.ide.vscode true }}
+cask "visual-studio-code"
+{{ end }}
+{{ if eq .lang.java.enabled true }}
+brew "openjdk@11"
+brew "openjdk@8"
+{{ end }}
+EOF
+{{ end -}}
