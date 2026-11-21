@@ -23,6 +23,19 @@
 {{- $lsd        := promptBoolOnce . "tools.enable.lsd"        "Enable lsd as a ls alternative (y/n)"        false -}}
 {{- $nix        := promptBoolOnce . "tools.enable.nix"        "Enable nix as a package manager (y/n)"       false -}}
 {{- $one_drive  := promptBoolOnce . "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
+{{- /* Notes tools: any combination, including none */ -}}
+{{- $notes_obsidian := promptBoolOnce . "tools.notes.obsidian" "Use Obsidian for notes (y/N)" false -}}
+{{- $notes_notion   := promptBoolOnce . "tools.notes.notion"   "Use Notion for notes (y/N)"   false -}}
+{{- $notes_logseq   := promptBoolOnce . "tools.notes.logseq"   "Use Logseq for notes (y/N)"   false -}}
+{{- $obsidian_vault := "" -}}
+{{- if $notes_obsidian -}}
+{{-   $obsidian_vault = promptStringOnce . "tools.notes.obsidian_vault" "Obsidian vault path (absolute)" (printf "%s/Documents/obsidian-vault" .chezmoi.homeDir) -}}
+{{- end -}}
+{{- $logseq_graph := "" -}}
+{{- if $notes_logseq -}}
+{{-   $logseq_graph = promptStringOnce . "tools.notes.logseq_graph" "Logseq graph path (absolute)" (printf "%s/Documents/logseq-graph" .chezmoi.homeDir) -}}
+{{- end -}}
+
 
 {{- /* Terminals */ -}}
 {{- $vscode := promptBoolOnce . "tools.install.ide.vscode" "Install Visual Studio Code as a IDE (Y/n)" true -}}
@@ -99,6 +112,17 @@ shell = "warp"
 editor = "vscode"
 # "lsd" or "exa" or "lsd" or "dust" or "dircolors"
 list = "lsd"
+[data.tools.notes]
+obsidian = {{ $notes_obsidian }}
+notion = {{ $notes_notion }}
+logseq = {{ $notes_logseq }}
+{{- if $notes_obsidian }}
+obsidian_vault = {{ $obsidian_vault | quote }}
+{{- end }}
+{{- if $notes_logseq }}
+logseq_graph = {{ $logseq_graph | quote }}
+{{- end }}
+
 
 [data.tools.install.ide]
 vscode = {{ $vscode }}
