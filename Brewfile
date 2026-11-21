@@ -3,21 +3,15 @@ tap "buo/cask-upgrade"
 tap "dagger/tap"
 tap "domt4/autoupdate"
 tap "fabianishere/personal"
-tap "go-task/tap"
-tap "hashicorp/tap"
 tap "homebrew/autoupdate"
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jmespath/jmespath"
-tap "localstack/tap"
 tap "mike-engel/jwt-cli"
 tap "minamijoyo/hcledit"
-tap "minamijoyo/tfupdate"
 tap "mtslzr/marmaduke-chromium"
 tap "turbot/tap"
 tap "tylerbrock/saw"
-# Run your GitHub Actions locally
-brew "act"
 # C parser in Python
 brew "pycparser"
 # C Foreign Function Interface for Python
@@ -26,8 +20,6 @@ brew "cffi"
 brew "cryptography"
 # General-purpose data compression with high compression ratio
 brew "xz"
-# Automate deployment, configuration, and upgrading
-brew "ansible"
 # New file format for still image compression
 brew "jpeg-xl"
 # Codec library for encoding and decoding AV1 video streams
@@ -40,16 +32,10 @@ brew "grpc"
 brew "apache-arrow"
 # Tool for generating GNU Standards-compliant Makefiles
 brew "automake"
-# CLI tool to build, test, debug, and deploy Serverless applications using AWS SAM
-brew "aws-sam-cli"
-# Microsoft Azure CLI 2.0
-brew "azure-cli"
 # Programmable completion for Bash 3.2
 brew "bash-completion"
 # C library implementing the SSH2 protocol
 brew "libssh2"
-# Clone of cat(1) with syntax highlighting and Git integration
-brew "bat"
 # OpenType text shaping engine
 brew "harfbuzz"
 # Remove large files or passwords from Git history like git-filter-branch
@@ -60,8 +46,6 @@ brew "binutils"
 brew "bit-git"
 # Collection of portable C++ source libraries
 brew "boost"
-# New way to see and navigate directory trees
-brew "broot"
 # GNU File, Shell, and Text utilities
 brew "coreutils"
 # Library to load and enumerate PKCS#11 modules
@@ -72,8 +56,6 @@ brew "unbound"
 brew "gnutls"
 # Emacs dependency management
 brew "cask"
-# Validate CloudFormation templates against the CloudFormation spec
-brew "cfn-lint"
 # Generic library support script
 brew "libtool"
 # Library for encoding and decoding .avif files
@@ -90,16 +72,10 @@ brew "cookiecutter"
 brew "corrosion"
 # Common UNIX Printing System
 brew "cups"
-# JSON, YAML, TOML, XML, and CSV query and modification tool
-brew "dasel"
 # DDC monitor controls (brightness) for Mac OSX command-line
 brew "ddcctl"
-# Secure runtime for JavaScript and TypeScript
-brew "deno"
 # File comparison utilities
 brew "diffutils"
-# Tool for exploring each layer in a docker image
-brew "dive"
 # Docker Credential Helper for Amazon ECR
 brew "docker-credential-helper-ecr"
 # Text processing system for reStructuredText
@@ -118,8 +94,6 @@ brew "fbthrift"
 brew "fb303"
 # Shared library for Watchman and Eden projects
 brew "edencommon"
-# Modern, maintained replacement for ls
-brew "eza"
 # High quality MPEG Audio Layer III (MP3) encoder
 brew "lame"
 # Image processing and image analysis library
@@ -146,20 +120,14 @@ brew "findutils"
 brew "fish"
 # Fast and simple Node.js version manager
 brew "fnm"
-# Command-line fuzzy finder written in Go
-brew "fzf"
 # GNU awk utility
 brew "gawk"
 # Toolkit for image loading and pixel buffer manipulation
 brew "gdk-pixbuf"
 # Distributed revision control system
 brew "git"
-# Syntax-highlighting pager for git and diff output
-brew "git-delta"
 # Simple and efficient way to access statistics in git
 brew "git-quick-stats"
-# Run gitlab pipelines locally as shell executor or docker executor
-brew "gitlab-ci-local"
 # OpenGL Extension Wrangler Library
 brew "glew"
 # C++ mathematics library for graphics software
@@ -196,14 +164,8 @@ brew "gzip"
 brew "hdf5"
 # Improved top (interactive process viewer)
 brew "htop"
-# Cost estimates for Terraform
-brew "infracost"
 # Manage your Java environment
 brew "jenv"
-# Lightweight and flexible command-line JSON processor
-brew "jq"
-# Handy way to save and run project-specific commands
-brew "just"
 # User-friendly front-end to ssh-agent(1)
 brew "keychain"
 # DNS library written in C
@@ -216,12 +178,8 @@ brew "libfido2"
 brew "libheif"
 # General purpose TCP-IP emulator
 brew "libslirp"
-# Clone of ls with colorful output, file type icons, and more
-brew "lsd"
 # Utility for directing compilation
 brew "make"
-# CLI for Node.js style checker and lint tool for Markdown files
-brew "markdownlint-cli"
 # Mac App Store command-line interface
 brew "mas"
 # Scalable distributed version control system
@@ -250,18 +208,12 @@ brew "pam-reattach"
 brew "pcre"
 # Port of pdftk in java
 brew "pdftk-java"
-# Highly capable, feature-rich programming language
-brew "perl"
 # Draw UML diagrams
 brew "plantuml"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler"
 # Object-relational database system
 brew "postgresql@14"
-# Framework for managing multi-language pre-commit hooks
-brew "pre-commit"
-# Code formatter for JavaScript, CSS, JSON, GraphQL, Markdown, YAML
-brew "prettier"
 # Cartographic Projections Library
 brew "proj"
 # Python version management
@@ -274,40 +226,16 @@ brew "python-markdown"
 brew "qemu"
 # Tools for and transforming and inspecting PDF files
 brew "qpdf"
-# Search tool like grep and The Silver Searcher
-brew "ripgrep"
 # SOcket CAT: netcat on steroids
 brew "socat"
 # Launcher to analyze a project with SonarQube
 brew "sonar-scanner"
-# Cross-shell prompt for astronauts
-brew "starship"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
-# Feature-rich console based todo list manager
-brew "task"
-# Shell wrapper for Taskwarrior commands
-brew "tasksh"
 # Send macOS User Notifications from the command-line
 brew "terminal-notifier"
 # Reads from existing Cloud Providers and generates Terraform code
 brew "terracognita"
-# Tool to generate documentation from Terraform modules
-brew "terraform-docs"
-# CLI tool to generate terraform files from existing infrastructure
-brew "terraformer"
-# Thin wrapper for Terraform e.g. for locking state
-brew "terragrunt"
-# Detect compliance and security violations across Infrastructure as Code
-brew "terrascan"
-# Linter for Terraform files
-brew "tflint"
-# Static analysis security scanner for your terraform code
-brew "tfsec"
-# Programmatically correct mistyped console commands
-brew "thefuck"
-# Simplified and community-driven man pages
-brew "tldr"
 # Command-line translator using Google Translate and more
 brew "translate-shell"
 # Lightweight, POSIX-compliant regular expression (regex) library
@@ -316,10 +244,6 @@ brew "tre"
 brew "tree"
 # Extraction utility for .zip compressed archives
 brew "unzip"
-# Vi 'workalike' with many additional features
-brew "vim"
-# Tool for creating isolated virtual python environments
-brew "virtualenv"
 # Watch files and take action when they change
 brew "watchman"
 # Internet file retriever
@@ -328,30 +252,20 @@ brew "wget"
 brew "whalebrew"
 # Modular BSD reimplementation of NASM
 brew "yasm"
-# Process YAML, JSON, XML, CSV and properties documents from the CLI
-brew "yq"
 # General-purpose lossless data-compression library
 brew "zlib"
-# Shell extension to navigate your filesystem faster
-brew "zoxide"
 # UNIX shell (command interpreter)
 brew "zsh"
 # Additional completion definitions for zsh
 brew "zsh-completions"
 # Dagger is an integrated platform to orchestrate the delivery of applications
 brew "dagger/tap/dagger"
-# Terraform
-brew "hashicorp/tap/terraform"
 # Command-line interface to JMESPath, a query language for JSON
 brew "jmespath/jmespath/jp"
-# Localstack cli packaged using pyinstaller
-brew "localstack/tap/localstack-cli"
 # Super fast CLI tool to decode and encode JWTs built in Rust
 brew "mike-engel/jwt-cli/jwt-cli"
 # A command line editor for HCL
 brew "minamijoyo/hcledit/hcledit"
-# Update version constraints in your Terraform configurations
-brew "minamijoyo/tfupdate/tfupdate"
 # Fast, multipurpose tool for AWS CloudWatch Logs
 brew "tylerbrock/saw/saw"
 # Enable Windows-like alt-tab
