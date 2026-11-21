@@ -7,6 +7,7 @@ mise.toml
 .vscode/
 Brewfile
 Applist.txt
+init-defaults.example.toml
 
 # Claude Code config (dot_claude/) only when Claude Code is enabled
 {{ if not (dig "tools" "ai" "claude" false .) -}}

@@ -1,0 +1,23 @@
+# Per-machine answers for `mise run init`.
+#
+# Copy to ~/.config/chezmoi/init-defaults.toml (outside this repo, so private values stay local) and edit. Keys mirror the
+# `[data]` table written to ~/.config/chezmoi/chezmoi.toml. Anything set here is used instead of prompting, and wins over
+# an answer already stored in the generated config. Keys left out keep their stored answer or are prompted.
+
+[tools.ai]
+claude = false
+gemini = false
+codex = false
+opencode = false
+
+[tools.notes]
+obsidian = false
+notion = false
+logseq = false
+# Only read when the matching tool is true
+# obsidian_vault = "/absolute/path/to/vault"
+# logseq_graph = "/absolute/path/to/graph"
+
+# [user.work]
+# name = "john.doe"
+# email = "john.doe@example.com"
