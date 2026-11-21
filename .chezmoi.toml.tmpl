@@ -17,7 +17,6 @@
 
 {{- /* Tools */ -}}
 {{- $bat        := promptBoolOnce . "tools.enable.bat"        "Enable bat as a cat replacement (y/n)"       true -}}
-{{- $dasel      := promptBoolOnce . "tools.enable.dasel"      "Enable dasel as a jq alternative (y/n)"      false -}}
 {{- $nix        := promptBoolOnce . "tools.enable.nix"        "Enable nix as a package manager (y/n)"       false -}}
 {{- $one_drive  := promptBoolOnce . "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
 
@@ -155,7 +154,6 @@ orbstack = {{ $install_orbstack }}
 
 [data.tools.enable]
 bat = {{ $bat }}
-dasel = {{ $dasel }}
 nix = {{ $nix }}
 one_drive = {{ $one_drive }}
 
