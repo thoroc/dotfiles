@@ -1,7 +1,7 @@
 {{- $email            := promptStringOnce . "user.work.email"   "Email address"                                                         "john.doe@example.com" -}}
 {{- $username         := promptStringOnce . "user.work.name"    "Username"                                                              "john.doe" -}}
 {{- $projects_dir     := promptStringOnce . "projects_dir"      "Work project directory (name of directory for the work projects)"      "acme" -}}
-{{- $gh_email         := promptStringOnce . "user.github.email" "GitHub email address"                                                  "john.doe@example.com" -}}
+{{- $gh_email         := promptStringOnce . "user.github.email" "GitHub email address"                                                  $email -}}
 {{- $gh_username      := promptStringOnce . "user.github.name"  "GitHub username"                                                       "john.doe" -}}
 {{- $gh_projects_dir  := promptStringOnce . "gh_projects_dir"   "GitHub project directory (name of directory for the GitHub projects)"  "github" -}}
 
@@ -68,6 +68,8 @@
 {{- $instal_firefox   := promptBoolOnce . "tools.install.browser.firefox"   "Install Firefox browser (Y/n)"   true -}}
 {{- $instal_chrome    := promptBoolOnce . "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
 {{- $instal_edge      := promptBoolOnce . "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
+
+sourceDir = "{{ .chezmoi.homeDir }}/.dotfiles"
 
 [data]
 os_shell = "/bin/{{ $os_shell }}"
