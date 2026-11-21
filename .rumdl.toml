@@ -1,0 +1,16 @@
+[global]
+disable = ["MD024", "MD007", "MD029", "MD030"]
+
+[MD013]
+code-blocks = false
+line-length = 120
+tables = false
+
+[MD033]
+allowed-elements = ["br", "abbr", "nobr", "details", "summary"]
+
+[MD046]
+style = "fenced"
+
+[MD049]
+style = "underscore"

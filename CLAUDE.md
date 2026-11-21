@@ -1,16 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-**Table of Contents** _generated with [DocToc](https://github.com/thlorenz/doctoc)_
-
-- [CLAUDE.md](#claudemd)
-  - [What this is](#what-this-is)
-  - [Commands](#commands)
-  - [Architecture](#architecture)
-  - [Conventions](#conventions)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
@@ -60,8 +47,8 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
 - **`thomas.roche_Applist.txt`** is a snapshot of installed apps. It is not ignored, so chezmoi currently copies it into
   `$HOME`.
 - **`.chezmoiignore`** excludes repo-only files (README, `CLAUDE.md`, `hk.pkl`, `mise.toml`, `.prettierrc`,
-  `.markdownlint.yml`, `.vscode`, `Brewfile`) from being applied to `$HOME`. Add new repo-only files there, or chezmoi
-  will copy them into `$HOME`.
+  `.rumdl.toml`, `.vscode`, `Brewfile`) from being applied to `$HOME`. Add new repo-only files there, or chezmoi will
+  copy them into `$HOME`.
 
 ## Conventions
 
