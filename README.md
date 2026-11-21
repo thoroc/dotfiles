@@ -56,6 +56,9 @@ not using `init --apply thoroc` (which clones it to chezmoi's default location).
 
 ## Day-to-day
 
+- Optional container runtimes (Docker Desktop, OrbStack, both or neither); PATH and aliases are only generated for the
+  ones you choose
+
 Tasks are defined in `mise.toml`:
 
 ```sh

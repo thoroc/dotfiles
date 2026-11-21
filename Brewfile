@@ -256,8 +256,6 @@ brew "zsh-completions"
 cask "alt-tab"
 # User-friendly GUI app for Homebrew
 cask "applite"
-# App to build and share containerised applications and microservices
-cask "docker"
 cask "font-hack-nerd-font"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"

@@ -81,6 +81,10 @@ gh_projects_dir = {{ $gh_projects_dir | quote }}
 name = {{ $username | quote }}
 email = {{ $email | quote }}
 
+{{- /* Container runtimes: either, both or neither */ -}}
+{{- $install_docker   := promptBoolOnce . "tools.install.container.docker"   "Install Docker Desktop (Y/n)" true -}}
+{{- $install_orbstack := promptBoolOnce . "tools.install.container.orbstack" "Install OrbStack (y/N)"       false -}}
+
 [data.user.github]
 name = {{ $gh_username | quote }}
 email = {{ $gh_email | quote }}
@@ -128,6 +132,10 @@ jenv = {{ $jenv }}
 enabled = {{ $enable_nodejs }}
 
 [data.lang.python]
+[data.tools.install.container]
+docker = {{ $install_docker }}
+orbstack = {{ $install_orbstack }}
+
 enabled = {{ $enable_python }}
 poetry = {{ $poetry }}
 pyenv = {{ $pyenv }}

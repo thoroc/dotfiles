@@ -61,10 +61,19 @@ export HOMEBREW_AUTO_UPDATE_SECS="86400"
 export PATH="$(brew --prefix)/opt/curl/bin:$PATH"
 
 
+{{- if eq .tools.install.container.docker true }}
 # ---------------------------------------------------------------------------------------------------------------------
 # docker
 # ---------------------------------------------------------------------------------------------------------------------
 export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
+{{- end }}
+
+{{- if eq .tools.install.container.orbstack true }}
+# ---------------------------------------------------------------------------------------------------------------------
+# orbstack
+# ---------------------------------------------------------------------------------------------------------------------
+export PATH="$HOME/.orbstack/bin:$PATH"
+{{- end }}
 
 
 {{- if eq .tools.enable.bat true }}

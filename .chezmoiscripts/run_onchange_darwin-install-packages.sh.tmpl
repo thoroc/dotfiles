@@ -19,6 +19,12 @@ cask "microsoft-edge"
 {{ if eq .lang.java.jenv true }}
 brew "jenv"
 {{ end }}
+{{ if eq .tools.install.container.docker true }}
+cask "docker"
+{{ end }}
+{{ if eq .tools.install.container.orbstack true }}
+cask "orbstack"
+{{ end }}
 {{ if eq .tools.install.ide.vscode true }}
 cask "visual-studio-code"
 {{ end }}

@@ -26,10 +26,12 @@ alias ld="ls -d */"
 alias ll="ls -alF"
 alias ls="ls --color"
 
+{{ if or .tools.install.container.docker .tools.install.container.orbstack -}}
 alias dc="docker compose"
 alias docker-list-containers="docker ps -a"
 alias docker-remove-containers='docker rm $(docker ps -a -q)'
 alias docker-remove-images='docker rmi $(docker images -q)'
+{{ end -}}
 
 # fucked ok, don't question me! node is SHITE
 alias npm="npq-hero"
