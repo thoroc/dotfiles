@@ -8,8 +8,8 @@ A [chezmoi](https://www.chezmoi.io/) source directory for a macOS (web-dev focus
 files are templates/sources that chezmoi renders into `$HOME`.
 
 The source dir is `~/.dotfiles` (set via `sourceDir` in `.chezmoi.toml.tmpl` and the generated
-`~/.config/chezmoi/chezmoi.toml`). The default chezmoi path `~/.local/share/chezmoi` is a stale 2024 checkout; always
-pass `--source ~/.dotfiles` if `chezmoi source-path` does not return `~/.dotfiles`.
+`~/.config/chezmoi/chezmoi.toml`). The default chezmoi path `~/.local/share/chezmoi` is not used (the old checkout was
+deleted); on a fresh machine, pass `--source ~/.dotfiles` to `chezmoi init` until the generated config exists.
 
 ## Commands
 

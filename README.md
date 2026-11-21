@@ -7,6 +7,7 @@
 - [Setup](#setup)
 - [What gets applied](#what-gets-applied)
 - [Claude Code config](#claude-code-config)
+- [Day-to-day](#day-to-day)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -38,26 +39,44 @@ Homebrew is installed automatically by the configure script if missing.
 Run:
 
 ```sh
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply thoroc
+git clone https://github.com/thoroc/.dotfiles ~/.dotfiles
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply --source ~/.dotfiles
 ```
 
-`init` prompts for identity (email, username, GitHub details), project directories, shell, and which optional tools,
-languages and browsers to install. Answers are stored in `~/.config/chezmoi/chezmoi.toml`, and each question is only
-asked once. The config also pins chezmoi's source directory to `~/.dotfiles`, so clone this repository there if you are
-not using `init --apply thoroc` (which clones it to chezmoi's default location).
+`init` prompts for identity (email, username, GitHub details), project directories, shell, which notes tools you use,
+and which optional tools, languages and browsers to install. Answers are stored in `~/.config/chezmoi/chezmoi.toml`, and
+each question is only asked once. The config pins chezmoi's source directory to `~/.dotfiles`, so always clone there and
+pass `--source ~/.dotfiles`: chezmoi's default location (`~/.local/share/chezmoi`) is not used.
+
+Notes tools (Obsidian, Notion, Logseq) are independent yes/no answers, so any combination works, including none.
+Obsidian additionally asks for a vault path and Logseq for a graph path; neither is asked unless that tool is selected.
 
 ## What gets applied
 
 - Shell config (zsh, aliases, oh-my-posh theme), git config, `lsd`, `fnox`, `mise` and vim config
 - `.Brewfile` (linked to `~/.config/homebrew/.Brewfile`) and a toggle-driven `brew bundle` on every change
+- Optional container runtimes (Docker Desktop, OrbStack, both or neither); PATH and aliases are only generated for the
+  ones you choose
 - macOS defaults (dock, Finder, screenshots, software update, TouchID for sudo) via `run_onchange` scripts
 - A OneDrive LaunchAgent plist
 - Tools listed in `dot_config/mise/config.toml`, managed by `mise` (upgrades wait 7 days after release)
 
 ## Claude Code config
 
-- Optional container runtimes (Docker Desktop, OrbStack, both or neither); PATH and aliases are only generated for the
-  ones you choose
+`dot_claude/` manages the portable parts of `~/.claude`:
+
+- `CLAUDE.md`, `commands/`, the `cbm-*` hook scripts
+- `settings.json` and `.mcp.json`, rendered from templates so machine paths use the home directory instead of being
+  hardcoded
+- With Obsidian enabled only: the Obsidian MCP server entry, its two hooks (`obsidian-context.sh`, `capture-insight.sh`)
+  and the `obsidian/*.py` scripts, with the vault path filled in from your answer
+
+Not managed (see `.chezmoiignore`): skills, agents, plugins, and all runtime or session data (`projects/`,
+`history.jsonl`, `cache/`, `sessions/`, `venvs/`, the Obsidian vector database, and so on). No secrets live in these
+files; keep tokens in `fnox`. Changes are committed manually, with no auto-commit or auto-push hooks. Preview with
+`mise run plan` before applying.
+
+## Day-to-day
 
 Tasks are defined in `mise.toml`:
 
