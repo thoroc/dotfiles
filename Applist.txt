@@ -1,59 +1,39 @@
-Adobe Acrobat Reader.app,24.002.20893,com.adobe.Reader
 Agenda.app,19.0,com.momenta.agenda.macos
-AltTab.app,6.71.0,com.lwouis.alt-tab-macos
-Applite.app,1.2.5,dev.aerolite.Applite
-Arc.app,0.107.0,company.thebrowser.Browser
+AltTab.app,11.10.2,com.lwouis.alt-tab-macos
+Applite.app,1.4.2,dev.aerolite.Applite
+BetterDisplay.app,5.2.1,pro.betterdisplay.BetterDisplay
 Boop.app,1.4.0,com.okatbest.boop
-Brave Browser.app,126.1.67.123,com.brave.Browser
-Chromium.app,123.0.6312.53,org.chromium.Chromium
-Discord.app,0.0.309,com.hnc.Discord
-Docker.app,4.31.0,com.docker.docker
+Brave Browser.app,158.1.100.58,com.brave.Browser
+Claude.app,3.1623.0,com.anthropic.claudefordesktop
+DaisyDisk.app,4.34.2,com.daisydiskapp.DaisyDiskStandAlone
+Deeper.app,3.3.3,com.titanium.Deeper
+Discord.app,0.0.423,com.hnc.Discord
+Firefox.app,142.0.1,org.mozilla.firefox
 FTPRush.app,3.5.40,com.wftpserver.ftprush.mac
-Fiery Driver Updater.app,1.4.0.004,com.efi.Fiery-Driver-Updater
-Figma.app,124.0.2,com.figma.Desktop
-Fing.app,File Doesn't Exist, Will Create: /Applications/Fing.app/Contents/info.plist,????
-Firefox.app,127.0.2,org.mozilla.firefox
-GitKraken.app,10.0.2,com.axosoft.gitkraken
-GlobalProtect.app,6.0.5-30,com.paloaltonetworks.GlobalProtect.client
-Google Chrome.app,126.0.6478.127,com.google.Chrome
-Install Spotify.app,1.2.29.605.g66a43ceb,com.spotify.installer
-JetBrains Toolbox.app,2.4.0.32175,com.jetbrains.toolbox
-KeePassXC.app,2.7.9,org.keepassxc.keepassxc
-Keka.app,1.4.3,com.aone.keka
-KeyCastr.app,0.9.18,io.github.keycastr
-Keynote.app,14.1,com.apple.iWork.Keynote
-Leapp.app,0.26.1,com.leapp.app
-Maccy.app,0.31.0,org.p0deje.Maccy
-Microsoft Edge.app,126.0.2592.87,com.microsoft.edgemac
-Microsoft Outlook.app,16.86.3,com.microsoft.Outlook
-Microsoft Teams classic.app,1.00.715956,com.microsoft.teams
-Microsoft Teams.app,24152.405.2925.6762,com.microsoft.teams2
-Miro.app,0.8.68,com.electron.realtimeboard
-NoSQL Workbench.app,3.13.1,com.dynamodb.workbench
-Notion.app,2.1.2,notion.id
-Obsidian.app,1.6.5,md.obsidian
-Ollama.app,0.1.22,com.electron.ollama
-OneDrive.app,24.116.0609,com.microsoft.OneDrive
-Opera (1).app,95.0,com.operasoftware.Opera
-Opera.app,111.0,com.operasoftware.Opera
-Postman.app,11.2.0,com.postmanlabs.mac
-Processing.app,4.3,org.processing.four
-RapidAPI.app,4.2.4,com.luckymarmot.Paw
-Rectangle.app,0.75,com.knollsoft.Rectangle
-Safari.app,17.5,com.apple.Safari
-Slack.app,4.39.88,com.tinyspeck.slackmacgap
-Spotify.app,1.2.30.1135.g02fef27a,com.spotify.client
-Stats.app,2.10.19,eu.exelban.Stats
+Google Chrome.app,158.0.8127.36,com.google.Chrome
+Hidden Bar.app,1.13.2,com.dwarvesv.minimalbar
+iTerm.app,3.7.9,com.googlecode.iterm2
+JetBrains Toolbox.app,3.9.1.89198,com.jetbrains.toolbox
+Keka.app,1.4.7,com.aone.keka
+KeyCastr.app,0.11.1,io.github.keycastr
+Maccy.app,2.8.0,org.p0deje.Maccy
+Microsoft Edge.app,142.0.3595.94,com.microsoft.edgemac
+Microsoft Outlook.app,16.98.1,com.microsoft.Outlook
+Microsoft Teams.app,25163.3001.3726.6503,com.microsoft.teams2
+MonitorControl.app,4.4.0,app.monitorcontrol.MonitorControl
+Obsidian.app,1.15.1,md.obsidian
+Ollama.app,0.32.15,com.electron.ollama
+OneDrive.app,25.159.0817,com.microsoft.OneDrive
+OpenCode Bar.app,2.12.0,com.copilotmonitor.CopilotMonitor
+OpenCode.app,1.0.150,ai.opencode.desktop
+OrbStack.app,2.2.5,dev.kdrag0n.MacVirt
+Pearcleaner.app,5.4.3,com.alienator88.Pearcleaner
+Rectangle.app,2.0.5,com.knollsoft.Rectangle
+Safari.app,26.6.2,com.apple.Safari
 TextMate.app,2.0.23,com.macromates.TextMate
-VLC.app,3.0.21,org.videolan.vlc
-Velja.app,2.0.4,com.sindresorhus.Velja
-Visual Studio Code.app,1.91.0,com.microsoft.VSCode
-Vivaldi.app,6.5.3206.63,com.vivaldi.Vivaldi
-Warp.app,0.1.0,dev.warp.Warp-Stable
-WeatherDock.app,2.5,com.astep.WeatherDock
-WhatsApp.app,24.12.80,net.whatsapp.WhatsApp
-Xcode.app,15.4,com.apple.dt.Xcode
-Zed.app,0.142.6,dev.zed.Zed
-iTerm.app,3.5.3,com.googlecode.iterm2
-zoom.us.app,6.1.1 (36333),us.zoom.xos
-*.app,File Doesn't Exist, Will Create: /Applications/Utilities/*.app/Contents/info.plist,
+Visual Studio Code.app,1.147.0,com.microsoft.VSCode
+VLC.app,3.0.24,org.videolan.vlc
+WeatherDock.app,2.9,com.astep.WeatherDock
+WhatsApp.app,26.46.21,net.whatsapp.WhatsApp
+Xcode.app,26.5,com.apple.dt.Xcode
+zoom.us.app,7.2.5 (90525),us.zoom.xos
