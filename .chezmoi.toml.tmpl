@@ -17,7 +17,6 @@
 
 {{- /* Tools */ -}}
 {{- $bat        := promptBoolOnce . "tools.enable.bat"        "Enable bat as a cat replacement (y/n)"       true -}}
-{{- $broot      := promptBoolOnce . "tools.enable.broot"      "Enable broot as a tree alternative (y/n)"    false -}}
 {{- $dasel      := promptBoolOnce . "tools.enable.dasel"      "Enable dasel as a jq alternative (y/n)"      false -}}
 {{- $eza        := promptBoolOnce . "tools.enable.eza"        "Enable eza as a ls alternative (y/n)"        true -}}
 {{- $lsd        := promptBoolOnce . "tools.enable.lsd"        "Enable lsd as a ls alternative (y/n)"        false -}}
@@ -135,7 +134,6 @@ edge = {{ $instal_edge }}
 
 [data.tools.enable]
 bat = {{ $bat }}
-broot = {{ $broot }}
 dasel = {{ $dasel }}
 eza = {{ $eza }}
 lsd = {{ $lsd }}
