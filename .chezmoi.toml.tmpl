@@ -40,7 +40,7 @@
 {{- end -}}
 
 {{- /* Shell prompt and ls replacement: one choice each ("none" keeps the shell default and installs nothing) */ -}}
-{{- $prompt := promptChoiceOnce . "tools.prompt" "Shell prompt" (list "oh-my-posh" "starship" "none") "oh-my-posh" -}}
+{{- $prompt := promptChoiceOnce . "tools.prompt" "Shell prompt" (list "oh-my-posh" "none") "oh-my-posh" -}}
 {{- $ls     := promptChoiceOnce . "tools.ls"     "ls replacement" (list "eza" "lsd" "none") "eza" -}}
 
 {{- /* Terminal emulator: pick one ("terminal" is the built-in Terminal.app, nothing is installed for it) */ -}}
@@ -116,7 +116,7 @@ name = {{ $gh_username | quote }}
 email = {{ $gh_email | quote }}
 
 [data.tools]
-# one of "oh-my-posh", "starship" or "none"
+# one of "oh-my-posh" or "none"
 prompt = {{ $prompt | quote }}
 # one of "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in Terminal.app)
 terminal = {{ $terminal | quote }}
