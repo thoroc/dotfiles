@@ -1,6 +1,7 @@
 [tools]
 "cargo:lsd" = "latest"
 "github:cli/cli" = "latest"
+"github:JanDeDobbeleer/oh-my-posh" = "latest"
 "github:DeusData/codebase-memory-mcp" = "latest"
 "github:golangci/golangci-lint" = "latest"
 "github:orhun/git-cliff" = "latest"
