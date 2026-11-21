@@ -1,7 +1,8 @@
 [tools]
-"cargo:lsd" = "latest"
 "github:cli/cli" = "latest"
+{{ if eq (dig "tools" "prompt" "oh-my-posh" .) "oh-my-posh" -}}
 "github:JanDeDobbeleer/oh-my-posh" = "latest"
+{{ end -}}
 "github:DeusData/codebase-memory-mcp" = "latest"
 "github:golangci/golangci-lint" = "latest"
 "github:jmespath/jp" = "latest"
@@ -45,14 +46,18 @@ chezmoi = "latest"
 dive = "latest"
 docker-compose = "latest"
 duckdb = "latest"
+{{ if eq (dig "tools" "ls" "eza" .) "eza" -}}
 eza = "latest"
+{{ end -}}
 fd = "latest"
 fnox = "latest"
 fzf = "latest"
 go = "1.24"
 java = "openjdk-11"
 jq = "latest"
+{{ if eq (dig "tools" "ls" "eza" .) "lsd" -}}
 lsd = "latest"
+{{ end -}}
 node = "latest"
 perl = "latest"
 pipx = "latest"
@@ -64,6 +69,9 @@ ripgrep = "latest"
 delta = "latest"
 rlwrap = "latest"
 rumdl = "latest"
+{{ if eq (dig "tools" "prompt" "oh-my-posh" .) "starship" -}}
+starship = "latest"
+{{ end -}}
 rust = "latest"
 semgrep = "latest"
 sqlite = "latest"

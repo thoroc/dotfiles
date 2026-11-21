@@ -32,12 +32,20 @@ if command -v fnm &>/dev/null; then
 fi
 
 
-{{- if eq .tools.prompt "oh-my-posh" }}
+{{- $prompt := dig "tools" "prompt" "oh-my-posh" . }}
+{{- if eq $prompt "oh-my-posh" }}
 # ---------------------------------------------------------------------------------------------------------------------
 # oh-my-posh: https://ohmyposh.dev
 # ---------------------------------------------------------------------------------------------------------------------
 if command -v oh-my-posh &>/dev/null; then
   eval "$(oh-my-posh init zsh --config {{ .chezmoi.homeDir }}/.config/oh-my-posh/theme.omp.json)"
+fi
+{{ else if eq $prompt "starship" }}
+# ---------------------------------------------------------------------------------------------------------------------
+# starship: https://starship.rs
+# ---------------------------------------------------------------------------------------------------------------------
+if command -v starship &>/dev/null; then
+  eval "$(starship init zsh)"
 fi
 {{ end -}}
 

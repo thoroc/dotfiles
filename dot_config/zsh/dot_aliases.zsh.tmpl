@@ -12,9 +12,10 @@ alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
 alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
 {{ end -}}
 
-{{- if eq .tools.enable.lsd true }}
+{{- $ls := dig "tools" "ls" "eza" . }}
+{{- if eq $ls "lsd" }}
 alias ls="lsd"
-{{ else if eq .tools.enable.eza true }}
+{{ else if eq $ls "eza" }}
 alias ls="eza"
 alias le="ls --icons -F -H --group-directories-first --git -1"
 alias lt="eza --tree --level=2 . --icons"

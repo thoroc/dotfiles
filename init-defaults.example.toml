@@ -6,6 +6,8 @@
 
 [tools]
 # "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in, installs nothing)
+prompt = "oh-my-posh" # "oh-my-posh", "starship" or "none"
+ls = "eza"           # "eza", "lsd" or "none"
 terminal = "iterm2"
 # Editors/IDEs by Homebrew cask name: "visual-studio-code", "zed", "cursor", "vscodium", "sublime-text", "webstorm",
 # "intellij-idea", "pycharm"

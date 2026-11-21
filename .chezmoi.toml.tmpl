@@ -18,8 +18,6 @@
 {{- /* Tools */ -}}
 {{- $bat        := promptBoolOnce . "tools.enable.bat"        "Enable bat as a cat replacement (y/n)"       true -}}
 {{- $dasel      := promptBoolOnce . "tools.enable.dasel"      "Enable dasel as a jq alternative (y/n)"      false -}}
-{{- $eza        := promptBoolOnce . "tools.enable.eza"        "Enable eza as a ls alternative (y/n)"        true -}}
-{{- $lsd        := promptBoolOnce . "tools.enable.lsd"        "Enable lsd as a ls alternative (y/n)"        false -}}
 {{- $nix        := promptBoolOnce . "tools.enable.nix"        "Enable nix as a package manager (y/n)"       false -}}
 {{- $one_drive  := promptBoolOnce . "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
 
@@ -41,6 +39,10 @@
 {{- if $notes_logseq -}}
 {{-   $logseq_graph = promptStringOnce . "tools.notes.logseq_graph" "Logseq graph path (absolute)" (printf "%s/Documents/logseq-graph" .chezmoi.homeDir) -}}
 {{- end -}}
+
+{{- /* Shell prompt and ls replacement: one choice each ("none" keeps the shell default and installs nothing) */ -}}
+{{- $prompt := promptChoiceOnce . "tools.prompt" "Shell prompt" (list "oh-my-posh" "starship" "none") "oh-my-posh" -}}
+{{- $ls     := promptChoiceOnce . "tools.ls"     "ls replacement" (list "eza" "lsd" "none") "eza" -}}
 
 {{- /* Terminal emulator: pick one ("terminal" is the built-in Terminal.app, nothing is installed for it) */ -}}
 {{- $terminal := promptChoiceOnce . "tools.terminal" "Terminal emulator" (list "iterm2" "warp" "alacritty" "kitty" "hyper" "wezterm" "terminal") "iterm2" -}}
@@ -115,15 +117,14 @@ name = {{ $gh_username | quote }}
 email = {{ $gh_email | quote }}
 
 [data.tools]
-# we want to try and allow other shells/prompts to be used
-# "starship"
-prompt = "oh-my-posh"
+# one of "oh-my-posh", "starship" or "none"
+prompt = {{ $prompt | quote }}
 # one of "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in Terminal.app)
 terminal = {{ $terminal | quote }}
 # editors/IDEs to install, by Homebrew cask name (see the "Editors/IDEs" prompt)
 editors = {{ $editors | toJson }}
-# "lsd" or "exa" or "lsd" or "dust" or "dircolors"
-list = "lsd"
+# one of "eza", "lsd" or "none"
+ls = {{ $ls | quote }}
 
 [data.tools.ai]
 claude = {{ $ai_claude }}
@@ -155,8 +156,6 @@ orbstack = {{ $install_orbstack }}
 [data.tools.enable]
 bat = {{ $bat }}
 dasel = {{ $dasel }}
-eza = {{ $eza }}
-lsd = {{ $lsd }}
 nix = {{ $nix }}
 one_drive = {{ $one_drive }}
 

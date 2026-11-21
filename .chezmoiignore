@@ -9,6 +9,14 @@ Brewfile
 Applist.txt
 init-defaults.example.toml
 
+# Prompt and ls configs only for the selected tools
+{{ if ne (dig "tools" "prompt" "oh-my-posh" .) "oh-my-posh" -}}
+.config/oh-my-posh
+{{ end -}}
+{{ if ne (dig "tools" "ls" "eza" .) "lsd" -}}
+.config/lsd
+{{ end -}}
+
 # Claude Code config (dot_claude/) only when Claude Code is enabled
 {{ if not (dig "tools" "ai" "claude" false .) -}}
 .claude
