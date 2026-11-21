@@ -8,6 +8,11 @@ mise.toml
 Brewfile
 Applist.txt
 
+# Claude Code config (dot_claude/) only when Claude Code is enabled
+{{ if not (dig "tools" "ai" "claude" false .) -}}
+.claude
+{{ end -}}
+
 # Claude Code runtime/session data (only config is managed under dot_claude/)
 .claude/backups
 .claude/cache

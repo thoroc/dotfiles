@@ -23,6 +23,12 @@
 {{- $nix        := promptBoolOnce . "tools.enable.nix"        "Enable nix as a package manager (y/n)"       false -}}
 {{- $one_drive  := promptBoolOnce . "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
 
+{{- /* AI coding assistants: any combination, including none */ -}}
+{{- $ai_claude   := promptBoolOnce . "tools.ai.claude"   "Install Claude Code (y/N)" false -}}
+{{- $ai_gemini   := promptBoolOnce . "tools.ai.gemini"   "Install Gemini CLI (y/N)"  false -}}
+{{- $ai_codex    := promptBoolOnce . "tools.ai.codex"    "Install Codex CLI (y/N)"   false -}}
+{{- $ai_opencode := promptBoolOnce . "tools.ai.opencode" "Install opencode (y/N)"    false -}}
+
 {{- /* Notes tools: any combination, including none */ -}}
 {{- $notes_obsidian := promptBoolOnce . "tools.notes.obsidian" "Use Obsidian for notes (y/N)" false -}}
 {{- $notes_notion   := promptBoolOnce . "tools.notes.notion"   "Use Notion for notes (y/N)"   false -}}
@@ -111,6 +117,12 @@ shell = "warp"
 editor = "vscode"
 # "lsd" or "exa" or "lsd" or "dust" or "dircolors"
 list = "lsd"
+
+[data.tools.ai]
+claude = {{ $ai_claude }}
+gemini = {{ $ai_gemini }}
+codex = {{ $ai_codex }}
+opencode = {{ $ai_opencode }}
 
 [data.tools.notes]
 obsidian = {{ $notes_obsidian }}

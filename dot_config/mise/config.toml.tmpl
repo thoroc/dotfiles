@@ -10,13 +10,23 @@
 "github:orhun/git-cliff" = "latest"
 "github:TylerBrock/saw" = "latest"
 "npm:@dotenvx/dotenvx" = "latest"
+{{ if dig "tools" "ai" "claude" false . -}}
+"npm:@anthropic-ai/claude-code" = "latest"
+{{ end -}}
+{{ if dig "tools" "ai" "gemini" false . -}}
 "npm:@google/gemini-cli" = "latest"
+{{ end -}}
+{{ if dig "tools" "ai" "codex" false . -}}
 "npm:@openai/codex" = "latest"
+{{ end -}}
 "npm:@tobilu/qmd" = "latest"
 "npm:aislop" = "latest"
 "npm:cgx" = "latest"
 "npm:context-mode" = "latest"
 "npm:generator-code" = "latest"
+{{ if dig "tools" "ai" "opencode" false . -}}
+"npm:opencode-ai" = "latest"
+{{ end -}}
 "npm:gitlab-ci-local" = "latest"
 "npm:npm" = "latest"
 "npm:osgrep" = "latest"
