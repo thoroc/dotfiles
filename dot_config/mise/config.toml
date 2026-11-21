@@ -15,7 +15,6 @@
 "npm:gitlab-ci-local" = "latest"
 "npm:npm" = "latest"
 "npm:osgrep" = "latest"
-"npm:puppeteer" = "latest"
 "pipx:thefuck" = "latest"
 "pipx:virtualenv" = "latest"
 act = "latest"
