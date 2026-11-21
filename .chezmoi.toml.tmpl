@@ -1,11 +1,18 @@
-{{- $email            := promptStringOnce . "user.work.email"   "Email address"                                                         "john.doe@example.com" -}}
-{{- $username         := promptStringOnce . "user.work.name"    "Username"                                                              "john.doe" -}}
-{{- $projects_dir     := promptStringOnce . "projects_dir"      "Work project directory (name of directory for the work projects)"      "acme" -}}
-{{- $gh_email         := promptStringOnce . "user.github.email" "GitHub email address"                                                  $email -}}
-{{- $gh_username      := promptStringOnce . "user.github.name"  "GitHub username"                                                       "john.doe" -}}
-{{- $gh_projects_dir  := promptStringOnce . "gh_projects_dir"   "GitHub project directory (name of directory for the GitHub projects)"  "github" -}}
+{{- /* Per-machine answers: an optional, untracked TOML file (default ~/.config/chezmoi/init-defaults.toml, or $CHEZMOI_INIT_DEFAULTS). Its keys win over stored answers and skip the matching prompts. chezmoi init ignores --override-data-file for prompts, so it is merged into the data the prompt*Once calls read ($d). */ -}}
+{{- $defaultsFile := or (env "CHEZMOI_INIT_DEFAULTS") (joinPath .chezmoi.homeDir ".config" "chezmoi" "init-defaults.toml") -}}
+{{- $d := . -}}
+{{- if stat $defaultsFile -}}
+{{-   $d = mergeOverwrite (deepCopy .) (include $defaultsFile | fromToml) -}}
+{{- end -}}
 
-{{- $os_shell := promptStringOnce . "os_shell" "Enter your shell" "zsh"}}
+{{- $email            := promptStringOnce $d "user.work.email"   "Email address"                                                         "john.doe@example.com" -}}
+{{- $username         := promptStringOnce $d "user.work.name"    "Username"                                                              "john.doe" -}}
+{{- $projects_dir     := promptStringOnce $d "projects_dir"      "Work project directory (name of directory for the work projects)"      "acme" -}}
+{{- $gh_email         := promptStringOnce $d "user.github.email" "GitHub email address"                                                  $email -}}
+{{- $gh_username      := promptStringOnce $d "user.github.name"  "GitHub username"                                                       "john.doe" -}}
+{{- $gh_projects_dir  := promptStringOnce $d "gh_projects_dir"   "GitHub project directory (name of directory for the GitHub projects)"  "github" -}}
+
+{{- $os_shell := promptStringOnce $d "os_shell" "Enter your shell" "zsh"}}
 
 {{- /* Homebrew prefix */ -}}
 {{- $homebrew_prefix := "" -}}
@@ -16,39 +23,39 @@
 {{- end -}}
 
 {{- /* Tools */ -}}
-{{- $bat        := promptBoolOnce . "tools.enable.bat"        "Enable bat as a cat replacement (y/n)"       true -}}
-{{- $nix        := promptBoolOnce . "tools.enable.nix"        "Enable nix as a package manager (y/n)"       false -}}
-{{- $one_drive  := promptBoolOnce . "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
+{{- $bat        := promptBoolOnce $d "tools.enable.bat"        "Enable bat as a cat replacement (y/n)"       true -}}
+{{- $nix        := promptBoolOnce $d "tools.enable.nix"        "Enable nix as a package manager (y/n)"       false -}}
+{{- $one_drive  := promptBoolOnce $d "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
 
 {{- /* AI coding assistants: any combination, including none */ -}}
-{{- $ai_claude   := promptBoolOnce . "tools.ai.claude"   "Install Claude Code (y/N)" false -}}
-{{- $ai_gemini   := promptBoolOnce . "tools.ai.gemini"   "Install Gemini CLI (y/N)"  false -}}
-{{- $ai_codex    := promptBoolOnce . "tools.ai.codex"    "Install Codex CLI (y/N)"   false -}}
-{{- $ai_opencode := promptBoolOnce . "tools.ai.opencode" "Install opencode (y/N)"    false -}}
+{{- $ai_claude   := promptBoolOnce $d "tools.ai.claude"   "Install Claude Code (y/N)" false -}}
+{{- $ai_gemini   := promptBoolOnce $d "tools.ai.gemini"   "Install Gemini CLI (y/N)"  false -}}
+{{- $ai_codex    := promptBoolOnce $d "tools.ai.codex"    "Install Codex CLI (y/N)"   false -}}
+{{- $ai_opencode := promptBoolOnce $d "tools.ai.opencode" "Install opencode (y/N)"    false -}}
 
 {{- /* Notes tools: any combination, including none */ -}}
-{{- $notes_obsidian := promptBoolOnce . "tools.notes.obsidian" "Use Obsidian for notes (y/N)" false -}}
-{{- $notes_notion   := promptBoolOnce . "tools.notes.notion"   "Use Notion for notes (y/N)"   false -}}
-{{- $notes_logseq   := promptBoolOnce . "tools.notes.logseq"   "Use Logseq for notes (y/N)"   false -}}
+{{- $notes_obsidian := promptBoolOnce $d "tools.notes.obsidian" "Use Obsidian for notes (y/N)" false -}}
+{{- $notes_notion   := promptBoolOnce $d "tools.notes.notion"   "Use Notion for notes (y/N)"   false -}}
+{{- $notes_logseq   := promptBoolOnce $d "tools.notes.logseq"   "Use Logseq for notes (y/N)"   false -}}
 {{- $obsidian_vault := "" -}}
 {{- if $notes_obsidian -}}
-{{-   $obsidian_vault = promptStringOnce . "tools.notes.obsidian_vault" "Obsidian vault path (absolute)" (printf "%s/Documents/obsidian-vault" .chezmoi.homeDir) -}}
+{{-   $obsidian_vault = promptStringOnce $d "tools.notes.obsidian_vault" "Obsidian vault path (absolute)" (printf "%s/Documents/obsidian-vault" .chezmoi.homeDir) -}}
 {{- end -}}
 {{- $logseq_graph := "" -}}
 {{- if $notes_logseq -}}
-{{-   $logseq_graph = promptStringOnce . "tools.notes.logseq_graph" "Logseq graph path (absolute)" (printf "%s/Documents/logseq-graph" .chezmoi.homeDir) -}}
+{{-   $logseq_graph = promptStringOnce $d "tools.notes.logseq_graph" "Logseq graph path (absolute)" (printf "%s/Documents/logseq-graph" .chezmoi.homeDir) -}}
 {{- end -}}
 
 {{- /* Shell prompt and ls replacement: one choice each ("none" keeps the shell default and installs nothing) */ -}}
-{{- $prompt := promptChoiceOnce . "tools.prompt" "Shell prompt" (list "oh-my-posh" "none") "oh-my-posh" -}}
-{{- $ls     := promptChoiceOnce . "tools.ls"     "ls replacement" (list "eza" "lsd" "none") "eza" -}}
+{{- $prompt := promptChoiceOnce $d "tools.prompt" "Shell prompt" (list "oh-my-posh" "none") "oh-my-posh" -}}
+{{- $ls     := promptChoiceOnce $d "tools.ls"     "ls replacement" (list "eza" "lsd" "none") "eza" -}}
 
 {{- /* Terminal emulator: pick one ("terminal" is the built-in Terminal.app, nothing is installed for it) */ -}}
-{{- $terminal := promptChoiceOnce . "tools.terminal" "Terminal emulator" (list "iterm2" "warp" "alacritty" "kitty" "hyper" "wezterm" "terminal") "iterm2" -}}
+{{- $terminal := promptChoiceOnce $d "tools.terminal" "Terminal emulator" (list "iterm2" "warp" "alacritty" "kitty" "hyper" "wezterm" "terminal") "iterm2" -}}
 
 {{- /* Editors/IDEs: any combination; the value is the Homebrew cask name. VS Code only by default. */ -}}
 {{- /* promptMultichoiceOnce ignores stored or overridden lists, so only prompt when no list is present */ -}}
-{{- $editors := dig "tools" "editors" "" . -}}
+{{- $editors := dig "tools" "editors" "" $d -}}
 {{- if not (kindIs "slice" $editors) -}}
 {{-   $editors = promptMultichoice "Editors/IDEs to install" (list "visual-studio-code" "zed" "cursor" "vscodium" "sublime-text" "webstorm" "intellij-idea" "pycharm") (list "visual-studio-code") -}}
 {{- end -}}
@@ -64,40 +71,40 @@
 {{- /* Languages */ -}}
 
 {{- /* NodeJS */ -}}
-{{- $enable_nodejs := promptBoolOnce . "lang.nodejs.enabled" "Enable NodeJS as a programming language (Y/n)" true -}}
+{{- $enable_nodejs := promptBoolOnce $d "lang.nodejs.enabled" "Enable NodeJS as a programming language (Y/n)" true -}}
 {{- if eq $enable_nodejs true -}}
 {{- end -}}
 
 {{- /* Python */ -}}
-{{- $enable_python := promptBoolOnce . "lang.python.enable" "Enable Python as a programming language (Y/n)" true -}}
+{{- $enable_python := promptBoolOnce $d "lang.python.enable" "Enable Python as a programming language (Y/n)" true -}}
 {{- $poetry := false -}}
 {{- $pyenv := false -}}
 {{- if eq $enable_python true -}}
-{{-   $poetry = promptBoolOnce . "lang.python.poetry" "Enable Poetry as a Python package manager (Y/n)" $poetry -}}
-{{-   $pyenv  = promptBoolOnce . "lang.python.pyenv"  "Enable pyenv as a Python version manager (Y/n)"  $pyenv -}}
+{{-   $poetry = promptBoolOnce $d "lang.python.poetry" "Enable Poetry as a Python package manager (Y/n)" $poetry -}}
+{{-   $pyenv  = promptBoolOnce $d "lang.python.pyenv"  "Enable pyenv as a Python version manager (Y/n)"  $pyenv -}}
 {{- end -}}
   
 {{- /* Go */ -}}
-{{- $enable_golang := promptBoolOnce . "lang.golang.enabled" "Enable Go as a programming language (Y/n)" true -}}
+{{- $enable_golang := promptBoolOnce $d "lang.golang.enabled" "Enable Go as a programming language (Y/n)" true -}}
 
 {{- /* Rust */ -}}
-{{- $enable_rust := promptBoolOnce . "lang.rust.enabled" "Enable Rust as a programming language (Y/n)" true -}}
+{{- $enable_rust := promptBoolOnce $d "lang.rust.enabled" "Enable Rust as a programming language (Y/n)" true -}}
 
 {{- /* Java */ -}}
-{{- $enable_java := promptBoolOnce . "lang.java.enabled" "Enable Java as a programming language (N/n)" false -}}
+{{- $enable_java := promptBoolOnce $d "lang.java.enabled" "Enable Java as a programming language (N/n)" false -}}
 {{- $jenv := false -}}
 {{- if eq $enable_java true -}}
-{{-   $jenv = promptBoolOnce . "lang.java.jenv" "Enable jenv as a Java version manager (y/n)" false -}}
+{{-   $jenv = promptBoolOnce $d "lang.java.jenv" "Enable jenv as a Java version manager (y/n)" false -}}
 {{- end -}}
 
-{{- $instal_brave     := promptBoolOnce . "tools.install.browser.brave"     "Install Brave browser (Y/n)"     false -}}
-{{- $instal_firefox   := promptBoolOnce . "tools.install.browser.firefox"   "Install Firefox browser (Y/n)"   true -}}
-{{- $instal_chrome    := promptBoolOnce . "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
-{{- $instal_edge      := promptBoolOnce . "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
+{{- $instal_brave     := promptBoolOnce $d "tools.install.browser.brave"     "Install Brave browser (Y/n)"     false -}}
+{{- $instal_firefox   := promptBoolOnce $d "tools.install.browser.firefox"   "Install Firefox browser (Y/n)"   true -}}
+{{- $instal_chrome    := promptBoolOnce $d "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
+{{- $instal_edge      := promptBoolOnce $d "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
 
 {{- /* Container runtimes: either, both or neither */ -}}
-{{- $install_docker   := promptBoolOnce . "tools.install.container.docker"   "Install Docker Desktop (Y/n)" true -}}
-{{- $install_orbstack := promptBoolOnce . "tools.install.container.orbstack" "Install OrbStack (y/N)"       false -}}
+{{- $install_docker   := promptBoolOnce $d "tools.install.container.docker"   "Install Docker Desktop (Y/n)" true -}}
+{{- $install_orbstack := promptBoolOnce $d "tools.install.container.orbstack" "Install OrbStack (y/N)"       false -}}
 
 sourceDir = "{{ .chezmoi.homeDir }}/.dotfiles"
 

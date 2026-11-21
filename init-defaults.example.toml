@@ -1,8 +1,9 @@
-# Per-machine answers for `mise run init`.
+# Per-machine answers for `chezmoi init` (also `mise run init`).
 #
 # Copy to ~/.config/chezmoi/init-defaults.toml (outside this repo, so private values stay local) and edit. Keys mirror the
 # `[data]` table written to ~/.config/chezmoi/chezmoi.toml. Anything set here is used instead of prompting, and wins over
-# an answer already stored in the generated config. Keys left out keep their stored answer or are prompted.
+# an answer already stored in the generated config. Keys left out keep their stored answer or are prompted. Set
+# CHEZMOI_INIT_DEFAULTS to read a different file.
 
 [tools]
 # "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in, installs nothing)
