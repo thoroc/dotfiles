@@ -44,6 +44,18 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
 - **`dot_config/`** holds tool configs: `zsh` (aliases, profile, env, rc), `gitconfig` (main plus github/gitlab
   includes, global gitignore), `mise`, `oh-my-posh`, `lsd`, `fnox`. `mise/config.toml` is the global tool list (the
   user's installed CLIs) and sets a 7-day upgrade cooloff; do not confuse it with the repo-local `mise.toml` (tasks).
+- **`dot_claude/`** manages the portable parts of `~/.claude` (`CLAUDE.md`, `commands/`, `hooks/`, `settings.json.tmpl`,
+  `dot_mcp.json.tmpl`, `obsidian/*.py.tmpl`). Skills, agents, plugins and runtime data are deliberately not managed and
+  are excluded in `.chezmoiignore`; add new exclusions there, not by omission. Machine paths must use
+  `{{ .chezmoi.homeDir }}`, never a literal home path, and secrets never go in these files (use `fnox`). Executable
+  scripts need the `executable_` prefix. Everything Obsidian-related (MCP entry, two hooks, `obsidian/`) is gated on
+  `.tools.notes.obsidian`, both inside the templates and in a templated block of `.chezmoiignore`. Read toggles with
+  `dig "tools" "notes" "obsidian" false .` so templates still render on machines whose config predates the key.
+- **Notes tools** are three independent toggles in `.chezmoi.toml.tmpl` (`tools.notes.obsidian|notion|logseq`).
+  `obsidian_vault` and `logseq_graph` paths are only prompted when the matching toggle is on. Only Obsidian is consumed
+  by templates so far; Notion and Logseq are recorded but unused. To test prompts non-interactively:
+  `chezmoi execute-template --init --promptBool "<prompt text>=true" < .chezmoi.toml.tmpl` (flags match the prompt text,
+  not the key).
 - **`Applist.txt`** is a snapshot of installed apps (repo-only, listed in `.chezmoiignore`).
 - **`.chezmoiignore`** excludes repo-only files (README, `CLAUDE.md`, `hk.pkl`, `mise.toml`, `.prettierrc`,
   `.rumdl.toml`, `.vscode`, `Brewfile`) from being applied to `$HOME`. Add new repo-only files there, or chezmoi will

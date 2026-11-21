@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+"""
+Obsidian MCP server: exposes vault retrieval as MCP tools over stdio.
+Tools: obsidian_search, obsidian_read_note, obsidian_list_notes
+"""
+
+import os
+import sys
+from pathlib import Path
+
+# Ensure our venv site-packages are on path when invoked via settings.json
+_venv = Path("~/.claude/venvs/memory").expanduser()
+_site = next((_venv / "lib").glob("python*/site-packages"), None)
+if _site and str(_site) not in sys.path:
+    sys.path.insert(0, str(_site))
+
+import mcp.server.stdio
+import mcp.types as types
+from mcp.server import Server
+from mcp.server.models import InitializationOptions
+
+VAULT_PATH = Path(os.environ.get("VAULT_PATH", "{{ .tools.notes.obsidian_vault }}")).expanduser()
+DB_PATH = Path(os.environ.get("DB_PATH", "~/.claude/obsidian/vectors.db")).expanduser()
+
+# Inject env so retriever picks it up
+os.environ["VAULT_PATH"] = str(VAULT_PATH)
+os.environ["DB_PATH"] = str(DB_PATH)
+
+# Import retriever after env is set
+sys.path.insert(0, str(Path(__file__).parent))
+import retriever
+
+app = Server("obsidian")
+
+
+@app.list_tools()
+async def list_tools() -> list[types.Tool]:
+    return [
+        types.Tool(
+            name="obsidian_search",
+            description="Search the Obsidian vault using hybrid BM25 + semantic retrieval. Returns ranked excerpts with file paths and section headings.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Search query"},
+                    "limit": {"type": "integer", "default": 5, "description": "Max results (1-10)"},
+                    "max_tokens": {"type": "integer", "default": 1500, "description": "Max tokens in response"},
+                },
+                "required": ["query"],
+            },
+        ),
+        types.Tool(
+            name="obsidian_read_note",
+            description="Read the full content of a specific note by its vault-relative file path.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "file_path": {"type": "string", "description": "Vault-relative path, e.g. '01-projects/myproject.md'"},
+                },
+                "required": ["file_path"],
+            },
+        ),
+        types.Tool(
+            name="obsidian_list_notes",
+            description="List notes in the vault, optionally filtered by folder prefix or tag.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "folder": {"type": "string", "description": "Folder prefix to filter by, e.g. '01-projects'"},
+                    "limit": {"type": "integer", "default": 50, "description": "Max notes to return"},
+                },
+            },
+        ),
+    ]
+
+
+@app.call_tool()
+async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
+    if name == "obsidian_search":
+        query = arguments.get("query", "")
+        limit = min(int(arguments.get("limit", 5)), 10)
+        max_tokens = int(arguments.get("max_tokens", 1500))
+        results = retriever.search(query, limit=limit, max_tokens=max_tokens)
+        text = retriever.format_results(results, max_tokens=max_tokens)
+        return [types.TextContent(type="text", text=text)]
+
+    elif name == "obsidian_read_note":
+        file_path_str = arguments.get("file_path", "")
+        # Security: prevent path traversal
+        try:
+            target = (VAULT_PATH / file_path_str).resolve()
+            target.relative_to(VAULT_PATH.resolve())
+        except (ValueError, Exception):
+            return [types.TextContent(type="text", text="Error: invalid path")]
+        if not target.exists():
+            return [types.TextContent(type="text", text=f"Note not found: {file_path_str}")]
+        content = target.read_text(encoding='utf-8', errors='replace')
+        # Redact credentials
+        content = retriever.redact(content) if hasattr(retriever, 'redact') else content
+        return [types.TextContent(type="text", text=content)]
+
+    elif name == "obsidian_list_notes":
+        folder = arguments.get("folder", "")
+        limit = int(arguments.get("limit", 50))
+        search_root = VAULT_PATH / folder if folder else VAULT_PATH
+        if not search_root.exists():
+            return [types.TextContent(type="text", text=f"Folder not found: {folder}")]
+        notes = sorted(search_root.rglob("*.md"))[:limit]
+        paths = [str(n.relative_to(VAULT_PATH)) for n in notes]
+        return [types.TextContent(type="text", text='\n'.join(paths) if paths else "No notes found.")]
+
+    return [types.TextContent(type="text", text=f"Unknown tool: {name}")]
+
+
+async def main():
+    async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
+        await app.run(
+            read_stream,
+            write_stream,
+            InitializationOptions(
+                server_name="obsidian",
+                server_version="1.0.0",
+                capabilities=app.get_capabilities(
+                    notification_options=None,
+                    experimental_capabilities={},
+                ),
+            ),
+        )
+
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())

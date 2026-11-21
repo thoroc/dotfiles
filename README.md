@@ -6,7 +6,7 @@
 - [Prerequisite](#prerequisite)
 - [Setup](#setup)
 - [What gets applied](#what-gets-applied)
-- [Day-to-day](#day-to-day)
+- [Claude Code config](#claude-code-config)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -54,7 +54,7 @@ not using `init --apply thoroc` (which clones it to chezmoi's default location).
 - A OneDrive LaunchAgent plist
 - Tools listed in `dot_config/mise/config.toml`, managed by `mise` (upgrades wait 7 days after release)
 
-## Day-to-day
+## Claude Code config
 
 - Optional container runtimes (Docker Desktop, OrbStack, both or neither); PATH and aliases are only generated for the
   ones you choose

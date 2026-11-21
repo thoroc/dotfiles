@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+"""
+Hybrid retriever: BM25 (FTS5) + vector search fused via Reciprocal Rank Fusion.
+Usage:
+    python retriever.py search "query text" [--limit 5] [--max-tokens 1500]
+"""
+
+import argparse
+import os
+import sqlite3
+import struct
+import sys
+from pathlib import Path
+
+import numpy as np
+import sqlite_vec
+from model2vec import StaticModel
+
+VAULT_PATH = Path(os.environ.get("VAULT_PATH", "{{ .tools.notes.obsidian_vault }}")).expanduser()
+DB_PATH = Path(os.environ.get("DB_PATH", "~/.claude/obsidian/vectors.db")).expanduser()
+MODEL_NAME = "minishlab/potion-base-8M"
+
+# RRF parameter (Cormack et al.)
+RRF_K = 60
+BM25_WEIGHT = 1.0
+VEC_WEIGHT = 1.0
+
+_model: StaticModel | None = None
+
+
+def get_model() -> StaticModel:
+    global _model
+    if _model is None:
+        _model = StaticModel.from_pretrained(MODEL_NAME)
+    return _model
+
+
+def get_conn() -> sqlite3.Connection:
+    conn = sqlite3.connect(DB_PATH)
+    conn.enable_load_extension(True)
+    sqlite_vec.load(conn)
+    conn.enable_load_extension(False)
+    return conn
+
+
+def serialize_vector(vec: np.ndarray) -> bytes:
+    return struct.pack(f'{len(vec)}f', *vec.astype(np.float32))
+
+
+def bm25_search(conn: sqlite3.Connection, query: str, limit: int) -> list[int]:
+    """Return chunk IDs ranked by BM25."""
+    try:
+        rows = conn.execute(
+            """
+            SELECT rowid FROM chunks_fts
+            WHERE chunks_fts MATCH ?
+            ORDER BY rank
+            LIMIT ?
+            """,
+            (query, limit)
+        ).fetchall()
+        return [r[0] for r in rows]
+    except sqlite3.OperationalError:
+        return []
+
+
+def vector_search(conn: sqlite3.Connection, query_vec: np.ndarray, limit: int) -> list[int]:
+    """Return chunk IDs ranked by cosine distance."""
+    try:
+        rows = conn.execute(
+            """
+            SELECT id FROM chunk_vecs
+            WHERE embedding MATCH ?
+            AND k = ?
+            ORDER BY distance
+            """,
+            (serialize_vector(query_vec), limit)
+        ).fetchall()
+        return [r[0] for r in rows]
+    except sqlite3.OperationalError:
+        return []
+
+
+def rrf_fuse(bm25_ids: list[int], vec_ids: list[int]) -> list[tuple[int, float]]:
+    """Reciprocal Rank Fusion of two ranked lists."""
+    scores: dict[int, float] = {}
+    for rank, doc_id in enumerate(bm25_ids):
+        scores[doc_id] = scores.get(doc_id, 0) + BM25_WEIGHT / (RRF_K + rank + 1)
+    for rank, doc_id in enumerate(vec_ids):
+        scores[doc_id] = scores.get(doc_id, 0) + VEC_WEIGHT / (RRF_K + rank + 1)
+    return sorted(scores.items(), key=lambda x: x[1], reverse=True)
+
+
+def truncate_to_tokens(text: str, max_tokens: int) -> str:
+    """Rough truncation: ~4 chars per token."""
+    max_chars = max_tokens * 4
+    if len(text) <= max_chars:
+        return text
+    return text[:max_chars] + '...'
+
+
+def search(query: str, limit: int = 5, max_tokens: int = 1500) -> list[dict]:
+    """Run hybrid search and return ranked results."""
+    if not DB_PATH.exists():
+        return []
+
+    conn = get_conn()
+    model = get_model()
+
+    query_vec = model.encode([query], show_progress_bar=False)[0]
+    fetch_limit = limit * 4  # over-fetch for fusion
+
+    bm25_ids = bm25_search(conn, query, fetch_limit)
+    vec_ids = vector_search(conn, query_vec, fetch_limit)
+    fused = rrf_fuse(bm25_ids, vec_ids)[:limit]
+
+    results = []
+    for doc_id, score in fused:
+        row = conn.execute(
+            "SELECT file_path, section, heading_context, chunk_text FROM chunks WHERE id=?",
+            (doc_id,)
+        ).fetchone()
+        if row:
+            file_path, section, heading_context, chunk_text = row
+            results.append({
+                'file_path': file_path,
+                'section': section,
+                'heading_context': heading_context,
+                'score': round(score, 6),
+                'excerpt': truncate_to_tokens(chunk_text, max_tokens // max(len(fused), 1)),
+            })
+
+    conn.close()
+    return results
+
+
+def format_results(results: list[dict], max_tokens: int = 1500) -> str:
+    if not results:
+        return "No results found."
+    lines = []
+    per_result_tokens = max_tokens // max(len(results), 1)
+    for i, r in enumerate(results, 1):
+        lines.append(f"[{i}] {r['file_path']} ({r['heading_context']})")
+        excerpt = truncate_to_tokens(r['excerpt'], per_result_tokens)
+        lines.append(excerpt)
+        lines.append('')
+    return '\n'.join(lines).strip()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(dest='command')
+
+    search_cmd = subparsers.add_parser('search')
+    search_cmd.add_argument('query')
+    search_cmd.add_argument('--limit', type=int, default=5)
+    search_cmd.add_argument('--max-tokens', type=int, default=1500)
+
+    args = parser.parse_args()
+
+    if args.command == 'search':
+        results = search(args.query, limit=args.limit, max_tokens=args.max_tokens)
+        print(format_results(results, max_tokens=args.max_tokens))
+    else:
+        parser.print_help()

@@ -1,0 +1,50 @@
+#!/bin/bash
+# Capture substantial tool outputs back to the Obsidian vault.
+# Claude Code passes JSON on stdin: {"tool_name": "...", "tool_response": {...}, ...}
+# This hook is intentionally permissive — failures are silent.
+
+TOOL_INPUT=$(cat)
+OUTPUT=$(echo "$TOOL_INPUT" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+resp = d.get('tool_response', {})
+if isinstance(resp, str):
+    print(resp)
+elif isinstance(resp, dict):
+    print(resp.get('output') or resp.get('content') or resp.get('text') or '')
+" 2>/dev/null)
+
+# Only capture substantial outputs (>500 chars)
+if [ ${#OUTPUT} -gt 500 ]; then
+    TOOL_NAME=$(echo "$TOOL_INPUT" | python3 -c "
+import sys, json
+print(json.load(sys.stdin).get('tool_name', 'unknown'))
+" 2>/dev/null)
+
+    VAULT="{{ .tools.notes.obsidian_vault }}"
+    INBOX="$VAULT/00-inbox"
+    mkdir -p "$INBOX"
+    TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+    OUTFILE="$INBOX/capture-${TOOL_NAME}-${TIMESTAMP}.md"
+
+    python3 -c "
+import sys
+tool_name = sys.argv[1]
+timestamp = sys.argv[2]
+output = open('/dev/stdin').read()
+print(f'''---
+title: Capture from {tool_name}
+type: note
+created: {timestamp[:8][:4]}-{timestamp[:8][4:6]}-{timestamp[:8][6:8]}
+source: claude-code-{tool_name}
+status: draft
+---
+
+# Capture from {tool_name}
+
+{output}
+''')
+" "$TOOL_NAME" "$TIMESTAMP" <<< "$OUTPUT" > "$OUTFILE" 2>/dev/null || true
+fi
+
+exit 0

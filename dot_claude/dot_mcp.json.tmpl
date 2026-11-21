@@ -1,0 +1,22 @@
+{
+    "mcpServers": {
+        "qmd": {
+            "transport": "stdio",
+            "command": "qmd",
+            "args": [
+                "mcp"
+            ]
+        },
+        "context-mode": {
+            "transport": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "context-mode"
+            ]
+        },
+        "codebase-memory-mcp": {
+            "command": "{{ .chezmoi.homeDir }}/.local/share/mise/installs/github-deus-data-codebase-memory-mcp/latest/codebase-memory-mcp"
+        }
+    }
+}

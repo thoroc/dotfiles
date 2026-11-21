@@ -1,0 +1,205 @@
+{{- $obsidian := dig "tools" "notes" "obsidian" false . -}}
+{
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+{{- if $obsidian }}
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/post-tool-use/capture-insight.sh"
+          }
+        ]
+      },
+{{- end }}
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+{{- if $obsidian }}
+      {
+        "matcher": "Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/pre-tool-use/obsidian-context.sh"
+          }
+        ]
+      },
+{{- end }}
+      {
+        "matcher": "Grep|Glob|Read|Search",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cbm-code-discovery-gate"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cbm-session-reminder"
+          }
+        ]
+      },
+      {
+        "matcher": "resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cbm-session-reminder"
+          }
+        ]
+      },
+      {
+        "matcher": "clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cbm-session-reminder"
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cbm-session-reminder"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"{{ .chezmoi.homeDir }}/.config/iterm2/it2\" handle-agent-hook"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "context-mode@context-mode": true,
+    "prompt-improver@severity1-marketplace": false
+  },
+  "extraKnownMarketplaces": {
+    "context-mode": {
+      "source": {
+        "source": "github",
+        "repo": "mksglu/context-mode"
+      }
+    },
+    "severity1-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "severity1/severity1-marketplace"
+      }
+    }
+  },
+  "mcpServers": {
+{{- if $obsidian }}
+    "obsidian": {
+      "args": [
+        "{{ .chezmoi.homeDir }}/.claude/obsidian/obsidian_mcp.py"
+      ],
+      "command": "{{ .chezmoi.homeDir }}/.claude/venvs/memory/bin/python",
+      "env": {
+        "DB_PATH": "{{ .chezmoi.homeDir }}/.claude/obsidian/vectors.db",
+        "VAULT_PATH": {{ .tools.notes.obsidian_vault | quote }}
+      }
+    }
+{{- end }}
+  },
+  "tui": "fullscreen"
+}

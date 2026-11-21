@@ -1,0 +1,266 @@
+#!/usr/bin/env python3
+"""
+Obsidian vault indexer: chunks notes by H2 headings, builds FTS5 + vector indexes.
+Usage:
+    python index_vault.py                  # full reindex
+    python index_vault.py --incremental    # only reindex changed files
+"""
+
+import argparse
+import os
+import re
+import sqlite3
+import struct
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
+import sqlite_vec
+from model2vec import StaticModel
+
+VAULT_PATH = Path(os.environ.get("VAULT_PATH", "{{ .tools.notes.obsidian_vault }}")).expanduser()
+DB_PATH = Path(os.environ.get("DB_PATH", "~/.claude/obsidian/vectors.db")).expanduser()
+MODEL_NAME = "minishlab/potion-base-8M"
+
+# Patterns to redact from indexed content
+REDACT_PATTERNS = [
+    (r'sk-[A-Za-z0-9]{32,}', '[REDACTED:openai-key]'),
+    (r'ghp_[A-Za-z0-9]{36}', '[REDACTED:github-pat]'),
+    (r'AKIA[0-9A-Z]{16}', '[REDACTED:aws-access-key]'),
+    (r'eyJ[A-Za-z0-9_\-]{20,}\.eyJ[A-Za-z0-9_\-]{20,}\.[A-Za-z0-9_\-]+', '[REDACTED:jwt]'),
+    (r'Bearer [A-Za-z0-9_\-\.]{20,}', '[REDACTED:bearer-token]'),
+    (r'-----BEGIN [A-Z ]+PRIVATE KEY-----[\s\S]+?-----END [A-Z ]+PRIVATE KEY-----', '[REDACTED:private-key]'),
+    (r'[A-Za-z0-9+/]{40,}={0,2}', '[REDACTED:high-entropy-b64]'),
+]
+
+EXCLUDE_DIRS = {'.obsidian', '.git', '07-templates', '08-attachments'}
+
+
+def load_indexignore(vault: Path) -> list[str]:
+    ignore_file = vault / '.indexignore'
+    if not ignore_file.exists():
+        return []
+    patterns = []
+    for line in ignore_file.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith('#'):
+            patterns.append(line)
+    return patterns
+
+
+def is_excluded(path: Path, vault: Path, ignore_patterns: list[str]) -> bool:
+    rel = path.relative_to(vault)
+    parts = rel.parts
+    # Exclude hardcoded dirs
+    if any(p in EXCLUDE_DIRS for p in parts):
+        return True
+    # Exclude .indexignore patterns (prefix match)
+    rel_str = str(rel)
+    for pattern in ignore_patterns:
+        pattern = pattern.rstrip('/')
+        if rel_str.startswith(pattern) or rel_str == pattern:
+            return True
+    return False
+
+
+def redact(text: str) -> str:
+    for pattern, replacement in REDACT_PATTERNS:
+        text = re.sub(pattern, replacement, text)
+    return text
+
+
+def chunk_note(file_path: Path, vault: Path) -> list[dict]:
+    """Split a note into chunks at H2 (##) boundaries."""
+    try:
+        raw = file_path.read_text(encoding='utf-8', errors='replace')
+    except Exception:
+        return []
+
+    raw = redact(raw)
+    rel_path = str(file_path.relative_to(vault))
+
+    # Extract frontmatter
+    frontmatter = ''
+    body = raw
+    fm_match = re.match(r'^---\n(.*?)\n---\n', raw, re.DOTALL)
+    if fm_match:
+        frontmatter = fm_match.group(1)
+        body = raw[fm_match.end():]
+
+    chunks = []
+    # Split on H2 headings
+    sections = re.split(r'\n(?=## )', body)
+
+    # First section (before any H2) = intro chunk
+    intro = sections[0].strip()
+    if intro or frontmatter:
+        heading_context = _extract_h1(intro) or file_path.stem
+        chunk_text = (frontmatter + '\n' + intro).strip() if frontmatter else intro
+        if chunk_text:
+            chunks.append({
+                'file_path': rel_path,
+                'section': heading_context,
+                'heading_context': heading_context,
+                'chunk_text': chunk_text,
+            })
+
+    # Subsequent H2 sections
+    for section in sections[1:]:
+        h2_match = re.match(r'^## (.+)', section)
+        heading = h2_match.group(1).strip() if h2_match else 'Unknown'
+        h1 = _extract_h1(sections[0])
+        heading_context = f"{h1} > {heading}" if h1 else heading
+        chunk_text = section.strip()
+        if chunk_text:
+            chunks.append({
+                'file_path': rel_path,
+                'section': heading,
+                'heading_context': heading_context,
+                'chunk_text': chunk_text,
+            })
+
+    return chunks
+
+
+def _extract_h1(text: str) -> str:
+    m = re.search(r'^# (.+)', text, re.MULTILINE)
+    return m.group(1).strip() if m else ''
+
+
+def setup_db(conn: sqlite3.Connection) -> None:
+    conn.execute("CREATE TABLE IF NOT EXISTS chunks (id INTEGER PRIMARY KEY, file_path TEXT, section TEXT, heading_context TEXT, chunk_text TEXT, modified_time REAL)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_chunks_path ON chunks(file_path)")
+    conn.execute("""
+        CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
+            chunk_text,
+            section,
+            heading_context,
+            content=chunks,
+            content_rowid=id
+        )
+    """)
+    conn.execute("""
+        CREATE VIRTUAL TABLE IF NOT EXISTS chunk_vecs USING vec0(
+            id INTEGER PRIMARY KEY,
+            embedding float[256]
+        )
+    """)
+    conn.execute("CREATE TABLE IF NOT EXISTS indexed_files (file_path TEXT PRIMARY KEY, modified_time REAL, chunk_count INTEGER)")
+    conn.commit()
+
+
+def delete_file_chunks(conn: sqlite3.Connection, rel_path: str) -> None:
+    ids = [r[0] for r in conn.execute("SELECT id FROM chunks WHERE file_path=?", (rel_path,)).fetchall()]
+    if ids:
+        placeholders = ','.join('?' * len(ids))
+        conn.execute(f"DELETE FROM chunk_vecs WHERE id IN ({placeholders})", ids)
+        conn.execute(f"DELETE FROM chunks WHERE id IN ({placeholders})", ids)
+        conn.execute(f"DELETE FROM chunks_fts WHERE rowid IN ({placeholders})", ids)
+    conn.execute("DELETE FROM indexed_files WHERE file_path=?", (rel_path,))
+
+
+def serialize_vector(vec: np.ndarray) -> bytes:
+    return struct.pack(f'{len(vec)}f', *vec.astype(np.float32))
+
+
+def index_vault(incremental: bool = False) -> None:
+    print(f"Vault: {VAULT_PATH}")
+    print(f"DB:    {DB_PATH}")
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+    conn = sqlite3.connect(DB_PATH)
+    conn.enable_load_extension(True)
+    sqlite_vec.load(conn)
+    conn.enable_load_extension(False)
+    setup_db(conn)
+
+    print(f"Loading embedding model: {MODEL_NAME}")
+    model = StaticModel.from_pretrained(MODEL_NAME)
+    print("Model loaded.")
+
+    ignore_patterns = load_indexignore(VAULT_PATH)
+    md_files = [p for p in VAULT_PATH.rglob('*.md') if not is_excluded(p, VAULT_PATH, ignore_patterns)]
+    print(f"Found {len(md_files)} markdown files")
+
+    if incremental:
+        existing = {r[0]: r[1] for r in conn.execute("SELECT file_path, modified_time FROM indexed_files").fetchall()}
+        to_index = []
+        for f in md_files:
+            rel = str(f.relative_to(VAULT_PATH))
+            mtime = f.stat().st_mtime
+            if rel not in existing or existing[rel] != mtime:
+                to_index.append(f)
+        # Remove deleted files
+        current_rel = {str(f.relative_to(VAULT_PATH)) for f in md_files}
+        for rel_path in list(existing.keys()):
+            if rel_path not in current_rel:
+                delete_file_chunks(conn, rel_path)
+                print(f"  Removed: {rel_path}")
+        conn.commit()
+        print(f"Incremental: {len(to_index)} files to update")
+    else:
+        # Full reindex: clear everything
+        conn.execute("DELETE FROM chunk_vecs")
+        conn.execute("DELETE FROM chunks_fts")
+        conn.execute("DELETE FROM chunks")
+        conn.execute("DELETE FROM indexed_files")
+        conn.commit()
+        to_index = md_files
+
+    if not to_index:
+        print("Nothing to index.")
+        conn.close()
+        return
+
+    total_chunks = 0
+    batch_size = 50
+
+    for i, file_path in enumerate(to_index):
+        rel_path = str(file_path.relative_to(VAULT_PATH))
+        mtime = file_path.stat().st_mtime
+
+        if incremental:
+            delete_file_chunks(conn, rel_path)
+
+        chunks = chunk_note(file_path, VAULT_PATH)
+        if not chunks:
+            conn.execute("INSERT OR REPLACE INTO indexed_files VALUES (?,?,?)", (rel_path, mtime, 0))
+            continue
+
+        # Insert chunks
+        texts = [c['chunk_text'] for c in chunks]
+        embeddings = model.encode(texts, show_progress_bar=False)
+
+        for chunk, embedding in zip(chunks, embeddings):
+            cur = conn.execute(
+                "INSERT INTO chunks (file_path, section, heading_context, chunk_text, modified_time) VALUES (?,?,?,?,?)",
+                (chunk['file_path'], chunk['section'], chunk['heading_context'], chunk['chunk_text'], mtime)
+            )
+            chunk_id = cur.lastrowid
+            conn.execute(
+                "INSERT INTO chunks_fts (rowid, chunk_text, section, heading_context) VALUES (?,?,?,?)",
+                (chunk_id, chunk['chunk_text'], chunk['section'], chunk['heading_context'])
+            )
+            conn.execute(
+                "INSERT INTO chunk_vecs (id, embedding) VALUES (?,?)",
+                (chunk_id, serialize_vector(embedding))
+            )
+
+        conn.execute("INSERT OR REPLACE INTO indexed_files VALUES (?,?,?)", (rel_path, mtime, len(chunks)))
+        total_chunks += len(chunks)
+
+        if (i + 1) % batch_size == 0:
+            conn.commit()
+            print(f"  {i+1}/{len(to_index)} files, {total_chunks} chunks so far...")
+
+    conn.commit()
+    conn.close()
+    print(f"Done. Indexed {len(to_index)} files, {total_chunks} chunks.")
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--incremental', action='store_true', help='Only reindex changed files')
+    args = parser.parse_args()
+    index_vault(incremental=args.incremental)
