@@ -48,9 +48,10 @@ defaults write com.apple.dock "orientation" -string "bottom"
 defaults write com.apple.dock "tilesize" -int 71
 # Don't show recent applications in Dock
 defaults write com.apple.dock "show-recents" -bool false
-# Clear Dock of all icons
+# Set Dock apps
 defaults write com.apple.dock "persistent-others" -array
-defaults write com.apple.dock "persistent-apps" -array
+defaults write com.apple.dock "persistent-apps" -array \
+  '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>file:///System/Applications/App Store.app/</string><key>_CFURLStringType</key><integer>15</integer></dict></dict></dict>'
 
 killall Dock
 
