@@ -44,8 +44,7 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
 - **`dot_config/`** holds tool configs: `zsh` (aliases, profile, env, rc), `gitconfig` (main plus github/gitlab
   includes, global gitignore), `mise`, `oh-my-posh`, `lsd`, `fnox`. `mise/config.toml` is the global tool list (the
   user's installed CLIs) and sets a 7-day upgrade cooloff; do not confuse it with the repo-local `mise.toml` (tasks).
-- **`thomas.roche_Applist.txt`** is a snapshot of installed apps. It is not ignored, so chezmoi currently copies it into
-  `$HOME`.
+- **`Applist.txt`** is a snapshot of installed apps (repo-only, listed in `.chezmoiignore`).
 - **`.chezmoiignore`** excludes repo-only files (README, `CLAUDE.md`, `hk.pkl`, `mise.toml`, `.prettierrc`,
   `.rumdl.toml`, `.vscode`, `Brewfile`) from being applied to `$HOME`. Add new repo-only files there, or chezmoi will
   copy them into `$HOME`.
