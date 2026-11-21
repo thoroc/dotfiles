@@ -1,6 +1,5 @@
 tap "aws/tap"
 tap "buo/cask-upgrade"
-tap "dagger/tap"
 tap "domt4/autoupdate"
 tap "fabianishere/personal"
 tap "homebrew/autoupdate"
@@ -258,8 +257,6 @@ brew "zlib"
 brew "zsh"
 # Additional completion definitions for zsh
 brew "zsh-completions"
-# Dagger is an integrated platform to orchestrate the delivery of applications
-brew "dagger/tap/dagger"
 # Command-line interface to JMESPath, a query language for JSON
 brew "jmespath/jmespath/jp"
 # Super fast CLI tool to decode and encode JWTs built in Rust
