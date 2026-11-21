@@ -56,6 +56,11 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   data as `$d`, which every `prompt*Once` call uses), so listed keys are not prompted and override stored answers. Do
   not rely on `chezmoi init --override-data-file`: it is ignored for prompts (only `execute-template` honours it). Keep
   emails, vault paths and other private values in that file, not in the repo.
+- **Already-installed apps are not asked about.** For Docker Desktop and OrbStack the template uses a stored or
+  defaults-file answer first, then treats an existing `/Applications/<App>.app` as yes, and only then prompts
+  (`promptBool`, not `...Once`, because the answer is derived). Reuse that pattern for other app prompts. Each
+  `prompt*Once` path must match the key the data table writes (the Python prompt used `lang.python.enable` while the
+  data key is `enabled`, so it re-prompted on every init).
 - **Prompt and ls replacement** are single choices (`tools.prompt`: `oh-my-posh` | `none`, default `oh-my-posh`;
   `tools.ls`: `eza` | `lsd` | `none`, default `eza`). They gate the mise entries (`dot_config/mise/config.toml.tmpl`),
   the zprofile init block, the aliases, and the `.config/oh-my-posh` and `.config/lsd` applies (`.chezmoiignore`).

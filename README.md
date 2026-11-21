@@ -78,7 +78,7 @@ Obsidian additionally asks for a vault path and Logseq for a graph path; neither
 - Shell config (zsh, aliases, oh-my-posh theme), git config, `lsd`, `fnox`, `mise` and vim config
 - `.Brewfile` (linked to `~/.config/homebrew/.Brewfile`) and a toggle-driven `brew bundle` on every change
 - Optional container runtimes (Docker Desktop, OrbStack, both or neither); PATH and aliases are only generated for the
-  ones you choose
+  ones you choose; an app that is already installed is enabled without asking
 - macOS defaults (dock, Finder, screenshots, software update, TouchID for sudo) via `run_onchange` scripts
 - A OneDrive LaunchAgent plist
 - Tools listed in `dot_config/mise/config.toml`, managed by `mise` (upgrades wait 7 days after release)
