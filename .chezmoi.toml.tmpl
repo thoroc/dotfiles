@@ -76,7 +76,7 @@
 {{- end -}}
 
 {{- /* Python */ -}}
-{{- $enable_python := promptBoolOnce $d "lang.python.enable" "Enable Python as a programming language (Y/n)" true -}}
+{{- $enable_python := promptBoolOnce $d "lang.python.enabled" "Enable Python as a programming language (Y/n)" true -}}
 {{- $poetry := false -}}
 {{- $pyenv := false -}}
 {{- if eq $enable_python true -}}
