@@ -141,6 +141,25 @@
 {{-   $_ := set (index $lang $parentKey) $name $value -}}
 {{- end -}}
 
+{{- /* Homebrew tools that mise can provide as prebuilt binaries (checked on darwin/amd64): offer to move the ones that are installed. ffmpeg, make and poppler are deliberately left out (mise builds or repackages them). */ -}}
+{{- $movable := list "colima" "d2" "mas" -}}
+{{- $moveChosen := dig "tools" "migrate_to_mise" "" $d -}}
+{{- if not (kindIs "slice" $moveChosen) -}}
+{{-   $moveChosen = list -}}
+{{-   if lookPath "brew" -}}
+{{-     $installed := splitList "\n" (output "brew" "list" "--formula" "-1" | trim) -}}
+{{-     $candidates := list -}}
+{{-     range $movable -}}
+{{-       if has . $installed -}}
+{{-         $candidates = append $candidates . -}}
+{{-       end -}}
+{{-     end -}}
+{{-     if $candidates -}}
+{{-       $moveChosen = promptMultichoice "Homebrew tools to move to mise (installs with mise, then removes the formula)" $candidates (list) -}}
+{{-     end -}}
+{{-   end -}}
+{{- end -}}
+
 {{- $instal_brave     := promptBoolOnce $d "tools.install.browser.brave"     "Install Brave browser (Y/n)"     false -}}
 {{- $instal_firefox   := promptBoolOnce $d "tools.install.browser.firefox"   "Install Firefox browser (Y/n)"   true -}}
 {{- $instal_chrome    := promptBoolOnce $d "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
@@ -188,6 +207,8 @@ prompt = {{ $prompt | quote }}
 terminal = {{ $terminal | quote }}
 # editors/IDEs to install, by Homebrew cask name (see the "Editors/IDEs" prompt)
 editors = {{ $editors | toJson }}
+# Homebrew tools to move to mise; consumed by the mise config and the migration script
+migrate_to_mise = {{ $moveChosen | toJson }}
 # one of "eza", "lsd" or "none"
 ls = {{ $ls | quote }}
 

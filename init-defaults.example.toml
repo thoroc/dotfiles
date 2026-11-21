@@ -37,3 +37,7 @@ logseq = false
 # migrate = false
 # [lang.python]
 # migrate = false
+
+# Homebrew tools to move to mise ("colima", "d2", "mas"); only ones installed with Homebrew are offered
+# [tools]
+# migrate_to_mise = []

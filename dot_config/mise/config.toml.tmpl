@@ -1,5 +1,8 @@
 [tools]
 "github:cli/cli" = "latest"
+{{ range (dig "tools" "migrate_to_mise" (list) .) -}}
+{{ . | quote }} = "latest"
+{{ end -}}
 {{ if eq (dig "tools" "prompt" "oh-my-posh" .) "oh-my-posh" -}}
 "github:JanDeDobbeleer/oh-my-posh" = "latest"
 {{ end -}}

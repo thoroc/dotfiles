@@ -1,14 +1,18 @@
 {{- /* Moves the languages the user opted in to (lang.<name>.migrate) from Homebrew to mise. Renders empty, so chezmoi skips it, when there is nothing to move. */ -}}
 {{- $migrations := dict "nodejs" (list "node" "^node(@[0-9.]+)?$") "python" (list "python" "^python(@[0-9.]+)?$") "golang" (list "go" "^go$") "java" (list "java" "^openjdk(@[0-9]+)?$") -}}
+{{- /* tools.migrate_to_mise holds plain tool names; mise and Homebrew use the same name for each */ -}}
+{{- range (dig "tools" "migrate_to_mise" (list) .) -}}
+{{-   $migrations = set $migrations . (list . (printf "^%s$" .)) -}}
+{{- end -}}
 {{- $wanted := list -}}
 {{- range $key, $spec := $migrations -}}
-{{-   if dig "lang" $key "migrate" false $ -}}
+{{-   if or (dig "lang" $key "migrate" false $) (has $key (dig "tools" "migrate_to_mise" (list) $)) -}}
 {{-     $wanted = append $wanted $key -}}
 {{-   end -}}
 {{- end -}}
 {{- if and (eq .chezmoi.os "darwin") $wanted -}}
 #!{{ .os_shell }}
-# Homebrew to mise, opt-in per language. Nothing is forced: brew refuses to uninstall a formula that other formulae
+# Homebrew to mise, opt-in per language or tool. Nothing is forced: brew refuses to uninstall a formula that other formulae
 # depend on, and that is reported rather than overridden.
 
 eval "$({{ .homebrew_prefix }}/bin/brew shellenv)"
