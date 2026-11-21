@@ -22,6 +22,7 @@
 {{- $lsd        := promptBoolOnce . "tools.enable.lsd"        "Enable lsd as a ls alternative (y/n)"        false -}}
 {{- $nix        := promptBoolOnce . "tools.enable.nix"        "Enable nix as a package manager (y/n)"       false -}}
 {{- $one_drive  := promptBoolOnce . "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
+
 {{- /* Notes tools: any combination, including none */ -}}
 {{- $notes_obsidian := promptBoolOnce . "tools.notes.obsidian" "Use Obsidian for notes (y/N)" false -}}
 {{- $notes_notion   := promptBoolOnce . "tools.notes.notion"   "Use Notion for notes (y/N)"   false -}}
@@ -34,7 +35,6 @@
 {{- if $notes_logseq -}}
 {{-   $logseq_graph = promptStringOnce . "tools.notes.logseq_graph" "Logseq graph path (absolute)" (printf "%s/Documents/logseq-graph" .chezmoi.homeDir) -}}
 {{- end -}}
-
 
 {{- /* Terminals */ -}}
 {{- $vscode := promptBoolOnce . "tools.install.ide.vscode" "Install Visual Studio Code as a IDE (Y/n)" true -}}
@@ -81,6 +81,10 @@
 {{- $instal_chrome    := promptBoolOnce . "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
 {{- $instal_edge      := promptBoolOnce . "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
 
+{{- /* Container runtimes: either, both or neither */ -}}
+{{- $install_docker   := promptBoolOnce . "tools.install.container.docker"   "Install Docker Desktop (Y/n)" true -}}
+{{- $install_orbstack := promptBoolOnce . "tools.install.container.orbstack" "Install OrbStack (y/N)"       false -}}
+
 sourceDir = "{{ .chezmoi.homeDir }}/.dotfiles"
 
 [data]
@@ -92,10 +96,6 @@ gh_projects_dir = {{ $gh_projects_dir | quote }}
 [data.user.work]
 name = {{ $username | quote }}
 email = {{ $email | quote }}
-
-{{- /* Container runtimes: either, both or neither */ -}}
-{{- $install_docker   := promptBoolOnce . "tools.install.container.docker"   "Install Docker Desktop (Y/n)" true -}}
-{{- $install_orbstack := promptBoolOnce . "tools.install.container.orbstack" "Install OrbStack (y/N)"       false -}}
 
 [data.user.github]
 name = {{ $gh_username | quote }}
@@ -111,6 +111,7 @@ shell = "warp"
 editor = "vscode"
 # "lsd" or "exa" or "lsd" or "dust" or "dircolors"
 list = "lsd"
+
 [data.tools.notes]
 obsidian = {{ $notes_obsidian }}
 notion = {{ $notes_notion }}
@@ -122,7 +123,6 @@ obsidian_vault = {{ $obsidian_vault | quote }}
 logseq_graph = {{ $logseq_graph | quote }}
 {{- end }}
 
-
 [data.tools.install.ide]
 vscode = {{ $vscode }}
 
@@ -131,6 +131,10 @@ brave = {{ $instal_brave }}
 firefox = {{ $instal_firefox }}
 chrome = {{ $instal_chrome }}
 edge = {{ $instal_edge }}
+
+[data.tools.install.container]
+docker = {{ $install_docker }}
+orbstack = {{ $install_orbstack }}
 
 [data.tools.enable]
 bat = {{ $bat }}
@@ -154,10 +158,6 @@ jenv = {{ $jenv }}
 enabled = {{ $enable_nodejs }}
 
 [data.lang.python]
-[data.tools.install.container]
-docker = {{ $install_docker }}
-orbstack = {{ $install_orbstack }}
-
 enabled = {{ $enable_python }}
 poetry = {{ $poetry }}
 pyenv = {{ $pyenv }}
