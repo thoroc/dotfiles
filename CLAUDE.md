@@ -55,6 +55,13 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   `init-defaults.example.toml`, repo-only). `mise run init` passes it via `chezmoi init --override-data-file`, which
   feeds the `prompt*Once` functions, so listed keys are not prompted and override stored answers. Keep emails, vault
   paths and other private values in that file, not in the repo.
+- **Prompt and ls replacement** are single choices (`tools.prompt`: `oh-my-posh` | `starship` | `none`, default
+  `oh-my-posh`; `tools.ls`: `eza` | `lsd` | `none`, default `eza`). They gate the mise entries
+  (`dot_config/mise/config.toml.tmpl`), the zprofile init block, the aliases, and the `.config/oh-my-posh` and
+  `.config/lsd` applies (`.chezmoiignore`). Templates read them with `dig` and defaults equal to the previous behaviour,
+  so older configs keep working. The old `tools.enable.lsd`/`eza`/`dasel` toggles (dasel was never consumed) and the
+  unused `tools.list`, `tools.shell` and `tools.editor` keys are gone; stale values in an existing `chezmoi.toml` are
+  harmless.
 - **Terminal emulator** is one `promptChoiceOnce` (`tools.terminal`, default `iterm2`) whose value is also the Homebrew
   cask name, installed by `run_onchange_darwin-install-packages`; `terminal` (Terminal.app) installs nothing. Adding a
   terminal means adding it to the choice list in `.chezmoi.toml.tmpl` after confirming the cask name. The iTerm2 `it2`
