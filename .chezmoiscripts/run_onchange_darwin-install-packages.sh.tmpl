@@ -31,9 +31,20 @@ cask {{ .tools.terminal | quote }}
 {{ range (dig "tools" "editors" (list "visual-studio-code") .) }}
 cask {{ . | quote }}
 {{ end }}
+{{ if eq .chezmoi.arch "amd64" }}
+brew "git-delta"
+{{ end }}
 {{ if eq .lang.java.enabled true }}
 brew "openjdk@11"
 brew "openjdk@8"
 {{ end }}
 EOF
+
+# AI assistants that ship their own installers: only install when missing, so an existing install is left alone
+{{ if dig "tools" "ai" "claude" false . -}}
+command -v claude >/dev/null 2>&1 || brew install --cask claude-code
+{{ end -}}
+{{ if dig "tools" "ai" "opencode" false . -}}
+command -v opencode >/dev/null 2>&1 || brew install opencode
+{{ end -}}
 {{ end -}}

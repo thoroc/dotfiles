@@ -11,9 +11,6 @@
 "github:orhun/git-cliff" = "latest"
 "github:TylerBrock/saw" = "latest"
 "npm:@dotenvx/dotenvx" = "latest"
-{{ if dig "tools" "ai" "claude" false . -}}
-"npm:@anthropic-ai/claude-code" = "latest"
-{{ end -}}
 {{ if dig "tools" "ai" "gemini" false . -}}
 "npm:@google/gemini-cli" = "latest"
 {{ end -}}
@@ -25,9 +22,6 @@
 "npm:cgx" = "latest"
 "npm:context-mode" = "latest"
 "npm:generator-code" = "latest"
-{{ if dig "tools" "ai" "opencode" false . -}}
-"npm:opencode-ai" = "latest"
-{{ end -}}
 "npm:gitlab-ci-local" = "latest"
 "npm:npm" = "latest"
 "npm:osgrep" = "latest"
@@ -66,10 +60,8 @@ prettier = "latest"
 protobuf = "latest"
 python = "3.13"
 ripgrep = "latest"
-{{ if eq .chezmoi.arch "amd64" -}}
-{{- /* no prebuilt delta for darwin/amd64 in mise's registry, so build it with cargo (needs the rust tool below) */ -}}
-"cargo:git-delta" = "latest"
-{{ else -}}
+{{ if ne .chezmoi.arch "amd64" -}}
+{{- /* no prebuilt delta for darwin/amd64 in mise's registry; Intel Macs get git-delta from Homebrew instead (install-packages script) */ -}}
 delta = "latest"
 {{ end -}}
 rlwrap = "latest"
