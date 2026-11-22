@@ -52,6 +52,8 @@
 
 {{- /* Terminal emulator: pick one ("terminal" is the built-in Terminal.app, nothing is installed for it) */ -}}
 {{- $terminal := promptChoiceOnce $d "tools.terminal" "Terminal emulator" (list "iterm2" "warp" "alacritty" "kitty" "hyper" "wezterm" "terminal") "iterm2" -}}
+{{- /* Primary web browser, pinned in the Dock next to the terminal. Independent of the install toggles below: it may be one that is already installed. */ -}}
+{{- $browser := promptChoiceOnce $d "tools.browser" "Primary browser (pinned in the Dock)" (list "safari" "brave" "firefox" "chrome" "edge") "safari" -}}
 
 {{- /* Editors/IDEs: any combination; the value is the Homebrew cask name. VS Code only by default. */ -}}
 {{- /* promptMultichoiceOnce ignores stored or overridden lists, so only prompt when no list is present */ -}}
@@ -233,6 +235,8 @@ email = {{ $gh_email | quote }}
 prompt = {{ $prompt | quote }}
 # one of "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in Terminal.app)
 terminal = {{ $terminal | quote }}
+# primary browser pinned in the Dock: one of "safari", "brave", "firefox", "chrome" or "edge"
+browser = {{ $browser | quote }}
 # container runtime: "docker", "orbstack", "colima" or "none" (the booleans under install.container are derived from it)
 container = {{ $container | quote }}
 # editors/IDEs to install, by Homebrew cask name (see the "Editors/IDEs" prompt)
