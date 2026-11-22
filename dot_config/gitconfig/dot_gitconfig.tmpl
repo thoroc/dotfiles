@@ -18,7 +18,7 @@
 	untracked = cyan
 
 [core]
-	excludesfile = {{- .chezmoi.homeDir -}}/.config/.gitignore_global
+	excludesfile = {{ .chezmoi.homeDir }}/.config/gitconfig/.gitignore_global
 	editor = vim
 	autocrlf = input
 
@@ -26,10 +26,10 @@
 	userConfigOnly = true
 	name = {{ .user.github.name }}
 	email = {{ .user.github.email }}
-	signingkey = {{- .chezmoi.homeDir -}}/.ssh/id_ed25519.pub
+	signingkey = {{ .chezmoi.homeDir }}/.ssh/id_ed25519.pub
 
-[includeIf "gitdir:{{- .chezmoi.homeDir -}}/Projects/{{ .projects_dir }}/"]
-  path = {{- .chezmoi.homeDir -}}/.config/.gitconfig_gitlab
+[includeIf "gitdir:{{ .chezmoi.homeDir }}/{{ dig "gitlab_projects_dir" "Projects/gitlab" . }}/"]
+  path = {{ .chezmoi.homeDir }}/.config/gitconfig/.gitconfig_gitlab
 
 [alias]
 	dev = "!f() { git stash && co develop && git pull && git co - && git rebase develop && git stash pop; }; f"
@@ -97,6 +97,8 @@
 	pushmegently = push origin HEAD --force-with-lease # push it regardless 
 	pushit = "!f() { git rev-parse --abbrev-ref HEAD ; }; git push --set-upstream origin `f`" # push and set upstream
 
+	mirror = "!git-mirror \"$@\" && cd \"$_\"" # https://github.com/thoroc/git-mirror (installed by mise)
+	recent = "!r() { count=$1; git for-each-ref --sort=-committerdate refs/heads --format='%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)' --color=always --count=${count:=10} | column -ts'|';}; r"
 	ec = config --global -e
 	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
 	cob = checkout -b

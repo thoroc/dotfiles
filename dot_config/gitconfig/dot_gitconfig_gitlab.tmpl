@@ -1,4 +1,4 @@
 [user]
-	user = {{ .user.work.name }}
+	name = {{ .user.work.name }}
 	email = {{ .user.work.email }}
-	signingkey = {{- .chezmoi.homeDir -}}/.ssh/id_ed25519_gitlab.pub
+	signingkey = {{ .chezmoi.homeDir }}/.ssh/id_ed25519_gitlab.pub
