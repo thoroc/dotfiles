@@ -85,6 +85,9 @@ rumdl = "latest"
 {{ if or (eq $rustManager "mise") (and (eq .chezmoi.arch "amd64") (eq $rustManager "none")) -}}
 rust = "latest"
 {{ end -}}
+{{ if eq (dig "lang" "ruby" "manager" "none" .) "mise" -}}
+ruby = "latest"
+{{ end -}}
 semgrep = "latest"
 sqlite = "latest"
 terraform = "latest"
@@ -104,7 +107,7 @@ yq = "latest"
 zoxide = "latest"
 
 [settings]
-idiomatic_version_file_enable_tools = ["node", "python", "rust", "terraform"]
+idiomatic_version_file_enable_tools = ["node", "python", "ruby", "rust", "terraform"]
 experimental = true
 minimum_release_age = "7d"
 # hk is the git hook runner for the dotfiles repo (mise.toml); install its newest release without waiting out the cooloff
