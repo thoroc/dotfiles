@@ -3,7 +3,9 @@
 
 eval "$({{ .homebrew_prefix }}/bin/brew shellenv)"
 
-brew bundle --file=/dev/stdin <<EOF
+# Install what is missing only: no `brew update` (~19s) and no upgrade of outdated casks
+export HOMEBREW_NO_AUTO_UPDATE=1
+brew bundle --no-upgrade --file=/dev/stdin <<EOF
 {{ if eq .tools.install.browser.brave true }}
 cask "brave-browser"
 {{ end }}
@@ -51,9 +53,27 @@ command -v colima >/dev/null 2>&1 || brew install colima
 {{ end -}}
 # AI assistants that ship their own installers: only install when missing, so an existing install is left alone
 {{ if dig "tools" "ai" "claude" false . -}}
-command -v claude >/dev/null 2>&1 || brew install --cask claude-code
+# The official installer puts claude in ~/.local/bin, which may not be on PATH inside chezmoi scripts
+if [ ! -x "$HOME/.local/bin/claude" ] && ! command -v claude >/dev/null 2>&1; then
+  printf '\n\e[33mclaude not found:\e[0m running the official installer\n'
+  if ! curl -fsSL https://claude.ai/install.sh | bash; then
+    printf '\n\e[33mWARNING:\e[0m the official claude installer failed, falling back to Homebrew\n\n'
+    brew install --cask claude-code
+  fi
+fi
 {{ end -}}
 {{ if dig "tools" "ai" "opencode" false . -}}
-command -v opencode >/dev/null 2>&1 || brew install opencode
+# The official installer puts opencode in ~/.opencode/bin, which is not on PATH inside chezmoi scripts
+if [ ! -x "$HOME/.opencode/bin/opencode" ] && ! command -v opencode >/dev/null 2>&1; then
+  printf '\n\e[33mopencode not found:\e[0m running the official installer\n'
+  if ! curl -fsSL https://opencode.ai/install | bash; then
+    printf '\n\e[33mWARNING:\e[0m the official opencode installer failed, falling back to Homebrew.\n'
+{{- if eq .chezmoi.arch "amd64" }}
+    printf 'On Intel there may be no bottle, so brew can compile llvm from source (hours); Ctrl-C to abort.\n'
+{{- end }}
+    printf '\n'
+    brew install opencode
+  fi
+fi
 {{ end -}}
 {{ end -}}
