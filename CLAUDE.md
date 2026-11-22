@@ -44,7 +44,9 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
 - **`dot_config/`** holds tool configs: `zsh` (aliases, profile, env, rc), `gitconfig` (main plus github/gitlab
   includes, global gitignore), `mise`, `oh-my-posh`, `lsd`, `fnox`. `mise/config.toml` is the global tool list (the
   user's installed CLIs) and sets a 7-day upgrade cooloff; do not confuse it with the repo-local `mise.toml` (tasks).
-- **`dot_claude/`** manages the portable parts of `~/.claude` (`CLAUDE.md`, `commands/`, `hooks/`, `settings.json.tmpl`,
+- **`dot_config/claude/`** manages the portable parts of `~/.claude`. On this setup `~/.claude` is a symlink to
+  `~/.config/claude` (`symlink_dot_claude.tmpl`), so the files live at the real path: chezmoi would otherwise replace
+  the symlink with a directory. It covers (`CLAUDE.md`, `commands/`, `hooks/`, `settings.json.tmpl`,
   `dot_mcp.json.tmpl`, `obsidian/*.py.tmpl`). Skills, agents, plugins and runtime data are deliberately not managed and
   are excluded in `.chezmoiignore`; add new exclusions there, not by omission. Machine paths must use
   `{{ .chezmoi.homeDir }}`, never a literal home path, and secrets never go in these files (use `fnox`). Executable
@@ -94,11 +96,11 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
 - **Terminal emulator** is one `promptChoiceOnce` (`tools.terminal`, default `iterm2`) whose value is also the Homebrew
   cask name, installed by `run_onchange_darwin-install-packages`; `terminal` (Terminal.app) installs nothing. Adding a
   terminal means adding it to the choice list in `.chezmoi.toml.tmpl` after confirming the cask name. The iTerm2 `it2`
-  agent hooks in `dot_claude/settings.json.tmpl` are only emitted when it is `iterm2` (or unset, for older configs);
-  events that contain only that hook are omitted entirely. The primary browser is a second choice, `tools.browser`
-  (`safari` | `brave` | `firefox` | `chrome` | `edge`, default `safari`), independent of the install toggles.
-  `run_onchange_after_darwin-configure-dock` (after the install script) pins the terminal, that browser and Apps.app in
-  the Dock (Finder is always present; Apple's default apps are not pinned).
+  agent hooks in `dot_config/claude/settings.json.tmpl` are only emitted when it is `iterm2` (or unset, for older
+  configs); events that contain only that hook are omitted entirely. The primary browser is a second choice,
+  `tools.browser` (`safari` | `brave` | `firefox` | `chrome` | `edge`, default `safari`), independent of the install
+  toggles. `run_onchange_after_darwin-configure-dock` (after the install script) pins the terminal, that browser and
+  Apps.app in the Dock (Finder is always present; Apple's default apps are not pinned).
 - **Editors/IDEs** are a multi-select stored as the list `tools.editors` (cask names, default `visual-studio-code`
   only), installed by looping over it in `run_onchange_darwin-install-packages`. `promptMultichoiceOnce` ignores stored
   and overridden lists (it would re-prompt on every `init` and ignore `init-defaults.toml`), so `.chezmoi.toml.tmpl`
@@ -111,7 +113,7 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   installers and are usually already present, so the install script only runs `brew install` for them when `command -v`
   finds nothing. Never add an install for something already provided another way. On Intel, delta is compiled by mise
   (`"cargo:git-delta"`, pinned to a version so it only recompiles when bumped by hand) because there is no darwin/amd64
-  prebuilt; `rust` is added through mise when no other manager provides rustc. `dot_claude/` is applied only when
+  prebuilt; `rust` is added through mise when no other manager provides rustc. `dot_config/claude/` is applied only when
   `tools.ai.claude` is true (a templated `.claude` ignore in `.chezmoiignore`). Gemini, Codex and opencode have no
   managed config yet; add it under `dot_gemini/`, `dot_codex/` or `dot_config/opencode/` and gate it the same way.
   Existing machines must run `mise run init` to answer the new prompts: until then the `dig` defaults treat every

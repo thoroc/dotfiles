@@ -17,33 +17,34 @@ init-defaults.example.toml
 .config/lsd
 {{ end -}}
 
-# Claude Code config (dot_claude/) only when Claude Code is enabled
+# Claude Code config (dot_config/claude/, reached through the ~/.claude symlink) only when Claude Code is enabled
 {{ if not (dig "tools" "ai" "claude" false .) -}}
 .claude
+.config/claude
 {{ end -}}
 
-# Claude Code runtime/session data (only config is managed under dot_claude/)
-.claude/backups
-.claude/cache
-.claude/debug
-.claude/downloads
-.claude/file-history
-.claude/history.jsonl
-.claude/ide
-.claude/paste-cache
-.claude/plugins
-.claude/projects
-.claude/session-env
-.claude/sessions
-.claude/shell-snapshots
-.claude/venvs
-.claude/skills
-.claude/agents
-.claude/*.bak*
+# Claude Code runtime/session data (only config is managed under dot_config/claude/)
+.config/claude/backups
+.config/claude/cache
+.config/claude/debug
+.config/claude/downloads
+.config/claude/file-history
+.config/claude/history.jsonl
+.config/claude/ide
+.config/claude/paste-cache
+.config/claude/plugins
+.config/claude/projects
+.config/claude/session-env
+.config/claude/sessions
+.config/claude/shell-snapshots
+.config/claude/venvs
+.config/claude/skills
+.config/claude/agents
+.config/claude/*.bak*
 
 # Obsidian integration (MCP server, hooks) only when Obsidian is enabled
 {{ if not (dig "tools" "notes" "obsidian" false .) -}}
-.claude/obsidian
-.claude/hooks/pre-tool-use/obsidian-context.sh
-.claude/hooks/post-tool-use/capture-insight.sh
+.config/claude/obsidian
+.config/claude/hooks/pre-tool-use/obsidian-context.sh
+.config/claude/hooks/post-tool-use/capture-insight.sh
 {{- end }}
