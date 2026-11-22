@@ -31,9 +31,6 @@ cask {{ .tools.terminal | quote }}
 {{ range (dig "tools" "editors" (list "visual-studio-code") .) }}
 cask {{ . | quote }}
 {{ end }}
-{{ if eq .chezmoi.arch "amd64" }}
-brew "git-delta"
-{{ end }}
 {{ if eq (dig "lang" "java" "manager" (ternary "brew" "none" .lang.java.enabled) .) "brew" }}
 brew "openjdk@11"
 brew "openjdk@8"
