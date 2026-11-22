@@ -62,3 +62,11 @@ eval "$(zoxide init --cmd cd zsh)"
 eval "$(jenv init -)"
 jenv enable-plugin export
 {{ end -}}
+
+
+{{ if dig "tools" "install" "container" "orbstack" false . -}}
+# ---------------------------------------------------------------------------------------------------------------------
+# OrbStack: command-line tools and shell integration (completions)
+# ---------------------------------------------------------------------------------------------------------------------
+source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+{{ end -}}
