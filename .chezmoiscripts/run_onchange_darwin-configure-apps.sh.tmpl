@@ -34,34 +34,6 @@ fi
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Dock settings: https://developer.apple.com/documentation/devicemanagement/dock
-# ---------------------------------------------------------------------------------------------------------------------
-# Set dock to autohide
-defaults write com.apple.dock "autohide" -bool true
-# Set dock to disable magnification
-defaults write com.apple.dock "magnification" -bool false
-# Minimize windows into their application's icon
-defaults write com.apple.dock "minimize-to-application" -bool true
-# Set dock position
-defaults write com.apple.dock "orientation" -string "bottom"
-# Set the icon size of Dock items in pixels
-defaults write com.apple.dock "tilesize" -int 71
-# Don't show recent applications in Dock
-defaults write com.apple.dock "show-recents" -bool false
-# Set Dock apps: Finder is always first; then the chosen terminal, the primary browser and Apps. Apple's default apps are not pinned.
-{{- $terminals := dict "iterm2" "/Applications/iTerm.app" "warp" "/Applications/Warp.app" "alacritty" "/Applications/Alacritty.app" "kitty" "/Applications/kitty.app" "hyper" "/Applications/Hyper.app" "wezterm" "/Applications/WezTerm.app" "terminal" "/System/Applications/Utilities/Terminal.app" }}
-{{- $browsers := dict "safari" "/Applications/Safari.app" "brave" "/Applications/Brave Browser.app" "firefox" "/Applications/Firefox.app" "chrome" "/Applications/Google Chrome.app" "edge" "/Applications/Microsoft Edge.app" }}
-{{- $dockApps := list (index $terminals (dig "tools" "terminal" "iterm2" .)) (index $browsers (dig "tools" "browser" "safari" .)) "/System/Applications/Apps.app" }}
-defaults write com.apple.dock "persistent-others" -array
-defaults write com.apple.dock "persistent-apps" -array \
-{{- range $i, $app := $dockApps }}
-  '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>file://{{ $app }}/</string><key>_CFURLStringType</key><integer>15</integer></dict></dict></dict>'{{ if lt (add1 $i) (len $dockApps) }} \{{ end }}
-{{- end }}
-
-killall Dock
-
-
-# ---------------------------------------------------------------------------------------------------------------------
 # Finder settings
 # ---------------------------------------------------------------------------------------------------------------------
 # Show hidden files in the Finder

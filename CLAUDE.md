@@ -97,8 +97,8 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   agent hooks in `dot_claude/settings.json.tmpl` are only emitted when it is `iterm2` (or unset, for older configs);
   events that contain only that hook are omitted entirely. The primary browser is a second choice, `tools.browser`
   (`safari` | `brave` | `firefox` | `chrome` | `edge`, default `safari`), independent of the install toggles.
-  `run_onchange_darwin-configure-apps` pins the terminal, that browser and Apps.app in the Dock (Finder is always
-  present; Apple's default apps are not pinned).
+  `run_onchange_after_darwin-configure-dock` (after the install script) pins the terminal, that browser and Apps.app in
+  the Dock (Finder is always present; Apple's default apps are not pinned).
 - **Editors/IDEs** are a multi-select stored as the list `tools.editors` (cask names, default `visual-studio-code`
   only), installed by looping over it in `run_onchange_darwin-install-packages`. `promptMultichoiceOnce` ignores stored
   and overridden lists (it would re-prompt on every `init` and ignore `init-defaults.toml`), so `.chezmoi.toml.tmpl`
