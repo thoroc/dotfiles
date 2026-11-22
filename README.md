@@ -102,7 +102,7 @@ Obsidian additionally asks for a vault path and Logseq for a graph path; neither
 
 ## Claude Code config
 
-`dot_config/claude/` manages the portable parts of `~/.claude` (only when Claude Code is enabled):
+`dot_claude/` manages the portable parts of `~/.claude` (only when Claude Code is enabled):
 
 - `CLAUDE.md`, the `cbm-*` hook scripts
 - `settings.json` and `.mcp.json`, rendered from templates so machine paths use the home directory instead of being
