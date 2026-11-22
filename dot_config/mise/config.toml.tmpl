@@ -74,10 +74,10 @@ python = "3.13"
 ripgrep = "latest"
 {{ if ne .chezmoi.arch "amd64" -}}
 delta = "latest"
-{{ end -}}
 {{ else -}}
 {{- /* no prebuilt delta for darwin/amd64: compile it with cargo. Pinned (not "latest") so mise only recompiles when this version is bumped by hand; bump it deliberately. Needs a Rust toolchain, see the rust block below. */ -}}
 "cargo:git-delta" = "0.21.2"
+{{ end -}}
 rlwrap = "latest"
 rumdl = "latest"
 {{/* Intel builds delta from source, so a toolchain is required: mise installs one when no other manager (rustup, brew, other) provides rustc */ -}}
