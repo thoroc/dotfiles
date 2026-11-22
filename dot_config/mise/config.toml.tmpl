@@ -101,4 +101,6 @@ zoxide = "latest"
 [settings]
 idiomatic_version_file_enable_tools = ["node", "python", "rust", "terraform"]
 experimental = true
-min_days_until_upgrade = 7
+minimum_release_age = "7d"
+# hk is the git hook runner for the dotfiles repo (mise.toml); install its newest release without waiting out the cooloff
+minimum_release_age_excludes = ["hk"]
