@@ -46,13 +46,13 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   user's installed CLIs) and sets a 7-day upgrade cooloff; do not confuse it with the repo-local `mise.toml` (tasks).
 - **`dot_config/claude/`** manages the portable parts of `~/.claude`. On this setup `~/.claude` is a symlink to
   `~/.config/claude` (`symlink_dot_claude.tmpl`), so the files live at the real path: chezmoi would otherwise replace
-  the symlink with a directory. It covers (`CLAUDE.md`, `commands/`, `hooks/`, `settings.json.tmpl`,
-  `dot_mcp.json.tmpl`, `obsidian/*.py.tmpl`). Skills, agents, plugins and runtime data are deliberately not managed and
-  are excluded in `.chezmoiignore`; add new exclusions there, not by omission. Machine paths must use
-  `{{ .chezmoi.homeDir }}`, never a literal home path, and secrets never go in these files (use `fnox`). Executable
-  scripts need the `executable_` prefix. Everything Obsidian-related (MCP entry, two hooks, `obsidian/`) is gated on
-  `.tools.notes.obsidian`, both inside the templates and in a templated block of `.chezmoiignore`. Read toggles with
-  `dig "tools" "notes" "obsidian" false .` so templates still render on machines whose config predates the key.
+  the symlink with a directory. It covers (`CLAUDE.md`, `hooks/`, `settings.json.tmpl`, `dot_mcp.json.tmpl`,
+  `obsidian/*.py.tmpl`). Skills, agents, plugins and runtime data are deliberately not managed and are excluded in
+  `.chezmoiignore`; add new exclusions there, not by omission. Machine paths must use `{{ .chezmoi.homeDir }}`, never a
+  literal home path, and secrets never go in these files (use `fnox`). Executable scripts need the `executable_` prefix.
+  Everything Obsidian-related (MCP entry, two hooks, `obsidian/`) is gated on `.tools.notes.obsidian`, both inside the
+  templates and in a templated block of `.chezmoiignore`. Read toggles with `dig "tools" "notes" "obsidian" false .` so
+  templates still render on machines whose config predates the key.
 - **Init defaults** live in `~/.config/chezmoi/init-defaults.toml` (per machine, untracked; template in
   `init-defaults.example.toml`, repo-only). `.chezmoi.toml.tmpl` reads it itself (`include`/`fromToml`, merged over the
   data as `$d`, which every `prompt*Once` call uses), so listed keys are not prompted and override stored answers. Do
