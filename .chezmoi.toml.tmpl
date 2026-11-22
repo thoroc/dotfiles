@@ -215,7 +215,7 @@
 sourceDir = "{{ .chezmoi.homeDir }}/.dotfiles"
 
 [data]
-os_shell = "/bin/{{ $os_shell }}"
+os_shell = "/bin/{{ base $os_shell }}"
 homebrew_prefix = {{ $homebrew_prefix | quote }}
 projects_dir = {{ $projects_dir | quote }}
 gh_projects_dir = {{ $gh_projects_dir | quote }}
