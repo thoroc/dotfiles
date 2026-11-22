@@ -160,5 +160,17 @@ if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 fi
 
+
+{{- $prompt := dig "tools" "prompt" "oh-my-posh" . }}
+{{- if eq $prompt "oh-my-posh" }}
+# ---------------------------------------------------------------------------------------------------------------------
+# oh-my-posh: https://ohmyposh.dev
+# Lives here, not in .zprofile: the prompt is needed by every interactive shell, login or not.
+# ---------------------------------------------------------------------------------------------------------------------
+if command -v oh-my-posh &>/dev/null; then
+  eval "$(oh-my-posh init zsh --config {{ .chezmoi.homeDir }}/.config/oh-my-posh/theme.omp.json)"
+fi
+{{ end }}
+
 # PATH deduplication
 typeset -U PATH

@@ -25,8 +25,9 @@ alias hal="ls -hal"
 alias la="ls -A"
 alias ld="ls -d */"
 alias ll="ls -alF"
-alias ls="ls --color"
-
+{{ if eq $ls "none" -}}
+alias ls="ls -G"
+{{ end }}
 {{ if or .tools.install.container.docker .tools.install.container.orbstack (dig "tools" "install" "container" "colima" false .) -}}
 alias dc="docker compose"
 alias docker-list-containers="docker ps -a"
