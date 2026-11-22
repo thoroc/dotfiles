@@ -27,7 +27,7 @@ alias ld="ls -d */"
 alias ll="ls -alF"
 alias ls="ls --color"
 
-{{ if or .tools.install.container.docker .tools.install.container.orbstack -}}
+{{ if or .tools.install.container.docker .tools.install.container.orbstack (dig "tools" "install" "container" "colima" false .) -}}
 alias dc="docker compose"
 alias docker-list-containers="docker ps -a"
 alias docker-remove-containers='docker rm $(docker ps -a -q)'

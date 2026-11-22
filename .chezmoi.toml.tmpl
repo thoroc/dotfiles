@@ -142,7 +142,7 @@
 {{- end -}}
 
 {{- /* Homebrew tools that mise can provide as prebuilt binaries (checked on darwin/amd64): offer to move the ones that are installed. ffmpeg, make and poppler are deliberately left out (mise builds or repackages them). */ -}}
-{{- $movable := list "colima" "d2" "mas" -}}
+{{- $movable := list "d2" "mas" -}}
 {{- $moveChosen := dig "tools" "migrate_to_mise" "" $d -}}
 {{- if not (kindIs "slice" $moveChosen) -}}
 {{-   $moveChosen = list -}}
@@ -160,27 +160,54 @@
 {{-   end -}}
 {{- end -}}
 
+{{- /* Local LLM runners: any combination, none by default. One that is already installed is enabled without asking. LM Studio only ships for Apple Silicon. */ -}}
+{{- $llmSpecs := list (list "ollama" "Ollama.app") (list "jan" "Jan.app") (list "msty" "Msty.app") -}}
+{{- if eq .chezmoi.arch "arm64" -}}
+{{-   $llmSpecs = append $llmSpecs (list "lm-studio" "LM Studio.app") -}}
+{{- end -}}
+{{- $llm := dig "tools" "llm" "" $d -}}
+{{- if not (kindIs "slice" $llm) -}}
+{{-   $llm = list -}}
+{{-   $llmAsk := list -}}
+{{-   range $llmSpecs -}}
+{{-     if stat (printf "/Applications/%s" (index . 1)) -}}
+{{-       $llm = append $llm (index . 0) -}}
+{{-     else -}}
+{{-       $llmAsk = append $llmAsk (index . 0) -}}
+{{-     end -}}
+{{-   end -}}
+{{-   if $llmAsk -}}
+{{-     $llm = concat $llm (promptMultichoice "Local LLM runners to install (none by default)" $llmAsk (list)) -}}
+{{-   end -}}
+{{- end -}}
+
 {{- $instal_brave     := promptBoolOnce $d "tools.install.browser.brave"     "Install Brave browser (Y/n)"     false -}}
 {{- $instal_firefox   := promptBoolOnce $d "tools.install.browser.firefox"   "Install Firefox browser (Y/n)"   true -}}
 {{- $instal_chrome    := promptBoolOnce $d "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
 {{- $instal_edge      := promptBoolOnce $d "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
 
-{{- /* Container runtimes: either, both or neither */ -}}
-{{- /* An app that is already installed is simply enabled, without asking */ -}}
-{{- $install_docker := dig "tools" "install" "container" "docker" "" $d -}}
-{{- if not (kindIs "bool" $install_docker) -}}
-{{-   if stat "/Applications/Docker.app" -}}
-{{-     $install_docker = true -}}
-{{-   else -}}
-{{-     $install_docker = promptBool "Install Docker Desktop (Y/n)" true -}}
-{{-   end -}}
+{{- /* Container runtime: exactly one of Docker Desktop, OrbStack or Colima (or none). A stored or defaults-file answer wins. Otherwise an installed runtime is used without asking; if several are installed, ask which one; if none is, ask with Docker Desktop as the default. */ -}}
+{{- $container := dig "tools" "container" "" $d -}}
+{{- if not (kindIs "string" $container) -}}
+{{-   $container = "" -}}
 {{- end -}}
-{{- $install_orbstack := dig "tools" "install" "container" "orbstack" "" $d -}}
-{{- if not (kindIs "bool" $install_orbstack) -}}
+{{- if not $container -}}
+{{-   $found := list -}}
+{{-   if stat "/Applications/Docker.app" -}}
+{{-     $found = append $found "docker" -}}
+{{-   end -}}
 {{-   if stat "/Applications/OrbStack.app" -}}
-{{-     $install_orbstack = true -}}
+{{-     $found = append $found "orbstack" -}}
+{{-   end -}}
+{{-   if lookPath "colima" -}}
+{{-     $found = append $found "colima" -}}
+{{-   end -}}
+{{-   if eq (len $found) 1 -}}
+{{-     $container = index $found 0 -}}
+{{-   else if $found -}}
+{{-     $container = promptChoice "Several container runtimes are installed. Which one do you use" $found (index $found 0) -}}
 {{-   else -}}
-{{-     $install_orbstack = promptBool "Install OrbStack (y/N)" false -}}
+{{-     $container = promptChoice "Container runtime" (list "docker" "orbstack" "colima" "none") "docker" -}}
 {{-   end -}}
 {{- end -}}
 
@@ -205,10 +232,14 @@ email = {{ $gh_email | quote }}
 prompt = {{ $prompt | quote }}
 # one of "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in Terminal.app)
 terminal = {{ $terminal | quote }}
+# container runtime: "docker", "orbstack", "colima" or "none" (the booleans under install.container are derived from it)
+container = {{ $container | quote }}
 # editors/IDEs to install, by Homebrew cask name (see the "Editors/IDEs" prompt)
 editors = {{ $editors | toJson }}
 # Homebrew tools to move to mise; consumed by the mise config and the migration script
 migrate_to_mise = {{ $moveChosen | toJson }}
+# local LLM runners to install (ollama, jan, msty, lm-studio on Apple Silicon)
+llm = {{ $llm | toJson }}
 # one of "eza", "lsd" or "none"
 ls = {{ $ls | quote }}
 
@@ -236,8 +267,9 @@ chrome = {{ $instal_chrome }}
 edge = {{ $instal_edge }}
 
 [data.tools.install.container]
-docker = {{ $install_docker }}
-orbstack = {{ $install_orbstack }}
+docker = {{ eq $container "docker" }}
+orbstack = {{ eq $container "orbstack" }}
+colima = {{ eq $container "colima" }}
 
 [data.tools.enable]
 bat = {{ $bat }}

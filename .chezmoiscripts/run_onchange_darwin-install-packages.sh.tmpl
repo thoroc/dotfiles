@@ -40,6 +40,18 @@ brew "openjdk@8"
 {{ end }}
 EOF
 
+# Container runtime without a cask: only install when missing
+{{ if dig "tools" "install" "container" "colima" false . -}}
+command -v colima >/dev/null 2>&1 || brew install colima
+{{ end -}}
+# Local LLM runners: only install when the app is not already in /Applications
+{{ $llmApps := dict "ollama" (list "ollama-app" "Ollama.app") "jan" (list "jan" "Jan.app") "msty" (list "msty" "Msty.app") "lm-studio" (list "lm-studio" "LM Studio.app") -}}
+{{ range (dig "tools" "llm" (list) .) -}}
+{{ $spec := index $llmApps . -}}
+{{ if or (ne . "lm-studio") (eq $.chezmoi.arch "arm64") -}}
+[ -d {{ printf "/Applications/%s" (index $spec 1) | quote }} ] || brew install --cask {{ index $spec 0 }}
+{{ end -}}
+{{ end -}}
 # AI assistants that ship their own installers: only install when missing, so an existing install is left alone
 {{ if dig "tools" "ai" "claude" false . -}}
 command -v claude >/dev/null 2>&1 || brew install --cask claude-code

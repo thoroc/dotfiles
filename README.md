@@ -64,9 +64,15 @@ mise: if you accept, `mise install` runs first and the Homebrew formula is then 
 it (that is reported, never forced). mise has no built-in migration; `mise sync node`/`ruby` can link Homebrew versions
 of those two, but everything else is a fresh `mise install` followed by `brew uninstall`.
 
-A few Homebrew tools that mise can provide as prebuilt binaries (currently `colima`, `d2` and `mas`) can be moved the
-same way: `init` lists the ones you have installed with Homebrew and you pick which to move (none by default). `ffmpeg`,
-`make` and `poppler` are not offered, because mise would build or repackage them rather than ship a binary.
+A few Homebrew tools that mise can provide as prebuilt binaries (currently `d2` and `mas`) can be moved the same way:
+`init` lists the ones you have installed with Homebrew and you pick which to move (none by default). `ffmpeg`, `make`
+and `poppler` are not offered, because mise would build or repackage them rather than ship a binary.
+
+The container runtime is exactly one of Docker Desktop, OrbStack or Colima (or none), never several. If one is already
+installed it is used without asking; if more than one is installed you are asked which to use; if none is, you pick
+(Docker Desktop is the default). Local LLM runners (Ollama, Jan, Msty, and LM Studio on Apple Silicon) are a
+multi-select that defaults to none; any that are already installed are enabled without asking and are never installed a
+second time.
 
 The terminal emulator is a single choice (`iterm2` by default, or `warp`, `alacritty`, `kitty`, `hyper`, `wezterm`,
 `terminal`). The chosen one is installed as a Homebrew cask; `terminal` means the built-in Terminal.app and installs
@@ -88,8 +94,8 @@ Obsidian additionally asks for a vault path and Logseq for a graph path; neither
 
 - Shell config (zsh, aliases, oh-my-posh theme), git config, `lsd`, `fnox`, `mise` and vim config
 - `.Brewfile` (linked to `~/.config/homebrew/.Brewfile`) and a toggle-driven `brew bundle` on every change
-- Optional container runtimes (Docker Desktop, OrbStack, both or neither); PATH and aliases are only generated for the
-  ones you choose; an app that is already installed is enabled without asking
+- One container runtime (Docker Desktop, OrbStack, Colima or none); PATH and aliases are only generated for the one you
+  choose, and one that is already installed is used without asking
 - macOS defaults (dock, Finder, screenshots, software update, TouchID for sudo) via `run_onchange` scripts
 - A OneDrive LaunchAgent plist
 - Tools listed in `dot_config/mise/config.toml`, managed by `mise` (upgrades wait 7 days after release)
