@@ -17,6 +17,11 @@ init-defaults.example.toml
 .config/lsd
 {{ end -}}
 
+# Vim config only when vim is installed (any source, found on PATH)
+{{ if not (lookPath "vim") -}}
+.vimrc
+{{ end -}}
+
 # Claude Code config (dot_claude/) only when Claude Code is enabled
 {{ if not (dig "tools" "ai" "claude" false .) -}}
 .claude
