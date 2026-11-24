@@ -83,12 +83,22 @@ Sublime Text, WebStorm, IntelliJ IDEA and PyCharm; each selected one is installe
 `init-defaults.toml` the key is `tools.editors`, a list of cask names.
 
 AI coding assistants (Claude Code, Gemini CLI, Codex CLI, opencode) are independent yes/no answers that default to no.
-Gemini CLI and Codex CLI are installed through `mise` (npm backend). Claude Code and opencode are installed with
-Homebrew only when `claude` or `opencode` is not already on the PATH, so an existing install is left alone. Only Claude
-Code has managed config so far (see below), and it is applied only when Claude Code is enabled.
+Gemini CLI and Codex CLI are installed through `mise` (npm backend). Claude Code and opencode are installed only when
+missing: the install script checks `~/.local/bin/claude` and `~/.opencode/bin/opencode` as well as the PATH (those
+directories are not on the PATH inside chezmoi scripts), runs the official installer, and falls back to Homebrew with a
+warning if that fails. On Intel the opencode formula has no bottle and Homebrew would compile llvm from source (hours),
+so abort that fallback and install it by hand. Only Claude Code has managed config so far (see below), and it is applied
+only when Claude Code is enabled.
 
 Notes tools (Obsidian, Notion, Logseq) are independent yes/no answers, so any combination works, including none.
 Obsidian additionally asks for a vault path and Logseq for a graph path; neither is asked unless that tool is selected.
+
+To re-run setup on a machine that already has the config, use `mise run init` (only new keys are prompted), then
+`mise run plan` and `mise run apply`. Read the plan first: `apply` overwrites any managed file that was edited in place,
+for example `~/.claude/settings.json`. `run_onchange` scripts only re-run when their rendered content changes, so
+`chezmoi apply --include=scripts` printing nothing means they are up to date; it does not apply config files. Apply a
+single file with `chezmoi apply <target>`. The brew install step never runs `brew update` or upgrades casks, so upgrade
+those yourself.
 
 ## What gets applied
 
