@@ -194,17 +194,22 @@
 {{- end }}
   },
   "enabledPlugins": {
+{{- /* the context-mode plugin needs NodeJS */ -}}
+{{ if ne (dig "lang" "nodejs" "manager" "mise" .) "none" }}
     "context-mode@context-mode": true,
+{{- end }}
     "prompt-improver@severity1-marketplace": false,
     "claude-memory@anthropic-plugin-directory": true
   },
   "extraKnownMarketplaces": {
+{{- if ne (dig "lang" "nodejs" "manager" "mise" .) "none" }}
     "context-mode": {
       "source": {
         "source": "github",
         "repo": "mksglu/context-mode"
       }
     },
+{{- end }}
     "severity1-marketplace": {
       "source": {
         "source": "github",
