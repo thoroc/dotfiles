@@ -29,7 +29,7 @@
 	signingkey = {{ .chezmoi.homeDir }}/.ssh/id_ed25519.pub
 
 [includeIf "gitdir:{{ .chezmoi.homeDir }}/{{ dig "gitlab_projects_dir" "Projects/gitlab" . }}/"]
-  path = {{ .chezmoi.homeDir }}/.config/gitconfig/.gitconfig_gitlab
+	path = {{ .chezmoi.homeDir }}/.config/gitconfig/.gitconfig_gitlab
 
 [alias]
 	dev = "!f() { git stash && co develop && git pull && git co - && git rebase develop && git stash pop; }; f"
@@ -40,16 +40,16 @@
 	# https://davidwalsh.name/sort-git-branches
 	# branch sorted by Date
 	# sort = "!f() { git for-each-ref --sort='-committerdate' --format='%(color:yellow)%(committerdate:relative)%09%(color:bold green)%(refname)' refs/heads | sed -e 's-refs/heads/--'; }; f"
-  sort = branch --sort=-committerdate --format='%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)' --color=always | column -ts'|'
-  sort-remote = branch -r --sort=-committerdate --format='%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)' --color=always | column -ts'|'
+	sort = branch --sort=-committerdate --format='%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)' --color=always | column -ts'|'
+	sort-remote = branch -r --sort=-committerdate --format='%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)' --color=always | column -ts'|'
 
 	# View the SHA, description, date, author and history graph
 	history = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' ;
-  on = "!f() { git log --pretty='format:%C(yellow)%h %G? %ad%Cred%d %Creset%s%C(cyan) [%cn]' --decorate --after=\"$1 0:00\" --before=\"$1 23:59\" --author \"`git config user.name`\"; }; f"
+	on = "!f() { git log --pretty='format:%C(yellow)%h %G? %ad%Cred%d %Creset%s%C(cyan) [%cn]' --decorate --after=\"$1 0:00\" --before=\"$1 23:59\" --author \"`git config user.name`\"; }; f"
 	list = branch --sort=-committerdate
 	# http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/
 	# List commits in short form, with colors and branch/tag annotations.
-  # inverse the order of the commits
+	# inverse the order of the commits
 	ls = log --pretty=format:%C(yellow)%h\\ %Cblue[%cn]\\ %Cred%cr\\ %Creset%s --decorate --reverse
 
 	# List commits showing changed files
@@ -67,8 +67,8 @@
 
 	# Rename [branch] to done-[branch]
 	done = "!f() { git branch | grep $1 | cut -c 3- | grep -v done | xargs -I{} git branch -m {} done-{}; }; f"
-  # Rename [branch] to temp-[branch]
-  temp = "!f() { git branch | grep $1 | cut -c 3- | grep -v temp | xargs -I{} git branch -m {} temp-{}; }; f"
+	# Rename [branch] to temp-[branch]
+	temp = "!f() { git branch | grep $1 | cut -c 3- | grep -v temp | xargs -I{} git branch -m {} temp-{}; }; f"
 	
 	# Show the last tag
 	lasttag = describe --tags --abbrev=0
@@ -146,8 +146,8 @@
 	hash = "!f() { ORIGIN=$(git config --get remote.origin.url); git ls-remote $ORIGIN HEAD | awk '{ print $1 }'; }; f"
 	origin = config --get remote.origin.url
 
-  branch-name = branch --show-current
-  set-upstream = !git branch --set-upstream-to=origin/$(git branch --show-current) $(git branch --show-current)
+	branch-name = branch --show-current
+	set-upstream = !git branch --set-upstream-to=origin/$(git branch --show-current) $(git branch --show-current)
 	change-commits = "!f() { VAR=$1; OLD=$2; NEW=$3; shift 3; git filter-branch --env-filter \"if [[ \\\"$`echo $VAR`\\\" = '$OLD' ]]; then export $VAR='$NEW'; fi\" $@; }; f"
 
 [rerere]
