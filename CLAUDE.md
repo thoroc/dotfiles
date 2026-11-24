@@ -134,24 +134,18 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
 
 - Markdown is wrapped by prettier (`--prose-wrap always`); keep the README TOC inside the doctoc markers.
 - Commit messages follow conventional commits (`feat(scope):`, `fix(scope):`, `chore:`).
-- Check the blast radius before changing or adding anything, and say what you checked. Do not stop at the line you were
-  asked to touch:
-  - **Find every consumer.** Search (`rg`) the whole repo for the key, tool or file being changed: a toggle is read by
-    `.chezmoi.toml.tmpl`, `dot_config/mise/config.toml.tmpl`, the gitconfig, zsh files, `.chezmoiscripts/`,
-    `.chezmoiignore`, the README and this file. Gating a tool means gating everything that mentions it, including
-    dependencies that exist only for it (delta also pulled in the Rust toolchain on Intel; the pager, interactive and
-    delta gitconfig sections all assumed the binary).
-  - **Check what the change assumes about the environment.** macOS-only settings (`osxkeychain`, `defaults`, casks) need
-    an `eq .chezmoi.os "darwin"` guard; arch-specific ones need `.chezmoi.arch`; anything calling a tool needs the tool
-    to exist or to be gated with it. Also check the caller's PATH: GUI clients (the VS Code source control panel) and
-    chezmoi scripts do not load shell activation, so a bare `hk`, `delta` or `mise` can fail there while working in your
-    terminal. Look for a second copy of a binary earlier on PATH (a stale `~/.cargo/bin/hk` shadowed the mise one) with
-    `type -a <tool>`.
-  - **Check who else is affected.** Existing machines keep stored answers, so new keys need a `dig` default equal to the
-    old behaviour. Generated files (the `hk` hook shim) are overwritten by the tool that wrote them, so a fix must live
-    in the source that regenerates them, not in the generated file.
-  - **Verify both branches.** Render the template with the toggle on and off
-    (`chezmoi execute-template --source ~/.dotfiles --override-data-file <file>`), parse the result (`tomllib`,
-    `git config -f`), and for a changed hook or PATH, reproduce with `env -i PATH=/usr/bin:/bin`.
-  - **Keep commits scoped.** Commit only the files for the change (`git commit -o <files>`) and one logical change per
-    commit, so unrelated staged work is not swept in.
+- Before changing, adding, removing or gating anything, work out its blast radius and say what you checked. Do not stop
+  at the line you were asked to touch:
+  - **Find every consumer.** Search the whole repo (`rg`) for the key, tool, file or name being changed, in templates,
+    scripts, configs, ignore files and docs. Whatever depends on it, including things that exist only to support it (a
+    toolchain, a prompt, an alias, a config section), must change with it.
+  - **Check what it assumes about the environment.** OS, architecture, installed tools, and the PATH and environment of
+    whatever runs it. Shells, GUI clients, git hooks and install scripts do not all load your shell setup, so something
+    that works in your terminal can fail there. Check for duplicate or stale copies of a binary (`type -a <tool>`).
+  - **Check who else is affected.** Existing machines and stored answers, defaults that must keep the old behaviour, and
+    generated files that another tool overwrites (fix the source that generates them, not the output).
+  - **Verify every branch.** Exercise the changed path and its alternatives (toggle on and off, each OS or architecture,
+    tool present and missing), parse or run the result, and reproduce failures in the same minimal environment they
+    occur in.
+  - **Keep changes scoped.** One logical change per commit, and commit only the files that belong to it
+    (`git commit -o <files>`) so unrelated staged work is not swept in.
