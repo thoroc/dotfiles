@@ -14,9 +14,13 @@
 
 {{- $os_shell := promptStringOnce $d "os_shell" "Enter your shell" "zsh"}}
 
-{{- /* Homebrew prefix */ -}}
+{{- $darwin := eq .chezmoi.os "darwin" -}}
+
+{{- /* Homebrew prefix (macOS only; Linux uses mise and apt, so it stays empty there) */ -}}
 {{- $homebrew_prefix := "" -}}
-{{- if eq .chezmoi.arch "amd64" -}}
+{{- if not $darwin -}}
+{{-   $homebrew_prefix = "" -}}
+{{- else if eq .chezmoi.arch "amd64" -}}
 {{-   $homebrew_prefix = "/usr/local" -}}
 {{- else -}}
 {{-   $homebrew_prefix = "/opt/homebrew" -}}
@@ -26,7 +30,10 @@
 {{- $bat        := promptBoolOnce $d "tools.enable.bat"        "Enable bat as a cat replacement (y/n)"       true -}}
 {{- $delta      := promptBoolOnce $d "tools.enable.delta"      "Enable delta as the git pager (Y/n)"         true -}}
 {{- $nix        := promptBoolOnce $d "tools.enable.nix"        "Enable nix as a package manager (y/n)"       false -}}
-{{- $one_drive  := promptBoolOnce $d "tools.enable.one_drive"  "Enable OneDrive autostart (y/n)"             false -}}
+{{- $one_drive  := false -}}
+{{- if $darwin -}}
+{{-   $one_drive = promptBoolOnce $d "tools.enable.one_drive" "Enable OneDrive autostart (y/n)" false -}}
+{{- end -}}
 
 {{- /* AI coding assistants: any combination, including none */ -}}
 {{- $ai_claude   := promptBoolOnce $d "tools.ai.claude"   "Install Claude Code (y/N)" false -}}
@@ -47,19 +54,35 @@
 {{-   $logseq_graph = promptStringOnce $d "tools.notes.logseq_graph" "Logseq graph path (absolute)" (printf "%s/Documents/logseq-graph" .chezmoi.homeDir) -}}
 {{- end -}}
 
+{{- /* Secrets on Linux: fnox uses an age key (macOS uses the keychain). Public recipient only; leave empty to skip the fnox config. The encrypted GITHUB_TOKEN may be set as secrets.github_token_age in init-defaults.toml. */ -}}
+{{- $age_recipient := "" -}}
+{{- if not $darwin -}}
+{{-   $age_recipient = promptStringOnce $d "secrets.age_recipient" "age public key (recipient) for fnox secrets, empty to skip" "" -}}
+{{- end -}}
+
 {{- /* Shell prompt and ls replacement: one choice each ("none" keeps the shell default and installs nothing) */ -}}
 {{- $prompt := promptChoiceOnce $d "tools.prompt" "Shell prompt" (list "oh-my-posh" "none") "oh-my-posh" -}}
 {{- $ls     := promptChoiceOnce $d "tools.ls"     "ls replacement" (list "eza" "lsd" "none") "eza" -}}
 
 {{- /* Terminal emulator: pick one ("terminal" is the built-in Terminal.app, nothing is installed for it) */ -}}
-{{- $terminal := promptChoiceOnce $d "tools.terminal" "Terminal emulator" (list "iterm2" "warp" "alacritty" "kitty" "hyper" "wezterm" "terminal") "iterm2" -}}
+{{- /* Terminal, browser, editors and the container/LLM apps are macOS desktop apps installed with Homebrew casks: on Linux they are not asked about and stay "none"/empty. */ -}}
+{{- $terminal := "none" -}}
+{{- if $darwin -}}
+{{-   $terminal = promptChoiceOnce $d "tools.terminal" "Terminal emulator" (list "iterm2" "warp" "alacritty" "kitty" "hyper" "wezterm" "terminal") "iterm2" -}}
+{{- end -}}
 {{- /* Primary web browser, pinned in the Dock next to the terminal. Independent of the install toggles below: it may be one that is already installed. */ -}}
-{{- $browser := promptChoiceOnce $d "tools.browser" "Primary browser (pinned in the Dock)" (list "safari" "brave" "firefox" "chrome" "edge") "safari" -}}
+{{- $browser := "none" -}}
+{{- if $darwin -}}
+{{-   $browser = promptChoiceOnce $d "tools.browser" "Primary browser (pinned in the Dock)" (list "safari" "brave" "firefox" "chrome" "edge") "safari" -}}
+{{- end -}}
 
 {{- /* Editors/IDEs: any combination; the value is the Homebrew cask name. VS Code only by default. */ -}}
 {{- /* promptMultichoiceOnce ignores stored or overridden lists, so only prompt when no list is present */ -}}
 {{- $editors := dig "tools" "editors" "" $d -}}
 {{- if not (kindIs "slice" $editors) -}}
+{{-   $editors = list -}}
+{{- end -}}
+{{- if and $darwin (not (kindIs "slice" (dig "tools" "editors" "" $d))) -}}
 {{-   $editors = promptMultichoice "Editors/IDEs to install" (list "visual-studio-code" "zed" "cursor" "vscodium" "sublime-text" "webstorm" "intellij-idea" "pycharm") (list "visual-studio-code") -}}
 {{- end -}}
 
@@ -173,6 +196,9 @@
 {{- if not (kindIs "slice" $llm) -}}
 {{-   $llm = list -}}
 {{-   $llmAsk := list -}}
+{{-   if not $darwin -}}
+{{-     $llmSpecs = list -}}
+{{-   end -}}
 {{-   range $llmSpecs -}}
 {{-     if stat (printf "/Applications/%s" (index . 1)) -}}
 {{-       $llm = append $llm (index . 0) -}}
@@ -185,10 +211,16 @@
 {{-   end -}}
 {{- end -}}
 
-{{- $instal_brave     := promptBoolOnce $d "tools.install.browser.brave"     "Install Brave browser (Y/n)"     false -}}
-{{- $instal_firefox   := promptBoolOnce $d "tools.install.browser.firefox"   "Install Firefox browser (Y/n)"   true -}}
-{{- $instal_chrome    := promptBoolOnce $d "tools.install.browser.chrome"    "Install Chrome browser (Y/n)"    true -}}
-{{- $instal_edge      := promptBoolOnce $d "tools.install.browser.edge"      "Install Edge browser (Y/n)"      false -}}
+{{- $instal_brave := false -}}
+{{- $instal_firefox := false -}}
+{{- $instal_chrome := false -}}
+{{- $instal_edge := false -}}
+{{- if $darwin -}}
+{{-   $instal_brave   = promptBoolOnce $d "tools.install.browser.brave"   "Install Brave browser (Y/n)"   false -}}
+{{-   $instal_firefox = promptBoolOnce $d "tools.install.browser.firefox" "Install Firefox browser (Y/n)" true -}}
+{{-   $instal_chrome  = promptBoolOnce $d "tools.install.browser.chrome"  "Install Chrome browser (Y/n)"  true -}}
+{{-   $instal_edge    = promptBoolOnce $d "tools.install.browser.edge"    "Install Edge browser (Y/n)"    false -}}
+{{- end -}}
 
 {{- /* Container runtime: exactly one of Docker Desktop, OrbStack or Colima (or none). A stored or defaults-file answer wins. Otherwise an installed runtime is used without asking; if several are installed, ask which one; if none is, ask with Docker Desktop as the default. */ -}}
 {{- $container := dig "tools" "container" "" $d -}}
@@ -197,10 +229,10 @@
 {{- end -}}
 {{- if not $container -}}
 {{-   $found := list -}}
-{{-   if stat "/Applications/Docker.app" -}}
+{{-   if or (and $darwin (stat "/Applications/Docker.app")) (and (not $darwin) (lookPath "docker")) -}}
 {{-     $found = append $found "docker" -}}
 {{-   end -}}
-{{-   if stat "/Applications/OrbStack.app" -}}
+{{-   if and $darwin (stat "/Applications/OrbStack.app") -}}
 {{-     $found = append $found "orbstack" -}}
 {{-   end -}}
 {{-   if lookPath "colima" -}}
@@ -210,8 +242,10 @@
 {{-     $container = index $found 0 -}}
 {{-   else if $found -}}
 {{-     $container = promptChoice "Several container runtimes are installed. Which one do you use" $found (index $found 0) -}}
-{{-   else -}}
+{{-   else if $darwin -}}
 {{-     $container = promptChoice "Container runtime" (list "docker" "orbstack" "colima" "none") "docker" -}}
+{{-   else -}}
+{{-     $container = promptChoice "Container runtime (not installed by this repo on Linux)" (list "docker" "colima" "none") "none" -}}
 {{-   end -}}
 {{- end -}}
 
@@ -234,7 +268,7 @@ email = {{ $gh_email | quote }}
 [data.tools]
 # one of "oh-my-posh" or "none"
 prompt = {{ $prompt | quote }}
-# one of "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in Terminal.app)
+# one of "iterm2", "warp", "alacritty", "kitty", "hyper", "wezterm" or "terminal" (built-in Terminal.app); "none" on Linux
 terminal = {{ $terminal | quote }}
 # primary browser pinned in the Dock: one of "safari", "brave", "firefox", "chrome" or "edge"
 browser = {{ $browser | quote }}
@@ -248,6 +282,15 @@ migrate_to_mise = {{ $moveChosen | toJson }}
 llm = {{ $llm | toJson }}
 # one of "eza", "lsd" or "none"
 ls = {{ $ls | quote }}
+
+{{- if not $darwin }}
+
+[data.secrets]
+age_recipient = {{ $age_recipient | quote }}
+{{- with dig "secrets" "github_token_age" "" $d }}
+github_token_age = {{ . | quote }}
+{{- end }}
+{{- end }}
 
 [data.tools.ai]
 claude = {{ $ai_claude }}

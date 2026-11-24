@@ -9,6 +9,17 @@ Brewfile
 Applist.txt
 init-defaults.example.toml
 
+# macOS-only files: the OneDrive LaunchAgent (Library/) and the Homebrew Brewfile symlink
+{{ if ne .chezmoi.os "darwin" -}}
+Library
+.Brewfile
+{{ end -}}
+
+# fnox on Linux needs an age recipient (secrets.age_recipient); without one there is nothing valid to write
+{{ if and (ne .chezmoi.os "darwin") (not (dig "secrets" "age_recipient" "" .)) -}}
+.config/fnox
+{{ end -}}
+
 # Prompt and ls configs only for the selected tools
 {{ if ne (dig "tools" "prompt" "oh-my-posh" .) "oh-my-posh" -}}
 .config/oh-my-posh

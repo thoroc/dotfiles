@@ -46,3 +46,8 @@ logseq = false
 # [tools]
 # container = "none"  # "docker", "orbstack", "colima" or "none"
 # llm = []            # "ollama", "jan", "msty" and, on Apple Silicon, "lm-studio"
+
+# Linux only: fnox uses age instead of the keychain. Public key (recipient); empty skips the fnox config.
+# [secrets]
+# age_recipient = "age1..."
+# github_token_age = "<output of: fnox set / age-encrypted GITHUB_TOKEN>"
