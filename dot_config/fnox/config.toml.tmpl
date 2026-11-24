@@ -1,0 +1,17 @@
+{{ if eq .chezmoi.os "darwin" -}}
+[providers.keychain]
+type = "keychain"
+service = "fnox"
+
+[secrets]
+GITHUB_TOKEN= { provider = "keychain", value = "GITHUB_TOKEN" }
+{{- else -}}
+{{- /* Linux has no keychain: secrets are age-encrypted. The recipient (public key) and the optional ciphertext are per machine (init-defaults.toml), never in the repo. */ -}}
+[providers.age]
+type = "age"
+recipients = [{{ dig "secrets" "age_recipient" "" . | quote }}]
+{{ with dig "secrets" "github_token_age" "" . }}
+[secrets]
+GITHUB_TOKEN = { provider = "age", value = {{ . | quote }} }
+{{ end -}}
+{{ end }}
