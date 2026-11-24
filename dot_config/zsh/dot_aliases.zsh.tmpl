@@ -7,7 +7,11 @@
 # ---------------------------------------------------------------------------------------------------------------------
 # bat: https://github.com/sharkdp/bat
 # ---------------------------------------------------------------------------------------------------------------------
+{{ if eq .chezmoi.os "darwin" -}}
 alias cat="bat --theme=\$(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo default || echo GitHub)"
+{{ else -}}
+alias cat="bat"
+{{ end -}}
 alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
 alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
 {{ end -}}

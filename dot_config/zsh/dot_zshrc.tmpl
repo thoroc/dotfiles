@@ -1,150 +1,56 @@
 source ~/.config/zsh/.aliases.zsh
 
-# ---------------------------------------------------------------------------------------------------------------------
-# Locale
-# ---------------------------------------------------------------------------------------------------------------------
-export LANG=en_US.UTF-8
+{{- if eq .chezmoi.os "darwin" }}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # bin on the path
 # ---------------------------------------------------------------------------------------------------------------------
-eval "$({{ .homebrew_prefix }}/bin/brew shellenv)"
+[ -x "{{ .homebrew_prefix }}/bin/brew" ] && eval "$({{ .homebrew_prefix }}/bin/brew shellenv)"
+{{- end }}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Manual
+# Shared environment (locale, PATH, AWS, language toolchains), also loaded by .zshenv
 # ---------------------------------------------------------------------------------------------------------------------
-export MANPATH="/usr/local/man:$MANPATH"
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# Brew config
-# ---------------------------------------------------------------------------------------------------------------------
-export HOMEBREW_AUTO_UPDATE_SECS="86400"
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# Brew's curl
-# ---------------------------------------------------------------------------------------------------------------------
-export PATH="$(brew --prefix curl)/bin:$PATH"
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# local bin directories
-# ---------------------------------------------------------------------------------------------------------------------
-export PATH="{{ .chezmoi.homeDir }}/Bin:$PATH"
-export PATH="{{ .chezmoi.homeDir }}/.bin:$PATH"
-export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
-export PATH="{{ .chezmoi.homeDir }}/bin:$PATH"
+source ~/.config/zsh/.common.zsh
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # fnox: secrets manager — must load before mise so GITHUB_TOKEN is in env
 # https://github.com/jdx/fnox
 # ---------------------------------------------------------------------------------------------------------------------
-eval "$($HOME/.local/share/mise/installs/fnox/latest/fnox activate zsh)"
-eval "$($HOME/.local/share/mise/installs/fnox/latest/fnox export --format shell GITHUB_TOKEN)"
+if [ -x "$HOME/.local/share/mise/installs/fnox/latest/fnox" ]; then
+  eval "$($HOME/.local/share/mise/installs/fnox/latest/fnox activate zsh)"
+  eval "$($HOME/.local/share/mise/installs/fnox/latest/fnox export --format shell GITHUB_TOKEN 2>/dev/null)"
+fi
 
 # ---------------------------------------------------------------------------------------------------------------------
 # mise: https://mise.jdx.dev
 # ---------------------------------------------------------------------------------------------------------------------
-eval "$({{ .chezmoi.homeDir }}/.local/bin/mise activate zsh)"
+[ -x "{{ .chezmoi.homeDir }}/.local/bin/mise" ] && eval "$({{ .chezmoi.homeDir }}/.local/bin/mise activate zsh)"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# AWS
+# VS Code shell integration
 # ---------------------------------------------------------------------------------------------------------------------
-export AWS_SDK_LOAD_CONFIG=1
-export AWS_CONFIG_FILE={{ .chezmoi.homeDir }}/.aws/config
-export AWS_SHARED_CREDENTIALS_FILE={{ .chezmoi.homeDir }}/.aws/credentials
-
-
-# declare the AWS_PROFILE var
-export AWS_PROFILE
-
-okta() {
-    # Argument is the okta profile name, defined in ~/.okta-aws (e.g. tooling)
-    if [ ! -f {{ .chezmoi.homeDir }}/.okta-aws ];then
-      echo "Missing {{ .chezmoi.homeDir }}/.okta-aws, please set it up."
-      return 1
-    elif [ -z "$1" ]; then
-      echo "Missing profile argument, please provide one of the following:"
-      cat "{{ .chezmoi.homeDir }}/.okta-aws" | sed -n 's/^\[/  * /p' | tr -d '\]' | sort
-      return 1
-    else
-        unset AWS_PROFILE
-        okta-awscli -f --okta-profile "${1}" --profile "${1}"
-        export AWS_PROFILE=$1
-        echo "AWS_PROFILE set to \"$1\"."
-    fi
-}
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# bat: https://github.com/sharkdp/bat
-# ---------------------------------------------------------------------------------------------------------------------
-# cause FU AWS putting output in less
-export PAGER=cat
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-alias cat="bat --theme=\$(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo default || echo GitHub)"
-alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
-alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# gnubin: https://gist.github.com/skyzyx/3438280b18e4f7c490db8a2a2ca0b9da
-# ---------------------------------------------------------------------------------------------------------------------
-BREW_BIN="/usr/local/bin/brew"
-if [ -f "/opt/homebrew/bin/brew" ]; then
-    BREW_BIN="/opt/homebrew/bin/brew"
-fi
-
-if type "${BREW_BIN}" &> /dev/null; then
-    export BREW_PREFIX="$("${BREW_BIN}" --prefix)"
-    for bindir in "${BREW_PREFIX}/opt/"*"/libexec/gnubin"; do export PATH=$bindir:$PATH; done
-    for bindir in "${BREW_PREFIX}/opt/"*"/bin"; do export PATH=$bindir:$PATH; done
-    for mandir in "${BREW_PREFIX}/opt/"*"/libexec/gnuman"; do export MANPATH=$mandir:$MANPATH; done
-    for mandir in "${BREW_PREFIX}/opt/"*"/share/man/man1"; do export MANPATH=$mandir:$MANPATH; done
-fi
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# VS Code
-# ---------------------------------------------------------------------------------------------------------------------
-export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
-[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# pnpm
-# ---------------------------------------------------------------------------------------------------------------------
-export PNPM_HOME="{{ .chezmoi.homeDir }}/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# golang
-# ---------------------------------------------------------------------------------------------------------------------
-export GOPATH="{{ .chezmoi.homeDir }}/go"
-export PATH="$PATH:$GOPATH/bin"
+[[ "$TERM_PROGRAM" == "vscode" ]] && command -v code &>/dev/null && . "$(code --locate-shell-integration-path zsh)"
+{{- if and (eq .lang.rust.enabled true) }}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Cargo
 # ---------------------------------------------------------------------------------------------------------------------
-export CARGO_HOME="{{ .chezmoi.homeDir }}/.cargo"
-export PATH="$CARGO_HOME/bin:$PATH"
 [[ -s "$CARGO_HOME" ]] && source "{{ .chezmoi.homeDir }}/.cargo/env"
+{{- end }}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # fzf: https://github.com/junegunn/fzf
 # ---------------------------------------------------------------------------------------------------------------------
 # source <(fzf --zsh)
+
+{{- if eq .chezmoi.os "darwin" }}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -159,6 +65,7 @@ export PATH="$CARGO_HOME/bin:$PATH"
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 fi
+{{- end }}
 
 
 {{- $prompt := dig "tools" "prompt" "oh-my-posh" . }}
