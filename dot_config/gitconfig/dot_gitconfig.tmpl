@@ -169,9 +169,11 @@
 	# templatedir = ~/.git/.git-template
 	defaultBranch = main
 
+{{ if eq .chezmoi.os "darwin" -}}
 [credential]
 	helper = osxkeychain
 
+{{ end -}}
 {{ if dig "tools" "enable" "delta" true . -}}
 [pager]
 	diff = delta
