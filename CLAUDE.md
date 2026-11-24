@@ -115,6 +115,10 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   managed config yet; add it under `dot_gemini/`, `dot_codex/` or `dot_config/opencode/` and gate it the same way.
   Existing machines must run `mise run init` to answer the new prompts: until then the `dig` defaults treat every
   assistant as off.
+- **JS package managers** are the multi-select `tools.js_pm` (`bun`, `pnpm`, `yarn`, `deno`; default `bun`). NodeJS is
+  separate (detected under `lang`). It gates the mise entries, the `PNPM_HOME` PATH block in `dot_common.zsh.tmpl` and
+  the `yarn` alias. Templates read it with `dig "tools" "js_pm" (list "bun" "pnpm") .` so older configs keep the old bun
+  and pnpm behaviour until `mise run init` is re-run. Same stored-list rule as `tools.editors`.
 - **delta** is gated by `tools.enable.delta` (default true, read with `dig "tools" "enable" "delta" true .`). It gates
   the mise entries, the Rust toolchain that only exists to compile it on Intel, and the `[pager]`, `[interactive]` and
   `[delta]` sections of the gitconfig. On Intel, delta is compiled by mise (`"cargo:git-delta"`, pinned to a version so

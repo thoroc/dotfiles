@@ -86,6 +86,12 @@
 {{-   $editors = promptMultichoice "Editors/IDEs to install" (list "visual-studio-code" "zed" "cursor" "vscodium" "sublime-text" "webstorm" "intellij-idea" "pycharm") (list "visual-studio-code") -}}
 {{- end -}}
 
+{{- /* JavaScript package managers/runtimes (NodeJS itself is detected under lang): any combination, bun by default. Same stored-list rule as the editors. */ -}}
+{{- $jsPm := dig "tools" "js_pm" "" $d -}}
+{{- if not (kindIs "slice" $jsPm) -}}
+{{-   $jsPm = promptMultichoice "JavaScript package managers/runtimes to install" (list "bun" "pnpm" "yarn" "deno") (list "bun") -}}
+{{- end -}}
+
 {{- /* Shells */ -}}
 
 {{- /* Prompts */ -}}
@@ -276,6 +282,8 @@ browser = {{ $browser | quote }}
 container = {{ $container | quote }}
 # editors/IDEs to install, by Homebrew cask name (see the "Editors/IDEs" prompt)
 editors = {{ $editors | toJson }}
+# JavaScript package managers/runtimes installed with mise: any of "bun", "pnpm", "yarn", "deno"
+js_pm = {{ $jsPm | toJson }}
 # Homebrew tools to move to mise; consumed by the mise config and the migration script
 migrate_to_mise = {{ $moveChosen | toJson }}
 # local LLM runners to install (ollama, jan, msty, lm-studio on Apple Silicon)

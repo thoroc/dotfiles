@@ -41,4 +41,6 @@ alias docker-remove-images='docker rmi $(docker images -q)'
 
 # fucked ok, don't question me! node is SHITE
 alias npm="npq-hero"
+{{ if has "yarn" (dig "tools" "js_pm" (list "bun" "pnpm") .) -}}
 alias yarn="NPQ_PKG_MGR=yarn npq-hero"
+{{ end -}}

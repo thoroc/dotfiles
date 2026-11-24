@@ -37,10 +37,16 @@ aws-cli = "latest"
 aws-sam-cli = "latest"
 azure-cli = "latest"
 bat = "latest"
+{{ $jsPm := dig "tools" "js_pm" (list "bun" "pnpm") . -}}
+{{ if has "bun" $jsPm -}}
 bun = "latest"
+{{ end -}}
 caddy = "latest"
 cfn-lint = "latest"
 chezmoi = "latest"
+{{ if has "deno" $jsPm -}}
+deno = "latest"
+{{ end -}}
 dive = "latest"
 docker-compose = "latest"
 duckdb = "latest"
@@ -65,7 +71,9 @@ node = "latest"
 {{ end -}}
 perl = "latest"
 pipx = "latest"
+{{ if has "pnpm" $jsPm -}}
 pnpm = "latest"
+{{ end -}}
 prettier = "latest"
 protobuf = "latest"
 {{ if eq (dig "lang" "python" "manager" "mise" .) "mise" -}}
@@ -105,6 +113,9 @@ uv = "latest"
 vim = "latest"
 watchexec = "latest"
 xh = "latest"
+{{ if has "yarn" $jsPm -}}
+yarn = "latest"
+{{ end -}}
 yq = "latest"
 zoxide = "latest"
 
