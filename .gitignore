@@ -1,4 +1,5 @@
 .claude/
+.context/
 .osgrep/
 .vscode/
 .rumdl_cache/
