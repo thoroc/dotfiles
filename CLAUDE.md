@@ -4,8 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A [chezmoi](https://www.chezmoi.io/) source directory for a macOS (web-dev focused) machine. Nothing here runs directly;
-files are templates/sources that chezmoi renders into `$HOME`.
+A [chezmoi](https://www.chezmoi.io/) source directory for a web-dev focused machine: macOS (Intel and arm) and
+Debian/Ubuntu Linux. Nothing here runs directly; files are templates/sources that chezmoi renders into `$HOME`.
 
 The source dir is `~/.dotfiles` (set via `sourceDir` in `.chezmoi.toml.tmpl` and the generated
 `~/.config/chezmoi/chezmoi.toml`). The default chezmoi path `~/.local/share/chezmoi` is not used (the old checkout was
@@ -125,6 +125,20 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   by templates so far; Notion and Logseq are recorded but unused. To test prompts non-interactively:
   `chezmoi execute-template --init --promptBool "<prompt text>=true" < .chezmoi.toml.tmpl` (flags match the prompt text,
   not the key).
+- **Linux** is supported with mise for CLIs and apt for system basics (no Homebrew).
+  `.chezmoiscripts/run_onchange_after_linux-install-packages` (an `after_` script, because `mise install` needs the
+  written mise config) installs zsh, git, curl, build tools and age with apt, bootstraps mise with `mise.run`, then runs
+  `mise install`. Everything macOS-only is gated on `.chezmoi.os`: the darwin scripts, `private_Library` and
+  `symlink_dot_Brewfile` (ignored in `.chezmoiignore`), the Homebrew/gnubin/`/Applications` PATH code, `osxkeychain`,
+  and the terminal/browser/editor/LLM/container-app prompts (on Linux `tools.terminal` and `tools.browser` are `"none"`,
+  which also drops the `it2` hooks). `homebrew_prefix` is empty on Linux, so never use it outside a darwin guard. delta
+  is a prebuilt mise tool on Linux (the cargo build is darwin/amd64 only). Shell environment shared by `.zshenv` and
+  `.zshrc` lives once in `dot_config/zsh/dot_common.zsh.tmpl` (sourced by both). fnox uses the keychain on macOS and an
+  age provider on Linux: the public key comes from `secrets.age_recipient` (prompted on Linux, or set in
+  `init-defaults.toml`, with an optional encrypted `secrets.github_token_age`); without it `.config/fnox` is not
+  applied. Git's credential helper has no Linux equivalent yet. `chezmoi execute-template` cannot fake `.chezmoi.os`; to
+  test Linux, run `chezmoi init` and `apply` in a Debian container with `CHEZMOI_INIT_DEFAULTS` pointing at a full
+  answers file.
 - **`Applist.txt`** is a snapshot of installed apps (repo-only, listed in `.chezmoiignore`).
 - **`.chezmoiignore`** excludes repo-only files (README, `CLAUDE.md`, `hk.pkl`, `mise.toml`, `.prettierrc`,
   `.rumdl.toml`, `.vscode`, `Brewfile`) from being applied to `$HOME`. Add new repo-only files there, or chezmoi will
