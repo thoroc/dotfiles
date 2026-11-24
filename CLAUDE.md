@@ -110,14 +110,16 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   (`tools.ai.claude|gemini|codex|opencode`, default false). Gemini and Codex are installed via mise
   (`dot_config/mise/config.toml.tmpl` gates each npm entry on its toggle). Claude Code and opencode ship their own
   installers and are usually already present, so the install script only runs `brew install` for them when `command -v`
-  finds nothing. Never add an install for something already provided another way. `tools.enable.delta` (default true)
-  gates delta: the mise entries, the Rust toolchain it needs on Intel, and the `[pager]`, `[interactive]` and `[delta]`
-  sections of the gitconfig. On Intel, delta is compiled by mise (`"cargo:git-delta"`, pinned to a version so it only
-  recompiles when bumped by hand) because there is no darwin/amd64 prebuilt; `rust` is added through mise when no other
-  manager provides rustc. `dot_claude/` is applied only when `tools.ai.claude` is true (a templated `.claude` ignore in
-  `.chezmoiignore`). Gemini, Codex and opencode have no managed config yet; add it under `dot_gemini/`, `dot_codex/` or
-  `dot_config/opencode/` and gate it the same way. Existing machines must run `mise run init` to answer the new prompts:
-  until then the `dig` defaults treat every assistant as off.
+  finds nothing. Never add an install for something already provided another way. `dot_claude/` is applied only when
+  `tools.ai.claude` is true (a templated `.claude` ignore in `.chezmoiignore`). Gemini, Codex and opencode have no
+  managed config yet; add it under `dot_gemini/`, `dot_codex/` or `dot_config/opencode/` and gate it the same way.
+  Existing machines must run `mise run init` to answer the new prompts: until then the `dig` defaults treat every
+  assistant as off.
+- **delta** is gated by `tools.enable.delta` (default true, read with `dig "tools" "enable" "delta" true .`). It gates
+  the mise entries, the Rust toolchain that only exists to compile it on Intel, and the `[pager]`, `[interactive]` and
+  `[delta]` sections of the gitconfig. On Intel, delta is compiled by mise (`"cargo:git-delta"`, pinned to a version so
+  it only recompiles when bumped by hand) because there is no darwin/amd64 prebuilt; `rust` is added through mise when
+  no other manager provides rustc.
 - **Notes tools** are three independent toggles in `.chezmoi.toml.tmpl` (`tools.notes.obsidian|notion|logseq`).
   `obsidian_vault` and `logseq_graph` paths are only prompted when the matching toggle is on. Only Obsidian is consumed
   by templates so far; Notion and Logseq are recorded but unused. To test prompts non-interactively:
@@ -132,3 +134,24 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
 
 - Markdown is wrapped by prettier (`--prose-wrap always`); keep the README TOC inside the doctoc markers.
 - Commit messages follow conventional commits (`feat(scope):`, `fix(scope):`, `chore:`).
+- Check the blast radius before changing or adding anything, and say what you checked. Do not stop at the line you were
+  asked to touch:
+  - **Find every consumer.** Search (`rg`) the whole repo for the key, tool or file being changed: a toggle is read by
+    `.chezmoi.toml.tmpl`, `dot_config/mise/config.toml.tmpl`, the gitconfig, zsh files, `.chezmoiscripts/`,
+    `.chezmoiignore`, the README and this file. Gating a tool means gating everything that mentions it, including
+    dependencies that exist only for it (delta also pulled in the Rust toolchain on Intel; the pager, interactive and
+    delta gitconfig sections all assumed the binary).
+  - **Check what the change assumes about the environment.** macOS-only settings (`osxkeychain`, `defaults`, casks) need
+    an `eq .chezmoi.os "darwin"` guard; arch-specific ones need `.chezmoi.arch`; anything calling a tool needs the tool
+    to exist or to be gated with it. Also check the caller's PATH: GUI clients (the VS Code source control panel) and
+    chezmoi scripts do not load shell activation, so a bare `hk`, `delta` or `mise` can fail there while working in your
+    terminal. Look for a second copy of a binary earlier on PATH (a stale `~/.cargo/bin/hk` shadowed the mise one) with
+    `type -a <tool>`.
+  - **Check who else is affected.** Existing machines keep stored answers, so new keys need a `dig` default equal to the
+    old behaviour. Generated files (the `hk` hook shim) are overwritten by the tool that wrote them, so a fix must live
+    in the source that regenerates them, not in the generated file.
+  - **Verify both branches.** Render the template with the toggle on and off
+    (`chezmoi execute-template --source ~/.dotfiles --override-data-file <file>`), parse the result (`tomllib`,
+    `git config -f`), and for a changed hook or PATH, reproduce with `env -i PATH=/usr/bin:/bin`.
+  - **Keep commits scoped.** Commit only the files for the change (`git commit -o <files>`) and one logical change per
+    commit, so unrelated staged work is not swept in.
