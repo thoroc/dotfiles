@@ -3,7 +3,8 @@ hk = "latest"
 rumdl = "latest"
 
 [hooks]
-enter = "mise run --quiet prepare 2>/dev/null || true"
+enter = "mise install --quiet"
+postinstall = { task = "prepare" }
 
 [tasks.init]
 description = "Initialise chezmoi (reads ~/.config/chezmoi/init-defaults.toml for answers when present)"
