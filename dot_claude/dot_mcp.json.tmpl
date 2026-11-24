@@ -1,5 +1,7 @@
 {
     "mcpServers": {
+{{- /* qmd comes from mise's npm: backend and context-mode runs through npx: both need NodeJS */ -}}
+{{ if ne (dig "lang" "nodejs" "manager" "mise" .) "none" }}
         "qmd": {
             "transport": "stdio",
             "command": "qmd",
@@ -15,6 +17,7 @@
                 "context-mode"
             ]
         },
+{{ end }}
         "codebase-memory-mcp": {
             "command": "{{ .chezmoi.homeDir }}/.local/share/mise/installs/github-deus-data-codebase-memory-mcp/latest/codebase-memory-mcp"
         }

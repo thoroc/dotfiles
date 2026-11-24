@@ -14,6 +14,8 @@
 "github:minamijoyo/hcledit" = "latest"
 "github:orhun/git-cliff" = "latest"
 "github:TylerBrock/saw" = "latest"
+{{/* npm: tools need a Node on PATH (any manager); skip them all when NodeJS is disabled */ -}}
+{{ if ne (dig "lang" "nodejs" "manager" "mise" .) "none" -}}
 "npm:@dotenvx/dotenvx" = "latest"
 {{ if dig "tools" "ai" "gemini" false . -}}
 "npm:@google/gemini-cli" = "latest"
@@ -29,6 +31,7 @@
 "npm:gitlab-ci-local" = "latest"
 "npm:npm" = "latest"
 "npm:osgrep" = "latest"
+{{ end -}}
 "pipx:thefuck" = "latest"
 "pipx:virtualenv" = "latest"
 act = "latest"
