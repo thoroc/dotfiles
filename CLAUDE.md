@@ -136,8 +136,9 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   `.zshrc` lives once in `dot_config/zsh/dot_common.zsh.tmpl` (sourced by both). fnox uses the keychain on macOS and an
   age provider on Linux: the public key comes from `secrets.age_recipient` (prompted on Linux, or set in
   `init-defaults.toml`, with an optional encrypted `secrets.github_token_age`); without it `.config/fnox` is not
-  applied. Git's credential helper has no Linux equivalent yet. `chezmoi execute-template` cannot fake `.chezmoi.os`; to
-  test Linux, run `chezmoi init` and `apply` in a Debian container with `CHEZMOI_INIT_DEFAULTS` pointing at a full
+  applied. On Linux git's credential helper is `gh auth git-credential` for github.com and gist (it reads
+  `GITHUB_TOKEN`, which fnox exports); macOS keeps `osxkeychain`. `chezmoi execute-template` cannot fake `.chezmoi.os`;
+  to test Linux, run `chezmoi init` and `apply` in a Debian container with `CHEZMOI_INIT_DEFAULTS` pointing at a full
   answers file.
 - **`Applist.txt`** is a snapshot of installed apps (repo-only, listed in `.chezmoiignore`).
 - **`.chezmoiignore`** excludes repo-only files (README, `CLAUDE.md`, `hk.pkl`, `mise.toml`, `.prettierrc`,

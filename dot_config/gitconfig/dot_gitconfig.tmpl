@@ -173,6 +173,16 @@
 [credential]
 	helper = osxkeychain
 
+{{ else -}}
+{{- /* Linux has no keychain: gh (installed by mise) answers for GitHub, reading GITHUB_TOKEN, which fnox exports from the age store. No plaintext `store` helper. */ -}}
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !gh auth git-credential
+
 {{ end -}}
 {{ if dig "tools" "enable" "delta" true . -}}
 [pager]
