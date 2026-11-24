@@ -110,13 +110,14 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   (`tools.ai.claude|gemini|codex|opencode`, default false). Gemini and Codex are installed via mise
   (`dot_config/mise/config.toml.tmpl` gates each npm entry on its toggle). Claude Code and opencode ship their own
   installers and are usually already present, so the install script only runs `brew install` for them when `command -v`
-  finds nothing. Never add an install for something already provided another way. On Intel, delta is compiled by mise
-  (`"cargo:git-delta"`, pinned to a version so it only recompiles when bumped by hand) because there is no darwin/amd64
-  prebuilt; `rust` is added through mise when no other manager provides rustc. `dot_claude/` is applied only when
-  `tools.ai.claude` is true (a templated `.claude` ignore in `.chezmoiignore`). Gemini, Codex and opencode have no
-  managed config yet; add it under `dot_gemini/`, `dot_codex/` or `dot_config/opencode/` and gate it the same way.
-  Existing machines must run `mise run init` to answer the new prompts: until then the `dig` defaults treat every
-  assistant as off.
+  finds nothing. Never add an install for something already provided another way. `tools.enable.delta` (default true)
+  gates delta: the mise entries, the Rust toolchain it needs on Intel, and the `[pager]`, `[interactive]` and `[delta]`
+  sections of the gitconfig. On Intel, delta is compiled by mise (`"cargo:git-delta"`, pinned to a version so it only
+  recompiles when bumped by hand) because there is no darwin/amd64 prebuilt; `rust` is added through mise when no other
+  manager provides rustc. `dot_claude/` is applied only when `tools.ai.claude` is true (a templated `.claude` ignore in
+  `.chezmoiignore`). Gemini, Codex and opencode have no managed config yet; add it under `dot_gemini/`, `dot_codex/` or
+  `dot_config/opencode/` and gate it the same way. Existing machines must run `mise run init` to answer the new prompts:
+  until then the `dig` defaults treat every assistant as off.
 - **Notes tools** are three independent toggles in `.chezmoi.toml.tmpl` (`tools.notes.obsidian|notion|logseq`).
   `obsidian_vault` and `logseq_graph` paths are only prompted when the matching toggle is on. Only Obsidian is consumed
   by templates so far; Notion and Logseq are recorded but unused. To test prompts non-interactively:

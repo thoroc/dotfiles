@@ -172,6 +172,7 @@
 [credential]
 	helper = osxkeychain
 
+{{ if dig "tools" "enable" "delta" true . -}}
 [pager]
 	diff = delta
 	log = delta
@@ -189,6 +190,7 @@
 	commit-decoration-style = bold yellow box ul
 	file-style = bold yellow ul
 	file-decoration-style = none
+{{ end -}}
 
 [pull]
 	ff = only
