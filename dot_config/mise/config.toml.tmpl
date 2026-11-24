@@ -73,7 +73,7 @@ python = "3.13"
 {{ end -}}
 ripgrep = "latest"
 {{ if dig "tools" "enable" "delta" true . -}}
-{{ if ne .chezmoi.arch "amd64" -}}
+{{ if or (ne .chezmoi.arch "amd64") (ne .chezmoi.os "darwin") -}}
 delta = "latest"
 {{ else -}}
 {{- /* no prebuilt delta for darwin/amd64: compile it with cargo. Pinned (not "latest") so mise only recompiles when this version is bumped by hand; bump it deliberately. Needs a Rust toolchain, see the rust block below. */ -}}
@@ -84,7 +84,7 @@ rlwrap = "latest"
 rumdl = "latest"
 {{/* Intel builds delta from source, so a toolchain is required: mise installs one when no other manager (rustup, brew, other) provides rustc */ -}}
 {{ $rustManager := dig "lang" "rust" "manager" "mise" . -}}
-{{ if or (eq $rustManager "mise") (and (eq .chezmoi.arch "amd64") (eq $rustManager "none") (dig "tools" "enable" "delta" true .)) -}}
+{{ if or (eq $rustManager "mise") (and (eq .chezmoi.os "darwin") (eq .chezmoi.arch "amd64") (eq $rustManager "none") (dig "tools" "enable" "delta" true .)) -}}
 rust = "latest"
 {{ end -}}
 {{ if eq (dig "lang" "ruby" "manager" "none" .) "mise" -}}
