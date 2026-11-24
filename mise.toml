@@ -3,7 +3,7 @@ hk = "latest"
 rumdl = "latest"
 
 [hooks]
-enter = "hk install --quiet 2>/dev/null || true"
+enter = "mise run --quiet prepare 2>/dev/null || true"
 
 [tasks.init]
 description = "Initialise chezmoi (reads ~/.config/chezmoi/init-defaults.toml for answers when present)"
@@ -27,4 +27,11 @@ run = "rumdl check ."
 
 [tasks.prepare]
 description = "Install git hooks"
-run = "hk install"
+run = '''
+hk install --quiet
+# GUI git clients (VS Code) start with a minimal PATH; make the shim find mise tools
+f=.git/hooks/pre-commit
+if [ -f "$f" ] && ! grep -q mise/shims "$f"; then
+  { head -1 "$f"; echo 'export PATH="$HOME/.local/share/mise/shims:/usr/local/bin:$PATH"'; tail -n +2 "$f"; } > "$f.new" && mv "$f.new" "$f" && chmod +x "$f"
+fi
+'''
