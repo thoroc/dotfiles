@@ -120,6 +120,10 @@ those yourself.
 - With iTerm2 as the terminal only: the `it2` agent-status hooks (all other hooks are unaffected)
 - With Obsidian enabled only: the Obsidian MCP server entry, its two hooks (`obsidian-context.sh`, `capture-insight.sh`)
   and the `obsidian/*.py` scripts, with the vault path filled in from your answer
+- The user-scope `codebase-memory-mcp` server: Claude Code does not load user-wide servers from `~/.claude/.mcp.json`,
+  so `.chezmoiscripts/run_after_register-claude-mcp` registers it with `claude mcp add` whenever the entry in
+  `~/.claude.json` is missing or points elsewhere (a custom command there is replaced). If `claude` or the server binary
+  is not installed yet, it says so and retries on the next apply
 
 Not managed (see `.chezmoiignore`): skills, agents, plugins, and all runtime or session data (`projects/`,
 `history.jsonl`, `cache/`, `sessions/`, `venvs/`, the Obsidian vector database, and so on). No secrets live in these

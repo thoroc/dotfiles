@@ -38,7 +38,11 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
 - **`.chezmoiscripts/`** hold `run_onchange_darwin-*` scripts that re-run whenever their rendered content changes:
   `install-packages` (conditional `brew bundle` driven by the toggles) and `configure-apps` (Homebrew bootstrap, macOS
   `defaults write`, sudo TouchID, dock, etc.). Both are wrapped in `{{ if eq .chezmoi.os "darwin" }}`. Template comment
-  or brace errors here break `chezmoi apply` entirely.
+  or brace errors here break `chezmoi apply` entirely. `run_after_register-claude-mcp` (all platforms, gated on
+  `tools.ai.claude`) registers `codebase-memory-mcp` at Claude Code's user scope with the `claude` CLI, because
+  `~/.claude/.mcp.json` only loads inside `~/.claude`. It is deliberately not `run_onchange_`: it renders empty once
+  `~/.claude.json` has the right command, so it retries until it succeeds. The binary path is repeated in
+  `dot_claude/dot_mcp.json.tmpl`; change both.
 - **`Brewfile`** at the repo root is the full static package list, separate from the toggle-driven inline bundle in
   `install-packages`. Custom-tap formulae have been migrating to the mise github backend (see git log).
 - **`dot_config/`** holds tool configs: `zsh` (aliases, profile, env, rc), `gitconfig` (main plus github/gitlab

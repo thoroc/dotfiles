@@ -1,0 +1,39 @@
+{{- /* Registers codebase-memory-mcp at Claude Code's user scope. Claude Code does not load user-wide servers from */ -}}
+{{- /* ~/.claude/.mcp.json, and ~/.claude.json is its own state file, so go through the claude CLI. */ -}}
+{{- /* Renders empty, so chezmoi skips it, when Claude Code is disabled or the entry is already right. */ -}}
+{{- /* run_after_, not run_onchange_: a skipped run must retry on the next apply. "after": mise installs come first. */ -}}
+{{- if dig "tools" "ai" "claude" false . -}}
+{{-   $name := "codebase-memory-mcp" -}}
+{{-   $bin := printf "%s/.local/share/mise/installs/github-deus-data-codebase-memory-mcp/latest/codebase-memory-mcp" .chezmoi.homeDir -}}
+{{-   $state := joinPath (env "CLAUDE_CONFIG_DIR" | default .chezmoi.homeDir) ".claude.json" -}}
+{{-   $current := "" -}}
+{{-   if stat $state -}}
+{{-     $json := include $state | trim -}}
+{{-     if $json -}}
+{{-       $current = dig "mcpServers" $name "command" "" (fromJson $json) -}}
+{{-     end -}}
+{{-   end -}}
+{{-   if ne $current $bin -}}
+#!/bin/bash
+set -euo pipefail
+
+name={{ $name | squote }}
+bin={{ $bin | squote }}
+
+# Appended, so a claude already on PATH wins; these cover applies started without shell setup
+export PATH="$PATH:$HOME/.local/bin:$HOME/.local/share/mise/shims"
+
+if ! command -v claude >/dev/null 2>&1; then
+  echo "claude not found, not registering $name (the next apply retries)"
+  exit 0
+fi
+if [ ! -x "$bin" ]; then
+  echo "$bin not found, not registering $name (run 'mise install', then apply again)"
+  exit 0
+fi
+
+# `claude mcp add` refuses to overwrite an entry, and `remove` fails when there is none
+claude mcp remove --scope user "$name" >/dev/null 2>&1 || true
+claude mcp add --scope user "$name" -- "$bin"
+{{   end -}}
+{{- end -}}
