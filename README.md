@@ -170,8 +170,8 @@ fnox -P pantheon-org lease revoke github   # revoke it on GitHub now
 
   ```toml
   [github_app.orgs.pantheon-org]
-  app_id = "3181784"            # pantheon-ai-bot (private app owned by pantheon-org)
-  installation_id = "118885330"
+  app_id = "<app_id>"           # the GitHub App's ID (private app owned by the org)
+  installation_id = "<installation_id>"
   ```
 
 - The private key is in the macOS keychain, service `fnox`, account `GITHUB_APP_PRIVATE_KEY_<org>` (`..._KEY` for
