@@ -300,7 +300,7 @@ github_token_age = {{ . | quote }}
 {{- end }}
 {{- end }}
 
-{{- /* GitHub Apps for fnox `github-app` leases (no prompt; set in init-defaults.toml). One entry per installation, each naming its own app: `user` for the personal account, `orgs.<org>` per org. app_id and installation_id are not secret; the private key is in the keychain (macOS) or the entry's age ciphertext `key_age` (Linux). An entry missing either id is dropped. */ -}}
+{{- /* GitHub Apps for fnox `github-app` leases (no prompt; set in init-defaults.toml). One entry per installation, each naming its own app: `user` for the personal account, `orgs.<org>` per org. app_id and installation_id are not secret; the optional slug names the bot (`<slug>[bot]`) in ~/.claude/CLAUDE.md; the private key is in the keychain (macOS) or the entry's age ciphertext `key_age` (Linux). An entry missing either id is dropped. */ -}}
 {{- $apps := list -}}
 {{- with dig "github_app" "user" (dict) $d -}}
 {{-   if and (get . "app_id") (get . "installation_id") -}}
@@ -318,6 +318,9 @@ github_token_age = {{ . | quote }}
 [{{ index . 0 }}]
 app_id = {{ (get $app "app_id") | toString | quote }}
 installation_id = {{ (get $app "installation_id") | toString | quote }}
+{{- with (get $app "slug") }}
+slug = {{ . | quote }}
+{{- end }}
 {{- with (get $app "key_age") }}
 key_age = {{ . | quote }}
 {{- end }}

@@ -53,13 +53,16 @@ logseq = false
 # github_token_age = "<age ciphertext of the classic PAT, exported as HOMEBREW_GITHUB_API_TOKEN and MISE_GITHUB_TOKEN>"
 
 # GitHub Apps for fnox github-app leases (short-lived gh tokens), one entry per installation, each with its own app.
-# The ids are not secret; omit an entry to render no lease for it. Private keys: macOS keychain (service "fnox",
-# account GITHUB_APP_PRIVATE_KEY for `user`, GITHUB_APP_PRIVATE_KEY_<org> for an org); Linux uses key_age.
+# Setup steps: README "GitHub tokens". The ids are not secret; omit an entry to render no lease for it.
+# Private keys: macOS keychain (service "fnox", account GITHUB_APP_PRIVATE_KEY for `user`,
+# GITHUB_APP_PRIVATE_KEY_<org> for an org); Linux uses key_age.
 # [github_app.user]                    # fnox exec -- gh ...
 # app_id = "123456"
 # installation_id = "11111111"         # https://github.com/settings/installations/<id>
+# slug = "<app-slug>"                  # optional: the bot is <app-slug>[bot]
 # key_age = "<age ciphertext of the app's PEM private key>"   # Linux only
-# [github_app.orgs.pantheon-org]       # fnox -P pantheon-org exec -- gh ...
+# [github_app.orgs.<org>]              # fnox -P <org> exec -- gh ...
 # app_id = "654321"
 # installation_id = "22222222"         # https://github.com/organizations/<org>/settings/installations/<id>
+# slug = "<app-slug>"
 # key_age = "<age ciphertext>"         # Linux only

@@ -49,7 +49,7 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   includes, global gitignore), `mise`, `oh-my-posh`, `lsd`, `fnox`. `mise/config.toml` is the global tool list (the
   user's installed CLIs) and sets a 7-day upgrade cooloff; do not confuse it with the repo-local `mise.toml` (tasks).
 - **`dot_claude/`** manages the portable parts of `~/.claude`, which must be a real directory (the standard location),
-  not a symlink: chezmoi would replace a symlink with a directory. It covers (`CLAUDE.md`, `hooks/`,
+  not a symlink: chezmoi would replace a symlink with a directory. It covers (`CLAUDE.md.tmpl`, `hooks/`,
   `settings.json.tmpl`, `dot_mcp.json.tmpl`, `obsidian/*.py.tmpl`). Skills, agents, plugins and runtime data are
   deliberately not managed and are excluded in `.chezmoiignore`; add new exclusions there, not by omission. Machine
   paths must use `{{ .chezmoi.homeDir }}`, never a literal home path, and secrets never go in these files (use `fnox`).
@@ -147,7 +147,8 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   applied. The classic PAT is exported only as `HOMEBREW_GITHUB_API_TOKEN` and `MISE_GITHUB_TOKEN`, never
   `GITHUB_TOKEN`. gh gets short-lived GitHub App installation tokens as `GH_TOKEN` from the fnox `github-app` lease, via
   `fnox exec -- gh ...` (`github_app.user`) or `fnox -P <org> exec -- gh ...` (one profile per `github_app.orgs.<org>`).
-  Each entry names its own `app_id`, `installation_id` and, on Linux, `key_age`; on macOS the key is keychain account
+  Each entry names its own `app_id`, `installation_id`, an optional `slug` (the bot's name, listed with each configured
+  owner in the templated `~/.claude/CLAUDE.md`) and, on Linux, `key_age`; on macOS the key is keychain account
   `GITHUB_APP_PRIVATE_KEY` (user) or `GITHUB_APP_PRIVATE_KEY_<org>`. fnox reads the key only from the
   `FNOX_GITHUB_APP_PRIVATE_KEY` secret, so each org profile overrides that secret. Entries come from
   `init-defaults.toml`; none are rendered without them. On Linux git's credential helper is `gh auth git-credential` for

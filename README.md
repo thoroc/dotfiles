@@ -9,6 +9,8 @@
 - [Claude Code config](#claude-code-config)
 - [Day-to-day](#day-to-day)
 - [GitHub tokens](#github-tokens)
+  - [How it works](#how-it-works)
+  - [Set up an account](#set-up-an-account)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -149,45 +151,95 @@ version (pinned in `mise.toml`) on pushes and PRs, and over the full history wee
 
 ## GitHub tokens
 
-No long-lived GitHub token is exported to the shell. The classic PAT (no scopes) is exported only as
-`HOMEBREW_GITHUB_API_TOKEN` and `MISE_GITHUB_TOKEN` for rate limits. `gh` gets a short-lived (1 hour) GitHub App
-installation token from a fnox `github-app` lease, set as `GH_TOKEN` for one command:
+No long-lived GitHub token is exported to the shell, so plain `gh` is not logged in. A classic PAT (no scopes needed)
+can be stored for rate limits; it is exported only as `HOMEBREW_GITHUB_API_TOKEN` and `MISE_GITHUB_TOKEN`, never as
+`GITHUB_TOKEN`. `gh` instead gets a short-lived (1 hour) GitHub App installation token from a
+[fnox `github-app` lease](https://github.com/jdx/fnox/blob/main/docs/leases/github-app.md), set as `GH_TOKEN` for one
+command only.
+
+### How it works
+
+- Each account you want tokens for (your personal account, or an org) is one entry in
+  `~/.config/chezmoi/init-defaults.toml`, pointing at a GitHub App installed on that account. The entry for your
+  personal account is `github_app.user` and is used by plain `fnox exec`; each org is `github_app.orgs.<org>` and
+  becomes a fnox profile, used with `fnox -P <org> exec`. One token only ever covers one installation.
+- The token acts as the app, not as you: issues, comments and PRs show the author `<app-slug>[bot]`. It is narrowed to
+  contents read, issues write and pull requests write, whatever else the app is allowed, so it cannot push, merge or
+  change settings. Push with git over SSH as yourself.
+- The token is cached and reused until 5 minutes before it expires. An account with no entry gets no lease: the command
+  still runs, unauthenticated.
 
 ```sh
-fnox -P pantheon-org exec -- gh issue create --repo pantheon-org/tekhne --title "..." --body "..."
-fnox -P pantheon-org exec -- gh pr list --repo pantheon-org/tekhne
-fnox -P pantheon-org lease list --active   # cached token and its expiry
-fnox -P pantheon-org lease revoke github   # revoke it on GitHub now
+fnox -P <org> exec -- gh pr list --repo <org>/<repo>
+fnox -P <org> exec -- gh issue create --repo <org>/<repo> --title "..." --body "..."
+fnox exec -- gh repo list               # personal account (github_app.user)
+fnox -P <org> lease list --active       # cached token and its expiry
+fnox -P <org> lease revoke github       # revoke the cached token on GitHub now
 ```
 
-- The token acts as the app (issues and PRs show `pantheon-ai-bot[bot]`), not as you, and is limited to contents read,
-  issues write and pull requests write, whatever else the app has. It is reused until 5 minutes before it expires.
+### Set up an account
 
-- One token covers one installation, so each org is a fnox profile (`-P <org>`). `fnox exec` without `-P` uses
-  `github_app.user`, the personal account, which is not set up yet: plain `gh` has no token.
+Do this once per account (`<owner>` is your username or the org). Creating, installing and keying an app has no API, so
+steps 1 to 3 are in the browser; the URL below fills in the form for you.
 
-- Config lives in `~/.config/chezmoi/init-defaults.toml` (not in the repo), then `mise run init` and `mise run apply`:
+1. Create a private GitHub App owned by that account. Open the URL (for your personal account, use
+   `https://github.com/settings/apps/new?...` with the same parameters), change the name if it is taken (names are
+   global), and click **Create GitHub App**:
 
-  ```toml
-  [github_app.orgs.pantheon-org]
-  app_id = "<app_id>"           # the GitHub App's ID (private app owned by the org)
-  installation_id = "<installation_id>"
-  ```
+   ```text
+   https://github.com/organizations/<owner>/settings/apps/new?name=<owner>-cli-bot&url=https://github.com/<owner>&public=false&webhook_active=false&contents=read&issues=write&pull_requests=write
+   ```
 
-- The private key is in the macOS keychain, service `fnox`, account `GITHUB_APP_PRIVATE_KEY_<org>` (`..._KEY` for
-  `github_app.user`); on Linux it is the entry's `key_age` ciphertext. CI uses a different key of the same app (org
-  secret `GH_APP_PRIVATE_KEY`), so the laptop key can be revoked on its own under the app's key pairs. The app has broad
-  org permissions, so treat the keychain item as high value.
+   Keep "Only on this account" (the default for `public=false`): an app that any account can install gains nothing here.
+   You can reuse an app the account already has instead, if it has at least those three permissions; the lease asks for
+   no more than that. Note the app's slug (the last part of its settings URL): it is the bot's login.
 
-- Adding another installation: generate a key pair on the app, store it without touching the global fnox config, then
-  add the entry above:
+2. Install it: on the app's page, **Install App**, choose the account, and pick all repositories or just the ones you
+   want. The installation ID is the number at the end of the URL you land on
+   (`.../settings/installations/<installation_id>`). The app ID is on the app's **General** page.
 
-  ```sh
-  f=~/Downloads/<app>.private-key.pem && d=$(mktemp -d) &&
-    printf '[providers.keychain]\ntype = "keychain"\nservice = "fnox"\n' > "$d/k.toml" &&
-    FNOX_CONFIG_DIR="$d" fnox -c "$d/k.toml" set K --provider keychain \
-      --key-name GITHUB_APP_PRIVATE_KEY_<org> --from-file "$f" && rm -rf "$d" "$f"
-  ```
+3. Create a key pair: on the app's **General** page, under **Private keys** (shown as "Credentials as Key Pairs" on some
+   accounts), **Generate a private key**. A `.pem` file downloads. Give each machine its own key pair, separate from any
+   CI key, so you can revoke one without the others.
 
-- The app ID and installation ID can be read from the API with a JWT signed by the key (`GET /app`,
-  `GET /app/installations`), or from the app's settings page and the installation's Configure URL.
+4. Store the key and delete the download. On macOS it goes into the keychain (service `fnox`, account
+   `GITHUB_APP_PRIVATE_KEY_<org>`, or `GITHUB_APP_PRIVATE_KEY` for your personal account) through a throwaway fnox
+   config, so the global one is not touched and the key is never printed:
+
+   ```sh
+   f=~/Downloads/<app-slug>.<date>.private-key.pem && d=$(mktemp -d) &&
+     printf '[providers.keychain]\ntype = "keychain"\nservice = "fnox"\n' > "$d/k.toml" &&
+     FNOX_CONFIG_DIR="$d" fnox -c "$d/k.toml" set K --provider keychain \
+       --key-name GITHUB_APP_PRIVATE_KEY_<org> --from-file "$f" && rm -rf "$d" "$f"
+   ```
+
+   On Linux it is stored as an age ciphertext for your `secrets.age_recipient` instead. This prints the value for
+   `key_age` in step 5 (ciphertext only, safe to keep in `init-defaults.toml`):
+
+   ```sh
+   f=~/Downloads/<app-slug>.<date>.private-key.pem && d=$(mktemp -d) &&
+     printf '[providers.age]\ntype = "age"\nrecipients = ["%s"]\n' "<age_recipient>" > "$d/k.toml" &&
+     FNOX_CONFIG_DIR="$d" fnox -c "$d/k.toml" set K --provider age --from-file "$f" &&
+     sed -n 's/.*value = "\([^"]*\)".*/\1/p' "$d/k.toml" && rm -rf "$d" "$f"
+   ```
+
+5. Add the entry to `~/.config/chezmoi/init-defaults.toml` (it is outside the repo; the IDs are not secret, but they
+   stay out of a public repo). See `init-defaults.example.toml`:
+
+   ```toml
+   [github_app.orgs.<org>]          # or [github_app.user] for your personal account
+   app_id = "<app_id>"
+   installation_id = "<installation_id>"
+   slug = "<app-slug>"              # optional: names the bot in ~/.claude/CLAUDE.md
+   # key_age = "<ciphertext>"       # Linux only, from step 4
+   ```
+
+6. Render it and check the token works:
+
+   ```sh
+   mise run init && mise run apply
+   fnox -P <org> exec -- gh auth status    # shows <app-slug>[bot] (GH_TOKEN)
+   ```
+
+To stop using an account, delete its entry and run step 6, then delete the keychain item and the key pair on the app.
+The keychain item and the key can mint tokens with every permission the app has, so treat them as high value.
