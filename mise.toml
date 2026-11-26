@@ -1,7 +1,8 @@
 [tools]
 hk = "latest"
 rumdl = "latest"
-gitleaks = "8.30.1"
+betterleaks = "1.10.1"
+kingfisher = "2.20.0"
 
 [hooks]
 enter = "mise install --quiet"

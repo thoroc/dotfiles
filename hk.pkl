@@ -5,7 +5,7 @@ import "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Builtins.
 steps {
     // Scans the staged diff (every file type) for secrets before it can be committed
     ["secrets"] {
-        check = "gitleaks git --pre-commit --staged --redact --no-banner --verbose"
+        check = "betterleaks git --pre-commit --staged --redact --no-banner --verbose"
     }
     ["format-docs"] {
         glob = "*.md"

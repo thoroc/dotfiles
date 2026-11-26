@@ -145,9 +145,11 @@ mise run format   # prettier on markdown
 mise run lint     # rumdl on markdown
 ```
 
-Git hooks are managed by [hk](https://hk.jdx.dev/) (`hk.pkl`): gitleaks scans every staged change for secrets, and
-prettier, rumdl and doctoc run on markdown files. CI (`.github/workflows/secret-scan.yml`) runs the same gitleaks
-version (pinned in `mise.toml`) on pushes and PRs, and over the full history weekly.
+Git hooks are managed by [hk](https://hk.jdx.dev/) (`hk.pkl`): [betterleaks](https://github.com/betterleaks/betterleaks)
+scans every staged change for secrets, and prettier, rumdl and doctoc run on markdown files. CI
+(`.github/workflows/secret-scan.yml`) runs two independent scanners, both pinned in `mise.toml`: betterleaks on the
+commits each push or PR adds (the full history weekly), and [kingfisher](https://github.com/mongodb/kingfisher) on the
+full history every run, which also checks whether a secret it finds is still live.
 
 ## GitHub tokens
 
