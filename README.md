@@ -151,6 +151,11 @@ scans every staged change for secrets, and prettier, rumdl and doctoc run on mar
 commits each push or PR adds (the full history weekly), and [kingfisher](https://github.com/mongodb/kingfisher) on the
 full history every run, which also checks whether a secret it finds is still live.
 
+Versions in `mise.toml` and the workflow actions are pinned exactly. [Renovate](https://docs.renovatebot.com/)
+(`renovate.json`) proposes updates on Sunday nights (Europe/London) once a release is 30 days old: minor, patch and
+digest updates come as one PR that merges itself when CI passes, majors as separate PRs to review. Security fixes are
+opened immediately. hk is held at 2.0.1, the last release with an Intel macOS build.
+
 ## GitHub tokens
 
 No long-lived GitHub token is exported to the shell, so plain `gh` is not logged in. A classic PAT (no scopes needed)

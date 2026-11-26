@@ -8,6 +8,7 @@ mise.toml
 Brewfile
 Applist.txt
 init-defaults.example.toml
+renovate.json
 
 # macOS-only files: the OneDrive LaunchAgent (Library/) and the Homebrew Brewfile symlink
 {{ if ne .chezmoi.os "darwin" -}}

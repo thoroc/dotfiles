@@ -157,8 +157,8 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   container with `CHEZMOI_INIT_DEFAULTS` pointing at a full answers file.
 - **`Applist.txt`** is a snapshot of installed apps (repo-only, listed in `.chezmoiignore`).
 - **`.chezmoiignore`** excludes repo-only files (README, `CLAUDE.md`, `hk.pkl`, `mise.toml`, `.prettierrc`,
-  `.rumdl.toml`, `.vscode`, `Brewfile`) from being applied to `$HOME`. Add new repo-only files there, or chezmoi will
-  copy them into `$HOME`.
+  `.rumdl.toml`, `.vscode`, `Brewfile`, `renovate.json`) from being applied to `$HOME`. Add new repo-only files there,
+  or chezmoi will copy them into `$HOME`.
 
 ## Conventions
 
