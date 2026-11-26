@@ -54,7 +54,7 @@
 {{-   $logseq_graph = promptStringOnce $d "tools.notes.logseq_graph" "Logseq graph path (absolute)" (printf "%s/Documents/logseq-graph" .chezmoi.homeDir) -}}
 {{- end -}}
 
-{{- /* Secrets on Linux: fnox uses an age key (macOS uses the keychain). Public recipient only; leave empty to skip the fnox config. The encrypted GITHUB_TOKEN may be set as secrets.github_token_age in init-defaults.toml. */ -}}
+{{- /* Secrets on Linux: fnox uses an age key (macOS uses the keychain). Public recipient only; leave empty to skip the fnox config. The encrypted classic PAT (exported for brew and mise) may be set as secrets.github_token_age in init-defaults.toml (GitHub App keys: see github_app below). */ -}}
 {{- $age_recipient := "" -}}
 {{- if not $darwin -}}
 {{-   $age_recipient = promptStringOnce $d "secrets.age_recipient" "age public key (recipient) for fnox secrets, empty to skip" "" -}}
@@ -297,6 +297,29 @@ ls = {{ $ls | quote }}
 age_recipient = {{ $age_recipient | quote }}
 {{- with dig "secrets" "github_token_age" "" $d }}
 github_token_age = {{ . | quote }}
+{{- end }}
+{{- end }}
+
+{{- /* GitHub Apps for fnox `github-app` leases (no prompt; set in init-defaults.toml). One entry per installation, each naming its own app: `user` for the personal account, `orgs.<org>` per org. app_id and installation_id are not secret; the private key is in the keychain (macOS) or the entry's age ciphertext `key_age` (Linux). An entry missing either id is dropped. */ -}}
+{{- $apps := list -}}
+{{- with dig "github_app" "user" (dict) $d -}}
+{{-   if and (get . "app_id") (get . "installation_id") -}}
+{{-     $apps = append $apps (list "data.github_app.user" .) -}}
+{{-   end -}}
+{{- end -}}
+{{- range $org, $app := dig "github_app" "orgs" (dict) $d -}}
+{{-   if and (get $app "app_id") (get $app "installation_id") -}}
+{{-     $apps = append $apps (list (printf "data.github_app.orgs.%s" ($org | quote)) $app) -}}
+{{-   end -}}
+{{- end -}}
+{{- range $apps }}
+{{- $app := index . 1 }}
+
+[{{ index . 0 }}]
+app_id = {{ (get $app "app_id") | toString | quote }}
+installation_id = {{ (get $app "installation_id") | toString | quote }}
+{{- with (get $app "key_age") }}
+key_age = {{ . | quote }}
 {{- end }}
 {{- end }}
 

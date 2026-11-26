@@ -174,7 +174,7 @@
 	helper = osxkeychain
 
 {{ else -}}
-{{- /* Linux has no keychain: gh (installed by mise) answers for GitHub, reading GITHUB_TOKEN, which fnox exports from the age store. No plaintext `store` helper. */ -}}
+{{- /* Linux has no keychain: gh (installed by mise) answers for GitHub, reading GH_TOKEN, which `fnox exec` sets from the github-app lease (the shell exports no GitHub token, so plain git is anonymous). No plaintext `store` helper. */ -}}
 [credential "https://github.com"]
 	helper =
 	helper = !gh auth git-credential

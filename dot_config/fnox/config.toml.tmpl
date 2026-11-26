@@ -1,17 +1,82 @@
-{{ if eq .chezmoi.os "darwin" -}}
+{{- /* The classic PAT is exported under the names Homebrew and mise read, never as GITHUB_TOKEN, so gh does not pick it up. gh gets short-lived GitHub App installation tokens from the leases below, through `fnox exec`. */ -}}
+{{- $darwin := eq .chezmoi.os "darwin" -}}
+{{- $user := dig "github_app" "user" (dict) . -}}
+{{- $orgs := dig "github_app" "orgs" (dict) . -}}
+{{- /* fnox reads a github-app key only from the FNOX_GITHUB_APP_PRIVATE_KEY secret, so each installation's profile overrides that secret: keychain item GITHUB_APP_PRIVATE_KEY (user) or GITHUB_APP_PRIVATE_KEY_<org> on macOS, the entry's key_age ciphertext on Linux. */ -}}
+{{- $userKey := "" -}}
+{{- if (get $user "app_id") -}}
+{{-   if $darwin -}}
+{{-     $userKey = `{ provider = "keychain", value = "GITHUB_APP_PRIVATE_KEY", env = false }` -}}
+{{-   else if (get $user "key_age") -}}
+{{-     $userKey = printf `{ provider = "age", value = %s, env = false }` ((get $user "key_age") | quote) -}}
+{{-   end -}}
+{{- end -}}
+{{ if $darwin -}}
 [providers.keychain]
 type = "keychain"
 service = "fnox"
 
 [secrets]
-GITHUB_TOKEN= { provider = "keychain", value = "GITHUB_TOKEN" }
+HOMEBREW_GITHUB_API_TOKEN = { provider = "keychain", value = "GITHUB_TOKEN" }
+MISE_GITHUB_TOKEN = { provider = "keychain", value = "GITHUB_TOKEN" }
+{{- with $userKey }}
+FNOX_GITHUB_APP_PRIVATE_KEY = {{ . }}
+{{- end }}
 {{- else -}}
-{{- /* Linux has no keychain: secrets are age-encrypted. The recipient (public key) and the optional ciphertext are per machine (init-defaults.toml), never in the repo. */ -}}
+{{- /* Linux has no keychain: secrets are age-encrypted. The recipient (public key) and the optional ciphertexts are per machine (init-defaults.toml), never in the repo. */ -}}
+{{- $pat := dig "secrets" "github_token_age" "" . -}}
 [providers.age]
 type = "age"
 recipients = [{{ dig "secrets" "age_recipient" "" . | quote }}]
-{{ with dig "secrets" "github_token_age" "" . }}
+{{- if or $pat $userKey }}
+
 [secrets]
-GITHUB_TOKEN = { provider = "age", value = {{ . | quote }} }
-{{ end -}}
-{{ end }}
+{{- with $pat }}
+HOMEBREW_GITHUB_API_TOKEN = { provider = "age", value = {{ . | quote }} }
+MISE_GITHUB_TOKEN = { provider = "age", value = {{ . | quote }} }
+{{- end }}
+{{- with $userKey }}
+FNOX_GITHUB_APP_PRIVATE_KEY = {{ . }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- /* One installation token covers one account or org: `fnox exec -- gh ...` for the user account, `fnox -P <org> exec -- gh ...` for an org, whose profile replaces the `github` lease and the key. GH_TOKEN wins over GITHUB_TOKEN in gh. */ -}}
+{{- if (get $user "app_id") }}
+
+[leases.github]
+type = "github-app"
+app_id = {{ (get $user "app_id") | toString | quote }}
+installation_id = {{ (get $user "installation_id") | toString | quote }}
+env_var = "GH_TOKEN"
+duration = "1h"
+
+[leases.github.permissions]
+contents = "read"
+issues = "write"
+pull_requests = "write"
+{{- end }}
+{{- range $org, $app := $orgs }}
+{{- $orgKey := "" }}
+{{- if $darwin }}
+{{-   $orgKey = printf `{ provider = "keychain", value = "GITHUB_APP_PRIVATE_KEY_%s", env = false }` $org }}
+{{- else if (get $app "key_age") }}
+{{-   $orgKey = printf `{ provider = "age", value = %s, env = false }` ((get $app "key_age") | quote) }}
+{{- end }}
+{{- with $orgKey }}
+
+[profiles.{{ $org }}.secrets]
+FNOX_GITHUB_APP_PRIVATE_KEY = {{ . }}
+{{- end }}
+
+[profiles.{{ $org }}.leases.github]
+type = "github-app"
+app_id = {{ (get $app "app_id") | toString | quote }}
+installation_id = {{ (get $app "installation_id") | toString | quote }}
+env_var = "GH_TOKEN"
+duration = "1h"
+
+[profiles.{{ $org }}.leases.github.permissions]
+contents = "read"
+issues = "write"
+pull_requests = "write"
+{{- end }}

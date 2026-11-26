@@ -17,12 +17,13 @@ source ~/.config/zsh/.common.zsh
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# fnox: secrets manager — must load before mise so GITHUB_TOKEN is in env
+# fnox: secrets manager — must load before mise so MISE_GITHUB_TOKEN is in env
+# The classic PAT goes to brew and mise only; gh gets GitHub App tokens through `fnox exec -- gh ...`
 # https://github.com/jdx/fnox
 # ---------------------------------------------------------------------------------------------------------------------
 if [ -x "$HOME/.local/share/mise/installs/fnox/latest/fnox" ]; then
   eval "$($HOME/.local/share/mise/installs/fnox/latest/fnox activate zsh)"
-  eval "$($HOME/.local/share/mise/installs/fnox/latest/fnox export --format shell GITHUB_TOKEN 2>/dev/null)"
+  eval "$($HOME/.local/share/mise/installs/fnox/latest/fnox export --format shell HOMEBREW_GITHUB_API_TOKEN MISE_GITHUB_TOKEN 2>/dev/null)"
 fi
 
 # ---------------------------------------------------------------------------------------------------------------------

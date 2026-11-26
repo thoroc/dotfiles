@@ -144,10 +144,16 @@ markdown: prettier (`--prose-wrap always`), rumdl, and doctoc for TOCs. There is
   `.zshrc` lives once in `dot_config/zsh/dot_common.zsh.tmpl` (sourced by both). fnox uses the keychain on macOS and an
   age provider on Linux: the public key comes from `secrets.age_recipient` (prompted on Linux, or set in
   `init-defaults.toml`, with an optional encrypted `secrets.github_token_age`); without it `.config/fnox` is not
-  applied. On Linux git's credential helper is `gh auth git-credential` for github.com and gist (it reads
-  `GITHUB_TOKEN`, which fnox exports); macOS keeps `osxkeychain`. `chezmoi execute-template` cannot fake `.chezmoi.os`;
-  to test Linux, run `chezmoi init` and `apply` in a Debian container with `CHEZMOI_INIT_DEFAULTS` pointing at a full
-  answers file.
+  applied. The classic PAT is exported only as `HOMEBREW_GITHUB_API_TOKEN` and `MISE_GITHUB_TOKEN`, never
+  `GITHUB_TOKEN`. gh gets short-lived GitHub App installation tokens as `GH_TOKEN` from the fnox `github-app` lease, via
+  `fnox exec -- gh ...` (`github_app.user`) or `fnox -P <org> exec -- gh ...` (one profile per `github_app.orgs.<org>`).
+  Each entry names its own `app_id`, `installation_id` and, on Linux, `key_age`; on macOS the key is keychain account
+  `GITHUB_APP_PRIVATE_KEY` (user) or `GITHUB_APP_PRIVATE_KEY_<org>`. fnox reads the key only from the
+  `FNOX_GITHUB_APP_PRIVATE_KEY` secret, so each org profile overrides that secret. Entries come from
+  `init-defaults.toml`; none are rendered without them. On Linux git's credential helper is `gh auth git-credential` for
+  github.com and gist (it reads `GH_TOKEN` under `fnox exec`; plain git is anonymous); macOS keeps `osxkeychain`.
+  `chezmoi execute-template` cannot fake `.chezmoi.os`; to test Linux, run `chezmoi init` and `apply` in a Debian
+  container with `CHEZMOI_INIT_DEFAULTS` pointing at a full answers file.
 - **`Applist.txt`** is a snapshot of installed apps (repo-only, listed in `.chezmoiignore`).
 - **`.chezmoiignore`** excludes repo-only files (README, `CLAUDE.md`, `hk.pkl`, `mise.toml`, `.prettierrc`,
   `.rumdl.toml`, `.vscode`, `Brewfile`) from being applied to `$HOME`. Add new repo-only files there, or chezmoi will
