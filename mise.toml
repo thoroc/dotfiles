@@ -1,6 +1,7 @@
 [tools]
 hk = "latest"
 rumdl = "latest"
+gitleaks = "8.30.1"
 
 [hooks]
 enter = "mise install --quiet"
