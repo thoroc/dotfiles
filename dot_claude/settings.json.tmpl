@@ -1,7 +1,18 @@
 {{- $obsidian := dig "tools" "notes" "obsidian" false . -}}
 {{- /* iTerm2 agent hooks only make sense with iTerm2; missing key means an older config that used it */ -}}
 {{- $it2 := eq (dig "tools" "terminal" "iterm2" .) "iterm2" -}}
+{{- /* Local mods (Claude Code function-hook plugins), not managed by chezmoi: each ~/.claude/mods/<name> holding a
+       .claude-plugin/plugin.json is loaded as a --plugin-dir. Read on apply: re-run `chezmoi apply` after adding one. */ -}}
+{{- $mods := list -}}
+{{- range glob (joinPath .chezmoi.homeDir ".claude/mods/*/.claude-plugin/plugin.json") -}}
+{{-   $mods = append $mods (dir (dir .)) -}}
+{{- end -}}
 {
+{{- if $mods }}
+  "env": {
+    "CLAUDE_CODE_PLUGIN_DIRS": {{ join ":" $mods | quote }}
+  },
+{{- end }}
   "hooks": {
     "PreToolUse": [
 {{- if $obsidian }}
