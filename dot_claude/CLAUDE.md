@@ -13,6 +13,13 @@
 - `uv`/`uvx` is available for Python tooling.
 - `lefthook` is used for git hooks.
 
+## GitHub (`gh`)
+- No GitHub token is exported to the shell: plain `gh` is not logged in. Do not ask for, create or widen a PAT.
+- For pantheon-org repos, run gh through the fnox GitHub App lease: `fnox -P pantheon-org exec -- gh <args>`. It mints a 1-hour `pantheon-ai-bot` installation token as `GH_TOKEN`.
+- The token can read contents and write issues and pull requests. It cannot push, merge or change settings; push with git over SSH as the user instead.
+- Issues, comments and PRs created this way show as `pantheon-ai-bot[bot]`, not as the user. Say so before creating them.
+- Other orgs and the personal account have no lease yet; if gh needs one, say so instead of working around it. Setup: "GitHub tokens" in `~/.dotfiles/README.md`.
+
 ## Style Preferences
 - No emojis unless explicitly requested.
 - Short, direct responses. Lead with the answer.
