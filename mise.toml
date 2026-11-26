@@ -1,6 +1,7 @@
 [tools]
-hk = "latest"
-rumdl = "latest"
+# hk 2.0.1 is the last release with a darwin/x86_64 build; keep it in step with the pkl URLs in hk.pkl
+hk = "2.0.1"
+rumdl = "0.3.5"
 betterleaks = "1.10.1"
 kingfisher = "2.20.0"
 
