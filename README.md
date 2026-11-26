@@ -8,6 +8,7 @@
 - [What gets applied](#what-gets-applied)
 - [Claude Code config](#claude-code-config)
 - [Day-to-day](#day-to-day)
+- [GitHub tokens](#github-tokens)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -143,3 +144,48 @@ mise run lint     # rumdl on markdown
 ```
 
 Git hooks are managed by [hk](https://hk.jdx.dev/) (`hk.pkl`) and run prettier, rumdl and doctoc on markdown files.
+
+## GitHub tokens
+
+No long-lived GitHub token is exported to the shell. The classic PAT (no scopes) is exported only as
+`HOMEBREW_GITHUB_API_TOKEN` and `MISE_GITHUB_TOKEN` for rate limits. `gh` gets a short-lived (1 hour) GitHub App
+installation token from a fnox `github-app` lease, set as `GH_TOKEN` for one command:
+
+```sh
+fnox -P pantheon-org exec -- gh issue create --repo pantheon-org/tekhne --title "..." --body "..."
+fnox -P pantheon-org exec -- gh pr list --repo pantheon-org/tekhne
+fnox -P pantheon-org lease list --active   # cached token and its expiry
+fnox -P pantheon-org lease revoke github   # revoke it on GitHub now
+```
+
+- The token acts as the app (issues and PRs show `pantheon-ai-bot[bot]`), not as you, and is limited to contents read,
+  issues write and pull requests write, whatever else the app has. It is reused until 5 minutes before it expires.
+
+- One token covers one installation, so each org is a fnox profile (`-P <org>`). `fnox exec` without `-P` uses
+  `github_app.user`, the personal account, which is not set up yet: plain `gh` has no token.
+
+- Config lives in `~/.config/chezmoi/init-defaults.toml` (not in the repo), then `mise run init` and `mise run apply`:
+
+  ```toml
+  [github_app.orgs.pantheon-org]
+  app_id = "3181784"            # pantheon-ai-bot (private app owned by pantheon-org)
+  installation_id = "118885330"
+  ```
+
+- The private key is in the macOS keychain, service `fnox`, account `GITHUB_APP_PRIVATE_KEY_<org>` (`..._KEY` for
+  `github_app.user`); on Linux it is the entry's `key_age` ciphertext. CI uses a different key of the same app (org
+  secret `GH_APP_PRIVATE_KEY`), so the laptop key can be revoked on its own under the app's key pairs. The app has broad
+  org permissions, so treat the keychain item as high value.
+
+- Adding another installation: generate a key pair on the app, store it without touching the global fnox config, then
+  add the entry above:
+
+  ```sh
+  f=~/Downloads/<app>.private-key.pem && d=$(mktemp -d) &&
+    printf '[providers.keychain]\ntype = "keychain"\nservice = "fnox"\n' > "$d/k.toml" &&
+    FNOX_CONFIG_DIR="$d" fnox -c "$d/k.toml" set K --provider keychain \
+      --key-name GITHUB_APP_PRIVATE_KEY_<org> --from-file "$f" && rm -rf "$d" "$f"
+  ```
+
+- The app ID and installation ID can be read from the API with a JWT signed by the key (`GET /app`,
+  `GET /app/installations`), or from the app's settings page and the installation's Configure URL.
