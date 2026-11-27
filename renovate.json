@@ -34,7 +34,7 @@
     {
       "description": "hk releases after 2.0.1 have no darwin/x86_64 build, and hk.pkl pins the 2.0.1 pkl schema",
       "matchManagers": ["mise"],
-      "matchPackageNames": ["hk"],
+      "matchDepNames": ["hk"],
       "allowedVersions": "<=2.0.1"
     }
   ]
